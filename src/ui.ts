@@ -41,10 +41,16 @@ export function picture(w: Word, cls = ''): HTMLElement {
   if (w.kind === 'number' && w.count) {
     const n = w.count;
     const cols = n <= 2 ? n : n <= 4 ? 2 : n <= 6 ? 3 : n <= 8 ? 4 : 5;
+    const big = n > 10;
     return h(
       'div',
-      { class: `pic count ${cls}`, style: `--cols:${cols}`, role: 'img', 'aria-label': w.word },
-      Array.from({ length: n }, () => h('img', { src: w.img, alt: '', draggable: false })),
+      { class: `pic count ${big ? 'many' : ''} ${cls}`, role: 'img', 'aria-label': w.word },
+      h('span', { class: 'numeral' }, String(n)),
+      h(
+        'div',
+        { class: 'grid', style: `--cols:${cols}` },
+        Array.from({ length: n }, () => h('img', { src: w.img, alt: '', draggable: false })),
+      ),
     );
   }
   return h(

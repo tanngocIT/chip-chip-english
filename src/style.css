@@ -99,10 +99,31 @@ select:focus-visible {
 .pic.lg { --s: clamp(170px, 46vw, 300px); }
 
 .pic.count {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4%;
+  padding: 4%;
+  container-type: inline-size;
+}
+
+.pic.count .numeral {
+  font-size: 30cqw;
+  font-weight: 800;
+  line-height: 0.9;
+  color: var(--ink);
+}
+
+.pic.count .grid {
   display: grid;
   grid-template-columns: repeat(var(--cols), 1fr);
-  gap: 4%;
-  padding: 6%;
+  gap: 3%;
+  width: 100%;
+}
+
+.pic.count.many .grid {
+  width: 92%;
 }
 
 .pic.count img {

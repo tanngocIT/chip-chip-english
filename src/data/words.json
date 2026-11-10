@@ -1,139 +1,2004 @@
 {
-  "topics": [
-    { "id": "animals", "en": "Animals", "vi": "Con vật", "icon": "cat", "color": "#FFE3B8" },
-    { "id": "fruits", "en": "Fruits", "vi": "Trái cây", "icon": "apple", "color": "#FFD6DC" },
-    { "id": "colors", "en": "Colors", "vi": "Màu sắc", "icon": "rainbow", "color": "#E4DBFF" },
-    { "id": "numbers", "en": "Numbers", "vi": "Con số", "icon": "three", "color": "#D4EEFF" },
-    { "id": "vehicles", "en": "Vehicles", "vi": "Xe cộ", "icon": "bus", "color": "#D9F2DD" },
-    { "id": "body", "en": "My body", "vi": "Cơ thể", "icon": "nose", "color": "#FFE0CC" },
-    { "id": "family", "en": "Family", "vi": "Gia đình", "icon": "mom", "color": "#FCE1F2" },
-    { "id": "food", "en": "Food", "vi": "Đồ ăn", "icon": "cake", "color": "#FFF1C2" },
-    { "id": "toys", "en": "Toys & home", "vi": "Đồ chơi & nhà", "icon": "teddy bear", "color": "#E0ECFF" },
-    { "id": "nature", "en": "Nature", "vi": "Thiên nhiên", "icon": "sun", "color": "#DDF5EE" }
-  ],
-  "words": [
-    { "id": "cat", "topic": "animals", "vi": "con mèo", "asset": "Cat face" },
-    { "id": "dog", "topic": "animals", "vi": "con chó", "asset": "Dog face" },
-    { "id": "cow", "topic": "animals", "vi": "con bò", "asset": "Cow face" },
-    { "id": "pig", "topic": "animals", "vi": "con heo", "asset": "Pig face" },
-    { "id": "duck", "topic": "animals", "vi": "con vịt", "asset": "Duck" },
-    { "id": "chicken", "topic": "animals", "vi": "con gà", "asset": "Chicken" },
-    { "id": "fish", "topic": "animals", "vi": "con cá", "asset": "Tropical fish", "fallback": "Fish" },
-    { "id": "bird", "topic": "animals", "vi": "con chim", "asset": "Bird" },
-    { "id": "rabbit", "topic": "animals", "vi": "con thỏ", "asset": "Rabbit face" },
-    { "id": "monkey", "topic": "animals", "vi": "con khỉ", "asset": "Monkey face" },
-    { "id": "elephant", "topic": "animals", "vi": "con voi", "asset": "Elephant" },
-    { "id": "lion", "topic": "animals", "vi": "con sư tử", "asset": "Lion" },
-    { "id": "tiger", "topic": "animals", "vi": "con hổ", "asset": "Tiger face" },
-    { "id": "bear", "topic": "animals", "vi": "con gấu", "asset": "Bear" },
-    { "id": "frog", "topic": "animals", "vi": "con ếch", "asset": "Frog" },
-    { "id": "horse", "topic": "animals", "vi": "con ngựa", "asset": "Horse face" },
-    { "id": "panda", "topic": "animals", "vi": "gấu trúc", "asset": "Panda" },
-    { "id": "turtle", "topic": "animals", "vi": "con rùa", "asset": "Turtle" },
-
-    { "id": "apple", "topic": "fruits", "vi": "quả táo", "asset": "Red apple" },
-    { "id": "banana", "topic": "fruits", "vi": "quả chuối", "asset": "Banana" },
-    { "id": "grapes", "topic": "fruits", "vi": "quả nho", "asset": "Grapes", "plural": true },
-    { "id": "orange", "topic": "fruits", "vi": "quả cam", "asset": "Tangerine" },
-    { "id": "watermelon", "topic": "fruits", "vi": "dưa hấu", "asset": "Watermelon" },
-    { "id": "strawberry", "topic": "fruits", "vi": "dâu tây", "asset": "Strawberry" },
-    { "id": "pear", "topic": "fruits", "vi": "quả lê", "asset": "Pear" },
-    { "id": "mango", "topic": "fruits", "vi": "quả xoài", "asset": "Mango" },
-    { "id": "pineapple", "topic": "fruits", "vi": "quả dứa", "asset": "Pineapple" },
-    { "id": "lemon", "topic": "fruits", "vi": "quả chanh", "asset": "Lemon" },
-    { "id": "cherries", "topic": "fruits", "vi": "quả anh đào", "asset": "Cherries", "plural": true },
-    { "id": "peach", "topic": "fruits", "vi": "quả đào", "asset": "Peach" },
-
-    { "id": "red", "topic": "colors", "vi": "màu đỏ", "asset": "Red heart", "kind": "color" },
-    { "id": "blue", "topic": "colors", "vi": "màu xanh dương", "asset": "Blue heart", "kind": "color" },
-    { "id": "green", "topic": "colors", "vi": "màu xanh lá", "asset": "Green heart", "kind": "color" },
-    { "id": "yellow", "topic": "colors", "vi": "màu vàng", "asset": "Yellow heart", "kind": "color" },
-    { "id": "orange-color", "word": "orange", "topic": "colors", "vi": "màu cam", "asset": "Orange heart", "kind": "color" },
-    { "id": "purple", "topic": "colors", "vi": "màu tím", "asset": "Purple heart", "kind": "color" },
-    { "id": "pink", "topic": "colors", "vi": "màu hồng", "asset": "Pink heart", "kind": "color" },
-    { "id": "brown", "topic": "colors", "vi": "màu nâu", "asset": "Brown heart", "kind": "color" },
-    { "id": "black", "topic": "colors", "vi": "màu đen", "asset": "Black heart", "kind": "color" },
-    { "id": "white", "topic": "colors", "vi": "màu trắng", "asset": "White heart", "kind": "color" },
-
-    { "id": "one", "topic": "numbers", "vi": "số một", "asset": "Glowing star", "count": 1, "kind": "number" },
-    { "id": "two", "topic": "numbers", "vi": "số hai", "asset": "Glowing star", "count": 2, "kind": "number" },
-    { "id": "three", "topic": "numbers", "vi": "số ba", "asset": "Glowing star", "count": 3, "kind": "number" },
-    { "id": "four", "topic": "numbers", "vi": "số bốn", "asset": "Glowing star", "count": 4, "kind": "number" },
-    { "id": "five", "topic": "numbers", "vi": "số năm", "asset": "Glowing star", "count": 5, "kind": "number" },
-    { "id": "six", "topic": "numbers", "vi": "số sáu", "asset": "Glowing star", "count": 6, "kind": "number" },
-    { "id": "seven", "topic": "numbers", "vi": "số bảy", "asset": "Glowing star", "count": 7, "kind": "number" },
-    { "id": "eight", "topic": "numbers", "vi": "số tám", "asset": "Glowing star", "count": 8, "kind": "number" },
-    { "id": "nine", "topic": "numbers", "vi": "số chín", "asset": "Glowing star", "count": 9, "kind": "number" },
-    { "id": "ten", "topic": "numbers", "vi": "số mười", "asset": "Glowing star", "count": 10, "kind": "number" },
-
-    { "id": "car", "topic": "vehicles", "vi": "xe hơi", "asset": "Automobile" },
-    { "id": "bus", "topic": "vehicles", "vi": "xe buýt", "asset": "Bus" },
-    { "id": "bicycle", "topic": "vehicles", "vi": "xe đạp", "asset": "Bicycle" },
-    { "id": "airplane", "topic": "vehicles", "vi": "máy bay", "asset": "Airplane" },
-    { "id": "train", "topic": "vehicles", "vi": "tàu hỏa", "asset": "Locomotive" },
-    { "id": "ship", "topic": "vehicles", "vi": "tàu thủy", "asset": "Ship" },
-    { "id": "rocket", "topic": "vehicles", "vi": "tên lửa", "asset": "Rocket" },
-    { "id": "taxi", "topic": "vehicles", "vi": "xe taxi", "asset": "Taxi" },
-    { "id": "ambulance", "topic": "vehicles", "vi": "xe cứu thương", "asset": "Ambulance" },
-    { "id": "fire truck", "topic": "vehicles", "vi": "xe cứu hỏa", "asset": "Fire engine" },
-    { "id": "tractor", "topic": "vehicles", "vi": "máy cày", "asset": "Tractor" },
-    { "id": "helicopter", "topic": "vehicles", "vi": "trực thăng", "asset": "Helicopter" },
-    { "id": "motorbike", "topic": "vehicles", "vi": "xe máy", "asset": "Motor scooter" },
-    { "id": "boat", "topic": "vehicles", "vi": "cái thuyền", "asset": "Sailboat" },
-
-    { "id": "eye", "topic": "body", "vi": "con mắt", "asset": "Eye" },
-    { "id": "ear", "topic": "body", "vi": "cái tai", "asset": "Ear", "skin": true },
-    { "id": "nose", "topic": "body", "vi": "cái mũi", "asset": "Nose", "skin": true },
-    { "id": "mouth", "topic": "body", "vi": "cái miệng", "asset": "Mouth" },
-    { "id": "hand", "topic": "body", "vi": "bàn tay", "asset": "Raised hand", "skin": true },
-    { "id": "foot", "topic": "body", "vi": "bàn chân", "asset": "Foot", "skin": true },
-    { "id": "tooth", "topic": "body", "vi": "cái răng", "asset": "Tooth" },
-
-    { "id": "baby", "topic": "family", "vi": "em bé", "asset": "Baby", "skin": true, "kind": "person" },
-    { "id": "mom", "topic": "family", "vi": "mẹ", "asset": "Woman", "skin": true, "kind": "person" },
-    { "id": "dad", "topic": "family", "vi": "bố", "asset": "Man", "skin": true, "kind": "person" },
-    { "id": "sister", "topic": "family", "vi": "chị / em gái", "asset": "Girl", "skin": true, "kind": "person" },
-    { "id": "brother", "topic": "family", "vi": "anh / em trai", "asset": "Boy", "skin": true, "kind": "person" },
-    { "id": "grandma", "topic": "family", "vi": "bà", "asset": "Old woman", "skin": true, "kind": "person" },
-    { "id": "grandpa", "topic": "family", "vi": "ông", "asset": "Old man", "skin": true, "kind": "person" },
-
-    { "id": "bread", "topic": "food", "vi": "bánh mì", "asset": "Bread", "mass": true },
-    { "id": "egg", "topic": "food", "vi": "quả trứng", "asset": "Egg" },
-    { "id": "milk", "topic": "food", "vi": "sữa", "asset": "Glass of milk", "mass": true },
-    { "id": "cake", "topic": "food", "vi": "bánh kem", "asset": "Birthday cake" },
-    { "id": "ice cream", "topic": "food", "vi": "kem", "asset": "Soft ice cream" },
-    { "id": "cookie", "topic": "food", "vi": "bánh quy", "asset": "Cookie" },
-    { "id": "pizza", "topic": "food", "vi": "bánh pizza", "asset": "Pizza", "mass": true },
-    { "id": "carrot", "topic": "food", "vi": "cà rốt", "asset": "Carrot" },
-    { "id": "corn", "topic": "food", "vi": "bắp ngô", "asset": "Ear of corn", "mass": true },
-    { "id": "rice", "topic": "food", "vi": "cơm", "asset": "Cooked rice", "mass": true },
-    { "id": "noodles", "topic": "food", "vi": "mì / phở", "asset": "Steaming bowl", "plural": true },
-    { "id": "candy", "topic": "food", "vi": "kẹo", "asset": "Lollipop", "mass": true },
-
-    { "id": "ball", "topic": "toys", "vi": "quả bóng", "asset": "Soccer ball" },
-    { "id": "teddy bear", "topic": "toys", "vi": "gấu bông", "asset": "Teddy bear" },
-    { "id": "balloon", "topic": "toys", "vi": "bóng bay", "asset": "Balloon" },
-    { "id": "kite", "topic": "toys", "vi": "con diều", "asset": "Kite" },
-    { "id": "book", "topic": "toys", "vi": "quyển sách", "asset": "Closed book" },
-    { "id": "pencil", "topic": "toys", "vi": "bút chì", "asset": "Pencil" },
-    { "id": "chair", "topic": "toys", "vi": "cái ghế", "asset": "Chair" },
-    { "id": "bed", "topic": "toys", "vi": "cái giường", "asset": "Bed" },
-    { "id": "door", "topic": "toys", "vi": "cánh cửa", "asset": "Door" },
-    { "id": "house", "topic": "toys", "vi": "ngôi nhà", "asset": "House with garden" },
-    { "id": "umbrella", "topic": "toys", "vi": "cái ô", "asset": "Umbrella" },
-    { "id": "gift", "topic": "toys", "vi": "món quà", "asset": "Wrapped gift" },
-
-    { "id": "sun", "topic": "nature", "vi": "mặt trời", "asset": "Sun with face", "the": true },
-    { "id": "moon", "topic": "nature", "vi": "mặt trăng", "asset": "Crescent moon", "the": true },
-    { "id": "star", "topic": "nature", "vi": "ngôi sao", "asset": "Star" },
-    { "id": "cloud", "topic": "nature", "vi": "đám mây", "asset": "Cloud" },
-    { "id": "rainbow", "topic": "nature", "vi": "cầu vồng", "asset": "Rainbow" },
-    { "id": "tree", "topic": "nature", "vi": "cái cây", "asset": "Deciduous tree" },
-    { "id": "flower", "topic": "nature", "vi": "bông hoa", "asset": "Tulip" },
-    { "id": "rain", "topic": "nature", "vi": "mưa", "asset": "Cloud with rain", "mass": true },
-    { "id": "snow", "topic": "nature", "vi": "tuyết", "asset": "Snowflake", "mass": true },
-    { "id": "sunflower", "topic": "nature", "vi": "hoa hướng dương", "asset": "Sunflower" },
-    { "id": "butterfly", "topic": "nature", "vi": "con bướm", "asset": "Butterfly" },
-    { "id": "bee", "topic": "nature", "vi": "con ong", "asset": "Honeybee" }
-  ]
+ "topics": [
+  {
+   "id": "animals",
+   "en": "Animals",
+   "vi": "Con vật",
+   "icon": "cat",
+   "color": "#FFE3B8"
+  },
+  {
+   "id": "fruits",
+   "en": "Fruits & veggies",
+   "vi": "Rau củ quả",
+   "icon": "apple",
+   "color": "#FFD6DC"
+  },
+  {
+   "id": "colors",
+   "en": "Colors",
+   "vi": "Màu sắc",
+   "icon": "rainbow",
+   "color": "#E4DBFF"
+  },
+  {
+   "id": "numbers",
+   "en": "Numbers",
+   "vi": "Con số",
+   "icon": "three",
+   "color": "#D4EEFF"
+  },
+  {
+   "id": "vehicles",
+   "en": "Vehicles",
+   "vi": "Xe cộ",
+   "icon": "bus",
+   "color": "#D9F2DD"
+  },
+  {
+   "id": "body",
+   "en": "My body",
+   "vi": "Cơ thể",
+   "icon": "nose",
+   "color": "#FFE0CC"
+  },
+  {
+   "id": "family",
+   "en": "People",
+   "vi": "Gia đình & nghề",
+   "icon": "mom",
+   "color": "#FCE1F2"
+  },
+  {
+   "id": "food",
+   "en": "Food",
+   "vi": "Đồ ăn",
+   "icon": "cake",
+   "color": "#FFF1C2"
+  },
+  {
+   "id": "toys",
+   "en": "Toys & home",
+   "vi": "Đồ chơi & nhà",
+   "icon": "teddy bear",
+   "color": "#E0ECFF"
+  },
+  {
+   "id": "nature",
+   "en": "Nature",
+   "vi": "Thiên nhiên",
+   "icon": "sun",
+   "color": "#DDF5EE"
+  }
+ ],
+ "words": [
+  {
+   "id": "cat",
+   "topic": "animals",
+   "vi": "con mèo",
+   "asset": "Cat face"
+  },
+  {
+   "id": "dog",
+   "topic": "animals",
+   "vi": "con chó",
+   "asset": "Dog face"
+  },
+  {
+   "id": "cow",
+   "topic": "animals",
+   "vi": "con bò",
+   "asset": "Cow face"
+  },
+  {
+   "id": "pig",
+   "topic": "animals",
+   "vi": "con heo",
+   "asset": "Pig face"
+  },
+  {
+   "id": "duck",
+   "topic": "animals",
+   "vi": "con vịt",
+   "asset": "Duck"
+  },
+  {
+   "id": "chicken",
+   "topic": "animals",
+   "vi": "con gà",
+   "asset": "Chicken"
+  },
+  {
+   "id": "fish",
+   "topic": "animals",
+   "vi": "con cá",
+   "asset": "Tropical fish",
+   "fallback": "Fish"
+  },
+  {
+   "id": "bird",
+   "topic": "animals",
+   "vi": "con chim",
+   "asset": "Bird"
+  },
+  {
+   "id": "rabbit",
+   "topic": "animals",
+   "vi": "con thỏ",
+   "asset": "Rabbit face"
+  },
+  {
+   "id": "monkey",
+   "topic": "animals",
+   "vi": "con khỉ",
+   "asset": "Monkey face"
+  },
+  {
+   "id": "elephant",
+   "topic": "animals",
+   "vi": "con voi",
+   "asset": "Elephant"
+  },
+  {
+   "id": "lion",
+   "topic": "animals",
+   "vi": "con sư tử",
+   "asset": "Lion"
+  },
+  {
+   "id": "tiger",
+   "topic": "animals",
+   "vi": "con hổ",
+   "asset": "Tiger face"
+  },
+  {
+   "id": "bear",
+   "topic": "animals",
+   "vi": "con gấu",
+   "asset": "Bear"
+  },
+  {
+   "id": "frog",
+   "topic": "animals",
+   "vi": "con ếch",
+   "asset": "Frog"
+  },
+  {
+   "id": "horse",
+   "topic": "animals",
+   "vi": "con ngựa",
+   "asset": "Horse face"
+  },
+  {
+   "id": "panda",
+   "topic": "animals",
+   "vi": "gấu trúc",
+   "asset": "Panda"
+  },
+  {
+   "id": "turtle",
+   "topic": "animals",
+   "vi": "con rùa",
+   "asset": "Turtle"
+  },
+  {
+   "id": "apple",
+   "topic": "fruits",
+   "vi": "quả táo",
+   "asset": "Red apple"
+  },
+  {
+   "id": "banana",
+   "topic": "fruits",
+   "vi": "quả chuối",
+   "asset": "Banana"
+  },
+  {
+   "id": "grapes",
+   "topic": "fruits",
+   "vi": "quả nho",
+   "asset": "Grapes",
+   "plural": true
+  },
+  {
+   "id": "orange",
+   "topic": "fruits",
+   "vi": "quả cam",
+   "asset": "Tangerine"
+  },
+  {
+   "id": "watermelon",
+   "topic": "fruits",
+   "vi": "dưa hấu",
+   "asset": "Watermelon"
+  },
+  {
+   "id": "strawberry",
+   "topic": "fruits",
+   "vi": "dâu tây",
+   "asset": "Strawberry"
+  },
+  {
+   "id": "pear",
+   "topic": "fruits",
+   "vi": "quả lê",
+   "asset": "Pear"
+  },
+  {
+   "id": "mango",
+   "topic": "fruits",
+   "vi": "quả xoài",
+   "asset": "Mango"
+  },
+  {
+   "id": "pineapple",
+   "topic": "fruits",
+   "vi": "quả dứa",
+   "asset": "Pineapple"
+  },
+  {
+   "id": "lemon",
+   "topic": "fruits",
+   "vi": "quả chanh",
+   "asset": "Lemon"
+  },
+  {
+   "id": "cherries",
+   "topic": "fruits",
+   "vi": "quả anh đào",
+   "asset": "Cherries",
+   "plural": true
+  },
+  {
+   "id": "peach",
+   "topic": "fruits",
+   "vi": "quả đào",
+   "asset": "Peach"
+  },
+  {
+   "id": "red",
+   "topic": "colors",
+   "vi": "màu đỏ",
+   "asset": "Red heart",
+   "kind": "color"
+  },
+  {
+   "id": "blue",
+   "topic": "colors",
+   "vi": "màu xanh dương",
+   "asset": "Blue heart",
+   "kind": "color"
+  },
+  {
+   "id": "green",
+   "topic": "colors",
+   "vi": "màu xanh lá",
+   "asset": "Green heart",
+   "kind": "color"
+  },
+  {
+   "id": "yellow",
+   "topic": "colors",
+   "vi": "màu vàng",
+   "asset": "Yellow heart",
+   "kind": "color"
+  },
+  {
+   "id": "orange-color",
+   "word": "orange",
+   "topic": "colors",
+   "vi": "màu cam",
+   "asset": "Orange heart",
+   "kind": "color"
+  },
+  {
+   "id": "purple",
+   "topic": "colors",
+   "vi": "màu tím",
+   "asset": "Purple heart",
+   "kind": "color"
+  },
+  {
+   "id": "pink",
+   "topic": "colors",
+   "vi": "màu hồng",
+   "asset": "Pink heart",
+   "kind": "color"
+  },
+  {
+   "id": "brown",
+   "topic": "colors",
+   "vi": "màu nâu",
+   "asset": "Brown heart",
+   "kind": "color"
+  },
+  {
+   "id": "black",
+   "topic": "colors",
+   "vi": "màu đen",
+   "asset": "Black heart",
+   "kind": "color"
+  },
+  {
+   "id": "white",
+   "topic": "colors",
+   "vi": "màu trắng",
+   "asset": "White heart",
+   "kind": "color"
+  },
+  {
+   "id": "one",
+   "topic": "numbers",
+   "vi": "số một",
+   "asset": "Glowing star",
+   "count": 1,
+   "kind": "number"
+  },
+  {
+   "id": "two",
+   "topic": "numbers",
+   "vi": "số hai",
+   "asset": "Glowing star",
+   "count": 2,
+   "kind": "number"
+  },
+  {
+   "id": "three",
+   "topic": "numbers",
+   "vi": "số ba",
+   "asset": "Glowing star",
+   "count": 3,
+   "kind": "number"
+  },
+  {
+   "id": "four",
+   "topic": "numbers",
+   "vi": "số bốn",
+   "asset": "Glowing star",
+   "count": 4,
+   "kind": "number"
+  },
+  {
+   "id": "five",
+   "topic": "numbers",
+   "vi": "số năm",
+   "asset": "Glowing star",
+   "count": 5,
+   "kind": "number"
+  },
+  {
+   "id": "six",
+   "topic": "numbers",
+   "vi": "số sáu",
+   "asset": "Glowing star",
+   "count": 6,
+   "kind": "number"
+  },
+  {
+   "id": "seven",
+   "topic": "numbers",
+   "vi": "số bảy",
+   "asset": "Glowing star",
+   "count": 7,
+   "kind": "number"
+  },
+  {
+   "id": "eight",
+   "topic": "numbers",
+   "vi": "số tám",
+   "asset": "Glowing star",
+   "count": 8,
+   "kind": "number"
+  },
+  {
+   "id": "nine",
+   "topic": "numbers",
+   "vi": "số chín",
+   "asset": "Glowing star",
+   "count": 9,
+   "kind": "number"
+  },
+  {
+   "id": "ten",
+   "topic": "numbers",
+   "vi": "số mười",
+   "asset": "Glowing star",
+   "count": 10,
+   "kind": "number"
+  },
+  {
+   "id": "car",
+   "topic": "vehicles",
+   "vi": "xe hơi",
+   "asset": "Automobile"
+  },
+  {
+   "id": "bus",
+   "topic": "vehicles",
+   "vi": "xe buýt",
+   "asset": "Bus"
+  },
+  {
+   "id": "bicycle",
+   "topic": "vehicles",
+   "vi": "xe đạp",
+   "asset": "Bicycle"
+  },
+  {
+   "id": "airplane",
+   "topic": "vehicles",
+   "vi": "máy bay",
+   "asset": "Airplane"
+  },
+  {
+   "id": "train",
+   "topic": "vehicles",
+   "vi": "tàu hỏa",
+   "asset": "Locomotive"
+  },
+  {
+   "id": "ship",
+   "topic": "vehicles",
+   "vi": "tàu thủy",
+   "asset": "Ship"
+  },
+  {
+   "id": "rocket",
+   "topic": "vehicles",
+   "vi": "tên lửa",
+   "asset": "Rocket"
+  },
+  {
+   "id": "taxi",
+   "topic": "vehicles",
+   "vi": "xe taxi",
+   "asset": "Taxi"
+  },
+  {
+   "id": "ambulance",
+   "topic": "vehicles",
+   "vi": "xe cứu thương",
+   "asset": "Ambulance"
+  },
+  {
+   "id": "fire truck",
+   "topic": "vehicles",
+   "vi": "xe cứu hỏa",
+   "asset": "Fire engine"
+  },
+  {
+   "id": "tractor",
+   "topic": "vehicles",
+   "vi": "máy cày",
+   "asset": "Tractor"
+  },
+  {
+   "id": "helicopter",
+   "topic": "vehicles",
+   "vi": "trực thăng",
+   "asset": "Helicopter"
+  },
+  {
+   "id": "motorbike",
+   "topic": "vehicles",
+   "vi": "xe máy",
+   "asset": "Motor scooter"
+  },
+  {
+   "id": "boat",
+   "topic": "vehicles",
+   "vi": "cái thuyền",
+   "asset": "Sailboat"
+  },
+  {
+   "id": "eye",
+   "topic": "body",
+   "vi": "con mắt",
+   "asset": "Eye"
+  },
+  {
+   "id": "ear",
+   "topic": "body",
+   "vi": "cái tai",
+   "asset": "Ear",
+   "skin": true
+  },
+  {
+   "id": "nose",
+   "topic": "body",
+   "vi": "cái mũi",
+   "asset": "Nose",
+   "skin": true
+  },
+  {
+   "id": "mouth",
+   "topic": "body",
+   "vi": "cái miệng",
+   "asset": "Mouth"
+  },
+  {
+   "id": "hand",
+   "topic": "body",
+   "vi": "bàn tay",
+   "asset": "Raised hand",
+   "skin": true
+  },
+  {
+   "id": "foot",
+   "topic": "body",
+   "vi": "bàn chân",
+   "asset": "Foot",
+   "skin": true
+  },
+  {
+   "id": "tooth",
+   "topic": "body",
+   "vi": "cái răng",
+   "asset": "Tooth"
+  },
+  {
+   "id": "baby",
+   "topic": "family",
+   "vi": "em bé",
+   "asset": "Baby",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "mom",
+   "topic": "family",
+   "vi": "mẹ",
+   "asset": "Woman",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "dad",
+   "topic": "family",
+   "vi": "bố",
+   "asset": "Man",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "sister",
+   "topic": "family",
+   "vi": "chị / em gái",
+   "asset": "Girl",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "brother",
+   "topic": "family",
+   "vi": "anh / em trai",
+   "asset": "Boy",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "grandma",
+   "topic": "family",
+   "vi": "bà",
+   "asset": "Old woman",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "grandpa",
+   "topic": "family",
+   "vi": "ông",
+   "asset": "Old man",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "bread",
+   "topic": "food",
+   "vi": "bánh mì",
+   "asset": "Bread",
+   "mass": true
+  },
+  {
+   "id": "egg",
+   "topic": "food",
+   "vi": "quả trứng",
+   "asset": "Egg"
+  },
+  {
+   "id": "milk",
+   "topic": "food",
+   "vi": "sữa",
+   "asset": "Glass of milk",
+   "mass": true
+  },
+  {
+   "id": "cake",
+   "topic": "food",
+   "vi": "bánh kem",
+   "asset": "Birthday cake"
+  },
+  {
+   "id": "ice cream",
+   "topic": "food",
+   "vi": "kem",
+   "asset": "Soft ice cream"
+  },
+  {
+   "id": "cookie",
+   "topic": "food",
+   "vi": "bánh quy",
+   "asset": "Cookie"
+  },
+  {
+   "id": "pizza",
+   "topic": "food",
+   "vi": "bánh pizza",
+   "asset": "Pizza",
+   "mass": true
+  },
+  {
+   "id": "carrot",
+   "topic": "fruits",
+   "vi": "cà rốt",
+   "asset": "Carrot"
+  },
+  {
+   "id": "corn",
+   "topic": "fruits",
+   "vi": "bắp ngô",
+   "asset": "Ear of corn",
+   "mass": true
+  },
+  {
+   "id": "rice",
+   "topic": "food",
+   "vi": "cơm",
+   "asset": "Cooked rice",
+   "mass": true
+  },
+  {
+   "id": "noodles",
+   "topic": "food",
+   "vi": "mì / phở",
+   "asset": "Steaming bowl",
+   "plural": true
+  },
+  {
+   "id": "candy",
+   "topic": "food",
+   "vi": "kẹo",
+   "asset": "Lollipop",
+   "mass": true
+  },
+  {
+   "id": "ball",
+   "topic": "toys",
+   "vi": "quả bóng",
+   "asset": "Soccer ball"
+  },
+  {
+   "id": "teddy bear",
+   "topic": "toys",
+   "vi": "gấu bông",
+   "asset": "Teddy bear"
+  },
+  {
+   "id": "balloon",
+   "topic": "toys",
+   "vi": "bóng bay",
+   "asset": "Balloon"
+  },
+  {
+   "id": "kite",
+   "topic": "toys",
+   "vi": "con diều",
+   "asset": "Kite"
+  },
+  {
+   "id": "book",
+   "topic": "toys",
+   "vi": "quyển sách",
+   "asset": "Closed book"
+  },
+  {
+   "id": "pencil",
+   "topic": "toys",
+   "vi": "bút chì",
+   "asset": "Pencil"
+  },
+  {
+   "id": "chair",
+   "topic": "toys",
+   "vi": "cái ghế",
+   "asset": "Chair"
+  },
+  {
+   "id": "bed",
+   "topic": "toys",
+   "vi": "cái giường",
+   "asset": "Bed"
+  },
+  {
+   "id": "door",
+   "topic": "toys",
+   "vi": "cánh cửa",
+   "asset": "Door"
+  },
+  {
+   "id": "house",
+   "topic": "toys",
+   "vi": "ngôi nhà",
+   "asset": "House with garden"
+  },
+  {
+   "id": "umbrella",
+   "topic": "toys",
+   "vi": "cái ô",
+   "asset": "Umbrella"
+  },
+  {
+   "id": "gift",
+   "topic": "toys",
+   "vi": "món quà",
+   "asset": "Wrapped gift"
+  },
+  {
+   "id": "sun",
+   "topic": "nature",
+   "vi": "mặt trời",
+   "asset": "Sun with face",
+   "the": true
+  },
+  {
+   "id": "moon",
+   "topic": "nature",
+   "vi": "mặt trăng",
+   "asset": "Crescent moon",
+   "the": true
+  },
+  {
+   "id": "star",
+   "topic": "nature",
+   "vi": "ngôi sao",
+   "asset": "Star"
+  },
+  {
+   "id": "cloud",
+   "topic": "nature",
+   "vi": "đám mây",
+   "asset": "Cloud"
+  },
+  {
+   "id": "rainbow",
+   "topic": "nature",
+   "vi": "cầu vồng",
+   "asset": "Rainbow"
+  },
+  {
+   "id": "tree",
+   "topic": "nature",
+   "vi": "cái cây",
+   "asset": "Deciduous tree"
+  },
+  {
+   "id": "flower",
+   "topic": "nature",
+   "vi": "bông hoa",
+   "asset": "Tulip"
+  },
+  {
+   "id": "rain",
+   "topic": "nature",
+   "vi": "mưa",
+   "asset": "Cloud with rain",
+   "mass": true
+  },
+  {
+   "id": "snow",
+   "topic": "nature",
+   "vi": "tuyết",
+   "asset": "Snowflake",
+   "mass": true
+  },
+  {
+   "id": "sunflower",
+   "topic": "nature",
+   "vi": "hoa hướng dương",
+   "asset": "Sunflower"
+  },
+  {
+   "id": "butterfly",
+   "topic": "nature",
+   "vi": "con bướm",
+   "asset": "Butterfly"
+  },
+  {
+   "id": "bee",
+   "topic": "nature",
+   "vi": "con ong",
+   "asset": "Honeybee"
+  },
+  {
+   "id": "sheep",
+   "topic": "animals",
+   "vi": "con cừu",
+   "asset": "Ewe"
+  },
+  {
+   "id": "goat",
+   "topic": "animals",
+   "vi": "con dê",
+   "asset": "Goat"
+  },
+  {
+   "id": "mouse",
+   "topic": "animals",
+   "vi": "con chuột",
+   "asset": "Mouse face"
+  },
+  {
+   "id": "snake",
+   "topic": "animals",
+   "vi": "con rắn",
+   "asset": "Snake"
+  },
+  {
+   "id": "giraffe",
+   "topic": "animals",
+   "vi": "hươu cao cổ",
+   "asset": "Giraffe"
+  },
+  {
+   "id": "zebra",
+   "topic": "animals",
+   "vi": "ngựa vằn",
+   "asset": "Zebra"
+  },
+  {
+   "id": "penguin",
+   "topic": "animals",
+   "vi": "chim cánh cụt",
+   "asset": "Penguin"
+  },
+  {
+   "id": "owl",
+   "topic": "animals",
+   "vi": "con cú",
+   "asset": "Owl"
+  },
+  {
+   "id": "crab",
+   "topic": "animals",
+   "vi": "con cua",
+   "asset": "Crab"
+  },
+  {
+   "id": "octopus",
+   "topic": "animals",
+   "vi": "bạch tuộc",
+   "asset": "Octopus"
+  },
+  {
+   "id": "dolphin",
+   "topic": "animals",
+   "vi": "cá heo",
+   "asset": "Dolphin"
+  },
+  {
+   "id": "whale",
+   "topic": "animals",
+   "vi": "cá voi",
+   "asset": "Spouting whale"
+  },
+  {
+   "id": "shark",
+   "topic": "animals",
+   "vi": "cá mập",
+   "asset": "Shark"
+  },
+  {
+   "id": "camel",
+   "topic": "animals",
+   "vi": "lạc đà",
+   "asset": "Camel"
+  },
+  {
+   "id": "kangaroo",
+   "topic": "animals",
+   "vi": "chuột túi",
+   "asset": "Kangaroo"
+  },
+  {
+   "id": "fox",
+   "topic": "animals",
+   "vi": "con cáo",
+   "asset": "Fox"
+  },
+  {
+   "id": "hippo",
+   "topic": "animals",
+   "vi": "hà mã",
+   "asset": "Hippopotamus"
+  },
+  {
+   "id": "crocodile",
+   "topic": "animals",
+   "vi": "cá sấu",
+   "asset": "Crocodile"
+  },
+  {
+   "id": "deer",
+   "topic": "animals",
+   "vi": "con nai",
+   "asset": "Deer"
+  },
+  {
+   "id": "ant",
+   "topic": "animals",
+   "vi": "con kiến",
+   "asset": "Ant"
+  },
+  {
+   "id": "parrot",
+   "topic": "animals",
+   "vi": "con vẹt",
+   "asset": "Parrot"
+  },
+  {
+   "id": "dinosaur",
+   "topic": "animals",
+   "vi": "khủng long",
+   "asset": "T-rex"
+  },
+  {
+   "id": "kiwi",
+   "topic": "fruits",
+   "vi": "quả kiwi",
+   "asset": "Kiwi fruit"
+  },
+  {
+   "id": "coconut",
+   "topic": "fruits",
+   "vi": "quả dừa",
+   "asset": "Coconut"
+  },
+  {
+   "id": "blueberries",
+   "topic": "fruits",
+   "vi": "việt quất",
+   "asset": "Blueberries",
+   "plural": true
+  },
+  {
+   "id": "melon",
+   "topic": "fruits",
+   "vi": "dưa lưới",
+   "asset": "Melon"
+  },
+  {
+   "id": "avocado",
+   "topic": "fruits",
+   "vi": "quả bơ",
+   "asset": "Avocado"
+  },
+  {
+   "id": "tomato",
+   "topic": "fruits",
+   "vi": "cà chua",
+   "asset": "Tomato"
+  },
+  {
+   "id": "broccoli",
+   "topic": "fruits",
+   "vi": "bông cải xanh",
+   "asset": "Broccoli",
+   "mass": true
+  },
+  {
+   "id": "potato",
+   "topic": "fruits",
+   "vi": "khoai tây",
+   "asset": "Potato"
+  },
+  {
+   "id": "eggplant",
+   "topic": "fruits",
+   "vi": "cà tím",
+   "asset": "Eggplant"
+  },
+  {
+   "id": "cucumber",
+   "topic": "fruits",
+   "vi": "dưa leo",
+   "asset": "Cucumber"
+  },
+  {
+   "id": "mushroom",
+   "topic": "fruits",
+   "vi": "cây nấm",
+   "asset": "Brown mushroom"
+  },
+  {
+   "id": "onion",
+   "topic": "fruits",
+   "vi": "củ hành",
+   "asset": "Onion"
+  },
+  {
+   "id": "garlic",
+   "topic": "fruits",
+   "vi": "tỏi",
+   "asset": "Garlic",
+   "mass": true
+  },
+  {
+   "id": "pepper",
+   "topic": "fruits",
+   "vi": "ớt chuông",
+   "asset": "Bell pepper"
+  },
+  {
+   "id": "chili",
+   "topic": "fruits",
+   "vi": "ớt cay",
+   "asset": "Hot pepper"
+  },
+  {
+   "id": "peas",
+   "topic": "fruits",
+   "vi": "đậu Hà Lan",
+   "asset": "Pea pod",
+   "plural": true
+  },
+  {
+   "id": "lettuce",
+   "topic": "fruits",
+   "vi": "rau xà lách",
+   "asset": "Leafy green",
+   "mass": true
+  },
+  {
+   "id": "sweet potato",
+   "topic": "fruits",
+   "vi": "khoai lang",
+   "asset": "Roasted sweet potato"
+  },
+  {
+   "id": "peanuts",
+   "topic": "fruits",
+   "vi": "đậu phộng",
+   "asset": "Peanuts",
+   "plural": true
+  },
+  {
+   "id": "green apple",
+   "topic": "fruits",
+   "vi": "táo xanh",
+   "asset": "Green apple"
+  },
+  {
+   "id": "olive",
+   "topic": "fruits",
+   "vi": "quả ô liu",
+   "asset": "Olive"
+  },
+  {
+   "id": "ginger",
+   "topic": "fruits",
+   "vi": "gừng",
+   "asset": "Ginger root",
+   "mass": true
+  },
+  {
+   "id": "gray",
+   "topic": "colors",
+   "vi": "màu xám",
+   "asset": "Grey heart",
+   "kind": "color"
+  },
+  {
+   "id": "light blue",
+   "topic": "colors",
+   "vi": "màu xanh nhạt",
+   "asset": "Light blue heart",
+   "kind": "color"
+  },
+  {
+   "id": "eleven",
+   "topic": "numbers",
+   "vi": "số mười một",
+   "asset": "Glowing star",
+   "count": 11,
+   "kind": "number"
+  },
+  {
+   "id": "twelve",
+   "topic": "numbers",
+   "vi": "số mười hai",
+   "asset": "Glowing star",
+   "count": 12,
+   "kind": "number"
+  },
+  {
+   "id": "thirteen",
+   "topic": "numbers",
+   "vi": "số mười ba",
+   "asset": "Glowing star",
+   "count": 13,
+   "kind": "number"
+  },
+  {
+   "id": "fourteen",
+   "topic": "numbers",
+   "vi": "số mười bốn",
+   "asset": "Glowing star",
+   "count": 14,
+   "kind": "number"
+  },
+  {
+   "id": "fifteen",
+   "topic": "numbers",
+   "vi": "số mười lăm",
+   "asset": "Glowing star",
+   "count": 15,
+   "kind": "number"
+  },
+  {
+   "id": "sixteen",
+   "topic": "numbers",
+   "vi": "số mười sáu",
+   "asset": "Glowing star",
+   "count": 16,
+   "kind": "number"
+  },
+  {
+   "id": "seventeen",
+   "topic": "numbers",
+   "vi": "số mười bảy",
+   "asset": "Glowing star",
+   "count": 17,
+   "kind": "number"
+  },
+  {
+   "id": "eighteen",
+   "topic": "numbers",
+   "vi": "số mười tám",
+   "asset": "Glowing star",
+   "count": 18,
+   "kind": "number"
+  },
+  {
+   "id": "nineteen",
+   "topic": "numbers",
+   "vi": "số mười chín",
+   "asset": "Glowing star",
+   "count": 19,
+   "kind": "number"
+  },
+  {
+   "id": "twenty",
+   "topic": "numbers",
+   "vi": "số hai mươi",
+   "asset": "Glowing star",
+   "count": 20,
+   "kind": "number"
+  },
+  {
+   "id": "police car",
+   "topic": "vehicles",
+   "vi": "xe cảnh sát",
+   "asset": "Police car"
+  },
+  {
+   "id": "truck",
+   "topic": "vehicles",
+   "vi": "xe tải",
+   "asset": "Delivery truck"
+  },
+  {
+   "id": "van",
+   "topic": "vehicles",
+   "vi": "xe thùng",
+   "asset": "Minibus"
+  },
+  {
+   "id": "race car",
+   "topic": "vehicles",
+   "vi": "xe đua",
+   "asset": "Racing car"
+  },
+  {
+   "id": "scooter",
+   "topic": "vehicles",
+   "vi": "xe trượt",
+   "asset": "Kick scooter"
+  },
+  {
+   "id": "skateboard",
+   "topic": "vehicles",
+   "vi": "ván trượt",
+   "asset": "Skateboard"
+  },
+  {
+   "id": "canoe",
+   "topic": "vehicles",
+   "vi": "xuồng",
+   "asset": "Canoe"
+  },
+  {
+   "id": "speedboat",
+   "topic": "vehicles",
+   "vi": "ca nô",
+   "asset": "Motor boat"
+  },
+  {
+   "id": "tram",
+   "topic": "vehicles",
+   "vi": "tàu điện",
+   "asset": "Tram"
+  },
+  {
+   "id": "subway",
+   "topic": "vehicles",
+   "vi": "tàu điện ngầm",
+   "asset": "Metro"
+  },
+  {
+   "id": "fast train",
+   "topic": "vehicles",
+   "vi": "tàu cao tốc",
+   "asset": "High-speed train"
+  },
+  {
+   "id": "cable car",
+   "topic": "vehicles",
+   "vi": "cáp treo",
+   "asset": "Aerial tramway"
+  },
+  {
+   "id": "parachute",
+   "topic": "vehicles",
+   "vi": "dù",
+   "asset": "Parachute"
+  },
+  {
+   "id": "satellite",
+   "topic": "vehicles",
+   "vi": "vệ tinh",
+   "asset": "Satellite"
+  },
+  {
+   "id": "ufo",
+   "topic": "vehicles",
+   "vi": "đĩa bay",
+   "asset": "Flying saucer"
+  },
+  {
+   "id": "sled",
+   "topic": "vehicles",
+   "vi": "xe trượt tuyết",
+   "asset": "Sled"
+  },
+  {
+   "id": "roller skate",
+   "topic": "vehicles",
+   "vi": "giày patin",
+   "asset": "Roller skate"
+  },
+  {
+   "id": "pickup truck",
+   "topic": "vehicles",
+   "vi": "xe bán tải",
+   "asset": "Pickup truck"
+  },
+  {
+   "id": "lorry",
+   "topic": "vehicles",
+   "vi": "xe container",
+   "asset": "Articulated lorry"
+  },
+  {
+   "id": "trolleybus",
+   "topic": "vehicles",
+   "vi": "xe buýt điện",
+   "asset": "Trolleybus"
+  },
+  {
+   "id": "leg",
+   "topic": "body",
+   "vi": "cái chân",
+   "asset": "Leg",
+   "skin": true
+  },
+  {
+   "id": "arm",
+   "topic": "body",
+   "vi": "cánh tay",
+   "asset": "Flexed biceps",
+   "skin": true
+  },
+  {
+   "id": "tongue",
+   "topic": "body",
+   "vi": "cái lưỡi",
+   "asset": "Tongue"
+  },
+  {
+   "id": "brain",
+   "topic": "body",
+   "vi": "bộ não",
+   "asset": "Brain"
+  },
+  {
+   "id": "bone",
+   "topic": "body",
+   "vi": "khúc xương",
+   "asset": "Bone"
+  },
+  {
+   "id": "heart",
+   "topic": "body",
+   "vi": "trái tim",
+   "asset": "Anatomical heart"
+  },
+  {
+   "id": "lungs",
+   "topic": "body",
+   "vi": "lá phổi",
+   "asset": "Lungs",
+   "plural": true
+  },
+  {
+   "id": "finger",
+   "topic": "body",
+   "vi": "ngón tay",
+   "asset": "Index pointing up",
+   "skin": true
+  },
+  {
+   "id": "thumb",
+   "topic": "body",
+   "vi": "ngón cái",
+   "asset": "Thumbs up",
+   "skin": true
+  },
+  {
+   "id": "teacher",
+   "topic": "family",
+   "vi": "cô giáo",
+   "asset": "Woman teacher",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "doctor",
+   "topic": "family",
+   "vi": "bác sĩ",
+   "asset": "Health worker",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "police officer",
+   "topic": "family",
+   "vi": "cảnh sát",
+   "asset": "Police officer",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "firefighter",
+   "topic": "family",
+   "vi": "lính cứu hỏa",
+   "asset": "Firefighter",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "farmer",
+   "topic": "family",
+   "vi": "nông dân",
+   "asset": "Farmer",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "cook",
+   "topic": "family",
+   "vi": "đầu bếp",
+   "asset": "Cook",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "pilot",
+   "topic": "family",
+   "vi": "phi công",
+   "asset": "Pilot",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "astronaut",
+   "topic": "family",
+   "vi": "phi hành gia",
+   "asset": "Astronaut",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "artist",
+   "topic": "family",
+   "vi": "họa sĩ",
+   "asset": "Artist",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "singer",
+   "topic": "family",
+   "vi": "ca sĩ",
+   "asset": "Singer",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "student",
+   "topic": "family",
+   "vi": "học sinh",
+   "asset": "Student",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "scientist",
+   "topic": "family",
+   "vi": "nhà khoa học",
+   "asset": "Scientist",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "builder",
+   "topic": "family",
+   "vi": "thợ xây",
+   "asset": "Construction worker",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "mechanic",
+   "topic": "family",
+   "vi": "thợ sửa xe",
+   "asset": "Mechanic",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "prince",
+   "topic": "family",
+   "vi": "hoàng tử",
+   "asset": "Prince",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "princess",
+   "topic": "family",
+   "vi": "công chúa",
+   "asset": "Princess",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "superhero",
+   "topic": "family",
+   "vi": "siêu anh hùng",
+   "asset": "Woman superhero",
+   "skin": true,
+   "kind": "person"
+  },
+  {
+   "id": "cheese",
+   "topic": "food",
+   "vi": "phô mai",
+   "asset": "Cheese wedge",
+   "mass": true
+  },
+  {
+   "id": "hamburger",
+   "topic": "food",
+   "vi": "bánh hamburger",
+   "asset": "Hamburger"
+  },
+  {
+   "id": "hot dog",
+   "topic": "food",
+   "vi": "xúc xích kẹp",
+   "asset": "Hot dog"
+  },
+  {
+   "id": "french fries",
+   "topic": "food",
+   "vi": "khoai tây chiên",
+   "asset": "French fries",
+   "plural": true
+  },
+  {
+   "id": "sandwich",
+   "topic": "food",
+   "vi": "bánh sandwich",
+   "asset": "Sandwich"
+  },
+  {
+   "id": "chicken leg",
+   "topic": "food",
+   "vi": "đùi gà",
+   "asset": "Poultry leg"
+  },
+  {
+   "id": "meat",
+   "topic": "food",
+   "vi": "thịt",
+   "asset": "Meat on bone",
+   "mass": true
+  },
+  {
+   "id": "soup",
+   "topic": "food",
+   "vi": "canh / súp",
+   "asset": "Pot of food",
+   "mass": true
+  },
+  {
+   "id": "juice",
+   "topic": "food",
+   "vi": "nước ép",
+   "asset": "Beverage box",
+   "mass": true
+  },
+  {
+   "id": "tea",
+   "topic": "food",
+   "vi": "trà",
+   "asset": "Teacup without handle",
+   "mass": true
+  },
+  {
+   "id": "honey",
+   "topic": "food",
+   "vi": "mật ong",
+   "asset": "Honey pot",
+   "mass": true
+  },
+  {
+   "id": "butter",
+   "topic": "food",
+   "vi": "bơ",
+   "asset": "Butter",
+   "mass": true
+  },
+  {
+   "id": "salt",
+   "topic": "food",
+   "vi": "muối",
+   "asset": "Salt",
+   "mass": true
+  },
+  {
+   "id": "chocolate",
+   "topic": "food",
+   "vi": "sô cô la",
+   "asset": "Chocolate bar",
+   "mass": true
+  },
+  {
+   "id": "popcorn",
+   "topic": "food",
+   "vi": "bỏng ngô",
+   "asset": "Popcorn",
+   "mass": true
+  },
+  {
+   "id": "donut",
+   "topic": "food",
+   "vi": "bánh vòng",
+   "asset": "Doughnut"
+  },
+  {
+   "id": "pancakes",
+   "topic": "food",
+   "vi": "bánh kếp",
+   "asset": "Pancakes",
+   "plural": true
+  },
+  {
+   "id": "waffle",
+   "topic": "food",
+   "vi": "bánh quế",
+   "asset": "Waffle"
+  },
+  {
+   "id": "sushi",
+   "topic": "food",
+   "vi": "sushi",
+   "asset": "Sushi",
+   "mass": true
+  },
+  {
+   "id": "dumpling",
+   "topic": "food",
+   "vi": "bánh bao / há cảo",
+   "asset": "Dumpling"
+  },
+  {
+   "id": "salad",
+   "topic": "food",
+   "vi": "món rau trộn",
+   "asset": "Green salad",
+   "mass": true
+  },
+  {
+   "id": "spaghetti",
+   "topic": "food",
+   "vi": "mì Ý",
+   "asset": "Spaghetti",
+   "mass": true
+  },
+  {
+   "id": "cupcake",
+   "topic": "food",
+   "vi": "bánh cupcake",
+   "asset": "Cupcake"
+  },
+  {
+   "id": "pie",
+   "topic": "food",
+   "vi": "bánh nướng",
+   "asset": "Pie"
+  },
+  {
+   "id": "croissant",
+   "topic": "food",
+   "vi": "bánh sừng bò",
+   "asset": "Croissant"
+  },
+  {
+   "id": "bubble tea",
+   "topic": "food",
+   "vi": "trà sữa",
+   "asset": "Bubble tea",
+   "mass": true
+  },
+  {
+   "id": "pretzel",
+   "topic": "food",
+   "vi": "bánh quy xoắn",
+   "asset": "Pretzel"
+  },
+  {
+   "id": "yo-yo",
+   "topic": "toys",
+   "vi": "con yo-yo",
+   "asset": "Yo-yo"
+  },
+  {
+   "id": "puzzle",
+   "topic": "toys",
+   "vi": "xếp hình",
+   "asset": "Puzzle piece"
+  },
+  {
+   "id": "robot",
+   "topic": "toys",
+   "vi": "người máy",
+   "asset": "Robot"
+  },
+  {
+   "id": "drum",
+   "topic": "toys",
+   "vi": "cái trống",
+   "asset": "Drum"
+  },
+  {
+   "id": "guitar",
+   "topic": "toys",
+   "vi": "đàn ghi-ta",
+   "asset": "Guitar"
+  },
+  {
+   "id": "piano",
+   "topic": "toys",
+   "vi": "đàn piano",
+   "asset": "Musical keyboard"
+  },
+  {
+   "id": "crayon",
+   "topic": "toys",
+   "vi": "bút sáp",
+   "asset": "Crayon"
+  },
+  {
+   "id": "scissors",
+   "topic": "toys",
+   "vi": "cái kéo",
+   "asset": "Scissors",
+   "plural": true
+  },
+  {
+   "id": "clock",
+   "topic": "toys",
+   "vi": "đồng hồ",
+   "asset": "Alarm clock"
+  },
+  {
+   "id": "phone",
+   "topic": "toys",
+   "vi": "điện thoại",
+   "asset": "Mobile phone"
+  },
+  {
+   "id": "tv",
+   "topic": "toys",
+   "vi": "ti vi",
+   "asset": "Television"
+  },
+  {
+   "id": "computer",
+   "topic": "toys",
+   "vi": "máy tính",
+   "asset": "Laptop"
+  },
+  {
+   "id": "key",
+   "topic": "toys",
+   "vi": "chìa khóa",
+   "asset": "Key"
+  },
+  {
+   "id": "backpack",
+   "topic": "toys",
+   "vi": "ba lô",
+   "asset": "Backpack"
+  },
+  {
+   "id": "shoe",
+   "topic": "toys",
+   "vi": "đôi giày",
+   "asset": "Running shoe"
+  },
+  {
+   "id": "hat",
+   "topic": "toys",
+   "vi": "cái mũ",
+   "asset": "Billed cap"
+  },
+  {
+   "id": "t-shirt",
+   "topic": "toys",
+   "vi": "áo thun",
+   "asset": "T-shirt"
+  },
+  {
+   "id": "socks",
+   "topic": "toys",
+   "vi": "đôi tất",
+   "asset": "Socks",
+   "plural": true
+  },
+  {
+   "id": "dress",
+   "topic": "toys",
+   "vi": "váy",
+   "asset": "Dress"
+  },
+  {
+   "id": "glasses",
+   "topic": "toys",
+   "vi": "mắt kính",
+   "asset": "Glasses",
+   "plural": true
+  },
+  {
+   "id": "toothbrush",
+   "topic": "toys",
+   "vi": "bàn chải",
+   "asset": "Toothbrush"
+  },
+  {
+   "id": "soap",
+   "topic": "toys",
+   "vi": "xà phòng",
+   "asset": "Soap",
+   "mass": true
+  },
+  {
+   "id": "bathtub",
+   "topic": "toys",
+   "vi": "bồn tắm",
+   "asset": "Bathtub"
+  },
+  {
+   "id": "toilet",
+   "topic": "toys",
+   "vi": "bồn cầu",
+   "asset": "Toilet"
+  },
+  {
+   "id": "window",
+   "topic": "toys",
+   "vi": "cửa sổ",
+   "asset": "Window"
+  },
+  {
+   "id": "sofa",
+   "topic": "toys",
+   "vi": "ghế sofa",
+   "asset": "Couch and lamp"
+  },
+  {
+   "id": "spoon",
+   "topic": "toys",
+   "vi": "cái thìa",
+   "asset": "Spoon"
+  },
+  {
+   "id": "basket",
+   "topic": "toys",
+   "vi": "cái giỏ",
+   "asset": "Basket"
+  },
+  {
+   "id": "leaf",
+   "topic": "nature",
+   "vi": "chiếc lá",
+   "asset": "Leaf fluttering in wind"
+  },
+  {
+   "id": "mountain",
+   "topic": "nature",
+   "vi": "ngọn núi",
+   "asset": "Mountain"
+  },
+  {
+   "id": "volcano",
+   "topic": "nature",
+   "vi": "núi lửa",
+   "asset": "Volcano"
+  },
+  {
+   "id": "wave",
+   "topic": "nature",
+   "vi": "con sóng",
+   "asset": "Water wave"
+  },
+  {
+   "id": "beach",
+   "topic": "nature",
+   "vi": "bãi biển",
+   "asset": "Beach with umbrella"
+  },
+  {
+   "id": "island",
+   "topic": "nature",
+   "vi": "hòn đảo",
+   "asset": "Desert island"
+  },
+  {
+   "id": "desert",
+   "topic": "nature",
+   "vi": "sa mạc",
+   "asset": "Desert"
+  },
+  {
+   "id": "fire",
+   "topic": "nature",
+   "vi": "lửa",
+   "asset": "Fire",
+   "mass": true
+  },
+  {
+   "id": "wind",
+   "topic": "nature",
+   "vi": "gió",
+   "asset": "Wind face",
+   "mass": true
+  },
+  {
+   "id": "lightning",
+   "topic": "nature",
+   "vi": "tia chớp",
+   "asset": "High voltage",
+   "mass": true
+  },
+  {
+   "id": "snowman",
+   "topic": "nature",
+   "vi": "người tuyết",
+   "asset": "Snowman"
+  },
+  {
+   "id": "rock",
+   "topic": "nature",
+   "vi": "hòn đá",
+   "asset": "Rock"
+  },
+  {
+   "id": "cactus",
+   "topic": "nature",
+   "vi": "cây xương rồng",
+   "asset": "Cactus"
+  },
+  {
+   "id": "palm tree",
+   "topic": "nature",
+   "vi": "cây dừa",
+   "asset": "Palm tree"
+  },
+  {
+   "id": "pine tree",
+   "topic": "nature",
+   "vi": "cây thông",
+   "asset": "Evergreen tree"
+  },
+  {
+   "id": "rose",
+   "topic": "nature",
+   "vi": "hoa hồng",
+   "asset": "Rose"
+  },
+  {
+   "id": "earth",
+   "topic": "nature",
+   "vi": "trái đất",
+   "asset": "Globe showing asia-australia",
+   "the": true
+  },
+  {
+   "id": "planet",
+   "topic": "nature",
+   "vi": "hành tinh",
+   "asset": "Ringed planet"
+  },
+  {
+   "id": "water",
+   "topic": "nature",
+   "vi": "nước",
+   "asset": "Droplet",
+   "mass": true
+  },
+  {
+   "id": "seed",
+   "topic": "nature",
+   "vi": "mầm cây",
+   "asset": "Seedling"
+  },
+  {
+   "id": "clover",
+   "topic": "nature",
+   "vi": "cỏ bốn lá",
+   "asset": "Four leaf clover"
+  },
+  {
+   "id": "tornado",
+   "topic": "nature",
+   "vi": "lốc xoáy",
+   "asset": "Tornado"
+  },
+  {
+   "id": "fog",
+   "topic": "nature",
+   "vi": "sương mù",
+   "asset": "Fog",
+   "mass": true
+  },
+  {
+   "id": "ice",
+   "topic": "nature",
+   "vi": "băng",
+   "asset": "Ice",
+   "mass": true
+  }
+ ]
 }

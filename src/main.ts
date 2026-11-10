@@ -28,6 +28,7 @@ import {
   topicStars,
   learnedCount,
   pickTargets,
+  pickLearnSet,
   choicesFor,
   addMinutes,
   overLimit,
@@ -263,7 +264,7 @@ function lessonBar(t: Topic, total: number, done: number, extra?: HTMLElement) {
 // ---------- learn (flashcards) ----------
 
 function learn(t: Topic) {
-  const list = wordsIn(t.id);
+  const list = pickLearnSet(wordsIn(t.id), levelConfig(P.settings.age).learnCount, P);
   let i = 0;
   const firstTime = !(P.best[`${t.id}:learn`] > 0);
 
@@ -795,7 +796,7 @@ function parentArea() {
       h(
         'section',
         { class: 'panel' },
-        field('Độ tuổi của bé', age, '2–3 tuổi: 2 hình, 8 câu; 4–5 tuổi: 3 hình, 10 câu; 6 tuổi: 4 hình, 12 câu. Bài Say it ít hơn 2 câu.'),
+        field('Độ tuổi của bé', age, '2–3 tuổi: 2 hình, 8 câu, 6 thẻ từ; 4–5 tuổi: 3 hình, 10 câu, 8 thẻ từ; 6 tuổi: 4 hình, 12 câu, 10 thẻ từ. Bài Say it ít hơn 2 câu.'),
         field('Tốc độ đọc', rate, 'Kéo xong sẽ đọc thử.'),
         field(
           'Đọc thêm nghĩa tiếng Việt ở thẻ từ',

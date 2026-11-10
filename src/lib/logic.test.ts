@@ -15,6 +15,8 @@ import {
   addMinutes,
   overLimit,
   stat,
+  pickLearnSet,
+  recordSeen,
 } from './progress';
 import { passes, scoreHeard, levenshtein } from './match';
 import { words, topics, wordsIn, nounPhrase, describe, question, stickers } from './content';
@@ -39,7 +41,8 @@ group('content', () => {
 
   it('ids are unique and every topic has enough words for 4 choices', () => {
     expect(new Set(words.map((w) => w.id)).size).toBe(words.length);
-    for (const t of topics) expect(wordsIn(t.id).length, t.id).toBeGreaterThanOrEqual(4);
+    for (const t of topics) expect(wordsIn(t.id).length, t.id).toBeGreaterThanOrEqual(12);
+    expect(words.length).toBeGreaterThan(280);
   });
 
   it('builds natural phrases', () => {
@@ -112,6 +115,30 @@ group('picking', () => {
     const t = pickTargets(pool, 400, p, seeded(3));
     const frog = t.filter((w) => w.id === 'frog').length;
     expect(frog).toBeGreaterThan(400 / pool.length);
+  });
+
+  it('learn rounds put missed words first, then new ones, and vary', () => {
+    const p = emptyProgress();
+    const ids = pool.map((w) => w.id);
+    for (const id of ids.slice(0, 10)) for (let i = 0; i < 3; i++) recordAnswer(p, id, true);
+    recordAnswer(p, 'frog', false);
+    const set = pickLearnSet(pool, 6, p, seeded(5));
+    expect(set.length).toBe(6);
+    expect(set[0].id).toBe('frog');
+    const known = new Set(ids.slice(0, 10).filter((id) => id !== 'frog'));
+    expect(set.slice(1).every((w) => !known.has(w.id))).toBe(true);
+    const other = pickLearnSet(pool, 6, p, seeded(99));
+    expect(other.map((w) => w.id).join()).not.toBe(set.map((w) => w.id).join());
+  });
+
+  it('quizzes favour words already shown', () => {
+    const p = emptyProgress();
+    for (const w of pool.slice(0, 6)) recordSeen(p, w.id);
+    const r = seeded(9);
+    let seen = 0;
+    for (let g = 0; g < 100; g++) seen += pickTargets(pool, 10, p, r).filter((w) => p.words[w.id]).length;
+    const seenShare = seen / 1000;
+    expect(seenShare).toBeGreaterThan(0.5);
   });
 
   it('choices contain the target once and are distinct', () => {

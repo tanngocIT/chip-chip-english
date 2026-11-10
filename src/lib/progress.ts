@@ -50,11 +50,11 @@ export const emptyProgress = (): Progress => ({
 export function levelConfig(age: AgeLevel) {
   switch (age) {
     case 'small':
-      return { choices: 2, rounds: 8, sayRounds: 6 };
+      return { choices: 2, rounds: 8, sayRounds: 6, learnCount: 6 };
     case 'middle':
-      return { choices: 3, rounds: 10, sayRounds: 8 };
+      return { choices: 3, rounds: 10, sayRounds: 8, learnCount: 8 };
     case 'big':
-      return { choices: 4, rounds: 12, sayRounds: 10 };
+      return { choices: 4, rounds: 12, sayRounds: 10, learnCount: 10 };
   }
 }
 
@@ -91,8 +91,36 @@ export function recordSeen(p: Progress, id: string): void {
   p.words[id] = s;
 }
 
-/** Words in low boxes come up more often. */
-export const weightOf = (s: WordStat) => MAX_BOX + 1 - s.box + (s.seen === 0 ? 1 : 0);
+/**
+ * Quiz weight: words the child has met but keeps missing come up most,
+ * well-known words least. Words never shown yet are possible but less likely,
+ * so quizzes mostly ask what Look and listen has already taught.
+ */
+export const weightOf = (s: WordStat) => (s.seen === 0 ? 0.4 : MAX_BOX + 1 - s.box);
+
+/**
+ * Words for one Look and listen round: first words the child keeps missing,
+ * then words never shown, then the rest from least to best known.
+ * Ties are shuffled so each round feels new.
+ */
+export function pickLearnSet<T extends { id: string }>(
+  pool: T[],
+  n: number,
+  p: Progress,
+  rand: () => number = Math.random,
+): T[] {
+  const rank = (w: T) => {
+    const s = stat(p, w.id);
+    if (s.wrong > 0 && s.box <= 1) return 0;
+    if (s.seen === 0) return 1;
+    return 2 + s.box;
+  };
+  return shuffle(pool, rand)
+    .map((w) => ({ w, r: rank(w) }))
+    .sort((a, b) => a.r - b.r)
+    .slice(0, n)
+    .map((x) => x.w);
+}
 
 /**
  * Pick `n` target words, weighted toward words the child knows less,

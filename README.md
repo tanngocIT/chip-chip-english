@@ -6,13 +6,26 @@ Chạy được trên iPad, tablet Android, điện thoại và máy tính. Có 
 
 ## Bé học được gì
 
-**10 chủ đề, 114 từ:** con vật, trái cây, màu sắc, con số 1–10, xe cộ, cơ thể, gia đình, đồ ăn, đồ chơi và đồ trong nhà, thiên nhiên.
+**10 chủ đề, 295 từ:**
+
+| Chủ đề | Số từ |
+|---|---|
+| Con vật | 40 |
+| Đồ chơi & đồ trong nhà | 40 |
+| Đồ ăn | 37 |
+| Rau củ quả | 36 |
+| Thiên nhiên | 36 |
+| Xe cộ | 34 |
+| Gia đình & nghề | 24 |
+| Con số 1–20 (có chữ số và số ngôi sao để đếm) | 20 |
+| Cơ thể | 16 |
+| Màu sắc | 12 |
 
 Mỗi chủ đề có 4 trò:
 
 | Trò | Bé làm gì | Chấm điểm |
 |---|---|---|
-| **Look and listen** (thẻ từ) | Xem hình, nghe từ và một câu ngắn ("It's a cat."). Chạm vào thẻ để nghe lại. | Học xong lần đầu được 1 sticker |
+| **Look and listen** (thẻ từ) | Mỗi lượt 6–10 thẻ (theo tuổi): từ bé hay nhầm ra trước, rồi đến từ chưa học, thứ tự xáo mỗi lần. Xem hình, nghe từ và một câu ngắn ("It's a cat."), chạm vào thẻ để nghe lại. | Học xong lần đầu được 1 sticker |
 | **Listen and tap** | Nghe "Where is the cat?" rồi chạm đúng hình | 1–3 sao |
 | **Find the shadow** | Kéo (hoặc chạm) hình vào đúng cái bóng | 1–3 sao |
 | **Say it** | Nghe mẫu, bấm micro và nói từ đó | 1–3 sao |
@@ -23,15 +36,15 @@ Mỗi chủ đề có 4 trò:
 - Đạt từ 2 sao trở lên được thưởng **một sticker mới** cho album (31 sticker).
 - Chọn sai không bị trừ điểm. App chỉ phát tiếng "boop" nhẹ, làm mờ hình sai và đọc lại câu hỏi.
 - Bài **Say it** chấm dễ: chấp nhận từ đồng âm ("for" → four, "I" → eye) và phát âm gần đúng. Nói hai lần chưa được thì app vẫn khen "Good try!", đọc mẫu rồi chuyển câu, để bé không bị kẹt.
-- App ghi nhớ từ nào bé hay nhầm (theo kiểu hộp Leitner) và cho từ đó xuất hiện nhiều hơn ở các lần chơi sau.
+- App ghi nhớ từ nào bé hay nhầm (theo kiểu hộp Leitner) và cho từ đó xuất hiện nhiều hơn ở các lần chơi sau. Các trò chơi chủ yếu hỏi những từ bé đã xem ở Look and listen, thỉnh thoảng mới có từ mới.
 
 **Độ khó theo tuổi** (bố mẹ chọn trong phần cài đặt):
 
-| Tuổi | Số hình mỗi câu | Listen and tap / Find the shadow | Say it |
-|---|---|---|---|
-| 2–3 | 2 | 8 câu | 6 câu |
-| 4–5 | 3 | 10 câu | 8 câu |
-| 6 | 4 | 12 câu | 10 câu |
+| Tuổi | Look and listen | Số hình mỗi câu | Listen and tap / Find the shadow | Say it |
+|---|---|---|---|---|
+| 2–3 | 6 thẻ | 2 | 8 câu | 6 câu |
+| 4–5 | 8 thẻ | 3 | 10 câu | 8 câu |
+| 6 | 10 thẻ | 4 | 12 câu | 10 câu |
 
 ## Phần dành cho bố mẹ
 
@@ -50,7 +63,7 @@ Toàn bộ tiến độ chỉ lưu trên máy (localStorage). App không có tà
 
 ## Âm thanh và hình ảnh đến từ đâu
 
-- **Hình:** [Fluent Emoji](https://github.com/microsoft/fluentui-emoji) của Microsoft, phong cách *Flat*, giấy phép **MIT**, dùng miễn phí cả cho mục đích thương mại. File SVG nằm trong `public/img`, nên app nhẹ (khoảng 700 KB) và nét ở mọi kích thước. Kiểu viền trắng như sticker cắt rời được làm bằng CSS.
+- **Hình:** [Fluent Emoji](https://github.com/microsoft/fluentui-emoji) của Microsoft, phong cách *Flat*, giấy phép **MIT**, dùng miễn phí cả cho mục đích thương mại. File SVG nằm trong `public/img`, nên app nhẹ (khoảng 2 MB) và nét ở mọi kích thước. Kiểu viền trắng như sticker cắt rời được làm bằng CSS.
 - **Giọng đọc:** giọng tiếng Anh có sẵn trên máy (Web Speech API). App tự chọn giọng tốt nhất nếu có, ví dụ "Google US English", Samantha (iOS) hoặc Aria/Jenny (Windows). Cách này không tốn tiền và chạy offline.
 - **Nhận giọng nói:** SpeechRecognition của trình duyệt. Có trên Chrome (Android, máy tính) và Safari mới. Trình duyệt nào không hỗ trợ thì bài Say it tự ẩn đi.
 - **Hiệu ứng âm thanh** (đúng, sai, sao, sticker): tạo bằng Web Audio, không cần file.
