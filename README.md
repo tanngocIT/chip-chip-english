@@ -28,7 +28,7 @@ Mỗi chủ đề có 4 trò:
 | **Look and listen** (thẻ từ) | Mỗi lượt 10–15 thẻ (theo tuổi): từ bé hay nhầm ra trước, rồi đến từ chưa học, thứ tự xáo mỗi lần. Xem hình, nghe từ và một câu ngắn ("It's a cat."), chạm vào thẻ để nghe lại. | Học xong lần đầu được 1 sticker |
 | **Listen and tap** | Nghe "Where is the cat?" rồi chạm đúng hình | 1–3 sao |
 | **Find the shadow** | Kéo (hoặc chạm) hình vào đúng cái bóng | 1–3 sao |
-| **Say it** | Nghe mẫu, bấm micro và nói từ đó | 1–3 sao |
+| **Say it** | Nghe mẫu, bấm micro và nói từ đó. App phát lại giọng bé vừa nói rồi đọc giọng mẫu để bé so sánh; nút bong bóng cho bé nghe lại giọng mình bao nhiêu lần cũng được. | 1–3 sao |
 
 **Cách chấm điểm**
 
@@ -55,11 +55,12 @@ Trong đó có:
 - Chọn độ tuổi.
 - Chỉnh tốc độ đọc. Kéo xong app sẽ đọc thử.
 - Bật đọc thêm nghĩa tiếng Việt ở thẻ từ (cần máy có giọng đọc tiếng Việt).
+- Bật/tắt phát lại giọng bé ở bài Say it (mặc định bật).
 - Giới hạn thời gian chơi mỗi ngày (mặc định 20 phút). Hết giờ, bạn gà Chip sẽ nói "Time to rest" và đưa bé ra màn hình nghỉ.
 - Xem tiến độ: số từ đã thuộc và số sao của từng chủ đề, các từ bé hay nhầm, số sticker đã có.
 - Xóa tiến độ.
 
-Toàn bộ tiến độ chỉ lưu trên máy (localStorage). App không có tài khoản và không gửi dữ liệu đi đâu. Giọng nói của bé chỉ được nhận dạng ngay trong trình duyệt, không ghi âm lại.
+Toàn bộ tiến độ chỉ lưu trên máy (localStorage). App không có tài khoản và không gửi dữ liệu đi đâu. Ở bài Say it, tiếng của bé chỉ giữ tạm trong bộ nhớ để phát lại ngay trong câu đó, không lưu vào máy và không gửi đi đâu (có thể tắt trong phần bố mẹ).
 
 ## Âm thanh và hình ảnh đến từ đâu
 

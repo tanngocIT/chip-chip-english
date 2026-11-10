@@ -28,6 +28,12 @@ export const icon = {
       `<rect x="9" y="3.5" width="6" height="11" rx="3" fill="currentColor"/>` +
         stroke('M6 11.5a6 6 0 0 0 12 0M12 17.5V21'),
     ),
+  // speech bubble with a play mark: "hear my voice"
+  voice: () =>
+    svg(
+      stroke('M5 5.5h14a1.5 1.5 0 0 1 1.5 1.5v8.5a1.5 1.5 0 0 1-1.5 1.5H11l-4.5 3.5V17H5a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 5 5.5z') +
+        `<path d="M10 8.6v5.8l4.8-2.9z" fill="currentColor"/>`,
+    ),
   lock: () =>
     svg(`<rect x="5.5" y="10.5" width="13" height="9.5" rx="2.5" fill="currentColor"/>` + stroke('M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5')),
   star: () =>

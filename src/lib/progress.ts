@@ -14,6 +14,7 @@ export interface Settings {
   age: AgeLevel;
   rate: number; // speech rate
   vietnamese: boolean; // also say the Vietnamese meaning on flashcards
+  playback: boolean; // play the child's own voice back in Say it
   limitMinutes: number; // 0 = no limit
 }
 
@@ -31,6 +32,7 @@ export const defaultSettings = (): Settings => ({
   age: 'small',
   rate: 0.85,
   vietnamese: false,
+  playback: true,
   limitMinutes: 20,
 });
 

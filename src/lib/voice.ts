@@ -148,3 +148,83 @@ export function listen(timeoutMs = 6000): { result: Promise<ListenResult>; stop:
   });
   return { result, stop: () => rec.stop() };
 }
+
+// ---------- recording the child's voice (kept in memory only, never saved or sent) ----------
+
+let micStream: MediaStream | null = null;
+/** Some phones can't record and recognise at the same time; then we only recognise. */
+let recordingClashes = false;
+
+export const canRecord = () =>
+  !recordingClashes && typeof MediaRecorder !== 'undefined' && !!navigator.mediaDevices?.getUserMedia;
+
+export function markRecordingClash() {
+  recordingClashes = true;
+  closeMic();
+}
+
+export async function openMic(): Promise<boolean> {
+  if (micStream) return true;
+  if (!canRecord()) return false;
+  try {
+    micStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function closeMic() {
+  micStream?.getTracks().forEach((t) => t.stop());
+  micStream = null;
+}
+
+const MIME = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/aac'];
+
+/** Start recording; `stop()` resolves with the clip (or null if recording isn't possible). */
+export function startRecording(): { stop: () => Promise<Blob | null> } {
+  if (!micStream) return { stop: async () => null };
+  const type = MIME.find((m) => MediaRecorder.isTypeSupported?.(m));
+  let rec: MediaRecorder;
+  try {
+    rec = new MediaRecorder(micStream, type ? { mimeType: type } : undefined);
+  } catch {
+    return { stop: async () => null };
+  }
+  const chunks: Blob[] = [];
+  rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+  rec.start();
+  return {
+    stop: () =>
+      new Promise((resolve) => {
+        if (rec.state === 'inactive') return resolve(chunks.length ? new Blob(chunks, { type: rec.mimeType }) : null);
+        rec.onstop = () => resolve(chunks.length ? new Blob(chunks, { type: rec.mimeType }) : null);
+        rec.stop();
+      }),
+  };
+}
+
+let playing: HTMLAudioElement | null = null;
+
+/** Play a recorded clip. Resolves when it ends (or fails). */
+export function playClip(clip: Blob | null): Promise<void> {
+  if (!clip) return Promise.resolve();
+  playing?.pause();
+  const url = URL.createObjectURL(clip);
+  const a = new Audio(url);
+  playing = a;
+  return new Promise((resolve) => {
+    const done = () => {
+      URL.revokeObjectURL(url);
+      if (playing === a) playing = null;
+      resolve();
+    };
+    a.onended = done;
+    a.onerror = done;
+    a.play().catch(done);
+  });
+}
+
+export const stopClip = () => playing?.pause();

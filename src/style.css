@@ -1042,3 +1042,22 @@ td:not(:first-child) {
     align-content: center;
   }
 }
+
+/* say it: hear my own voice */
+.sayit .pager {
+  align-items: center;
+  gap: clamp(20px, 7vw, 60px);
+}
+
+.round.mine {
+  background: #fff4d6;
+  color: var(--ink);
+}
+
+.round.mine:disabled {
+  opacity: 0.35;
+}
+
+[hidden] {
+  display: none !important;
+}

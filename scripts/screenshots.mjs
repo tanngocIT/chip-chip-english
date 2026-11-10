@@ -11,7 +11,7 @@ fs.mkdirSync('shots', { recursive: true });
 const server = await preview({ preview: { port: 4179, host: '127.0.0.1' } });
 const browser = await puppeteer.launch({
   executablePath: process.env.CHROME ?? '/usr/bin/google-chrome',
-  args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'],
+  args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required', '--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream'],
 });
 const page = await browser.newPage();
 await page.setViewport(vp);
@@ -97,9 +97,20 @@ await page.evaluate(() => {
   window.__heard = document.querySelector('.flash .word').textContent;
 });
 await shot('10-say');
+await page.evaluate(() => {
+  window.__played = 0;
+  const orig = HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play = function () {
+    window.__played++;
+    return orig.call(this);
+  };
+});
 await click('.mic');
-await wait(900);
+await wait(1500);
 await shot('11-say-right');
+const played = await page.evaluate(() => window.__played);
+console.log('voice clips played back:', played);
+if (!played) errors.push('child voice was not played back');
 await click('.bar .round');
 await click('.bar .round');
 
