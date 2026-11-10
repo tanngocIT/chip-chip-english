@@ -32,7 +32,109 @@ function pickVoices() {
   viVoice = voices.find((v) => /^vi/i.test(v.lang)) ?? null;
 }
 
+// ---------- pre-generated English voice (public/voice/*.mp3, made by scripts/gen-voice.mjs) ----------
+// Câu nào có file thì phát file (giọng đồng đều trên mọi máy); câu nào chưa có thì rơi về TTS của trình duyệt.
+
+const base = import.meta.env?.BASE_URL ?? './';
+let clipKeys = new Set<string>();
+const clipUrls = new Map<string, Promise<string | null>>();
+const DEFAULT_RATE = 0.85;
+
+async function loadManifest() {
+  try {
+    const r = await fetch(`${base}voice/manifest.json`);
+    if (r.ok) clipKeys = new Set<string>(await r.json());
+  } catch {
+    /* offline lần đầu hoặc không có: dùng TTS */
+  }
+}
+
+/** Tải file thành blob URL (không dùng Range request, vì Safari phát từ service worker không ổn với Range). */
+function clipUrl(key: string): Promise<string | null> {
+  let p = clipUrls.get(key);
+  if (!p) {
+    p = fetch(`${base}voice/${key}.mp3`)
+      .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
+      .then((b) => URL.createObjectURL(b))
+      .catch(() => {
+        clipUrls.delete(key);
+        return null;
+      });
+    clipUrls.set(key, p);
+  }
+  return p;
+}
+
+/** Same as src/lib/phrases.ts phraseKey; duplicated so the app does not bundle the whole phrase list. */
+function phraseKey(text: string): string {
+  const b = text
+    .toLowerCase()
+    .replace(/[’']/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  const end = text.trim().slice(-1);
+  return (b || 'x') + (end === '!' ? '_e' : end === '?' ? '_q' : end === '.' ? '_p' : '');
+}
+
+let voiceEl: HTMLAudioElement | null = null;
+let sayToken = 0;
+
+/** Play a pre-generated clip. Resolves false if it could not be played (caller then uses TTS). */
+async function playVoiceClip(key: string, speed: number, token: number): Promise<boolean> {
+  const url = await clipUrl(key);
+  if (!url || token !== sayToken) return token === sayToken ? false : true;
+  const a = (voiceEl ??= new Audio());
+  a.src = url;
+  a.playbackRate = speed;
+  a.preservesPitch = true;
+  return new Promise<boolean>((resolve) => {
+    let settled = false;
+    const end = (ok: boolean) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(guard);
+      a.onended = a.onerror = a.onpause = null;
+      resolve(ok);
+    };
+    const guard = setTimeout(() => end(true), 10000);
+    a.onended = () => end(true);
+    a.onerror = () => end(false);
+    a.onpause = () => end(true); // bị cắt bởi lời nói mới
+    a.play().catch(() => end(false));
+  });
+}
+
+function speakTts(text: string, opts: { lang?: 'en' | 'vi'; slow?: boolean }, token: number): Promise<void> {
+  const s = synth();
+  if (!s) return Promise.resolve();
+  return new Promise((resolve) => {
+    const u = new SpeechSynthesisUtterance(text);
+    if (opts.lang === 'vi') {
+      if (viVoice) u.voice = viVoice;
+      u.lang = 'vi-VN';
+      u.rate = 1;
+    } else {
+      if (enVoice) u.voice = enVoice;
+      u.lang = enVoice?.lang ?? 'en-US';
+      u.rate = opts.slow ? rate * 0.8 : rate;
+      u.pitch = 1.1;
+    }
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      clearTimeout(guard);
+      resolve();
+    };
+    const guard = setTimeout(finish, 1500 + text.length * 120);
+    u.onend = u.onerror = finish;
+    if (token === sayToken) s.speak(u);
+    else finish();
+  });
+}
+
 export function initVoice() {
+  void loadManifest();
   const s = synth();
   if (!s) return;
   pickVoices();
@@ -44,49 +146,34 @@ export const setRate = (r: number) => {
 };
 
 export const hasVietnameseVoice = () => !!viVoice;
-export const canSpeak = () => !!synth();
+export const canSpeak = () => !!synth() || clipKeys.size > 0;
 
-/** Speak one or more lines in order. Resolves when done (or after a timeout if the browser stalls). */
-export function say(lines: string | string[], opts: { lang?: 'en' | 'vi'; slow?: boolean } = {}): Promise<void> {
-  const s = synth();
+/** Say one or more lines in order. Resolves when done, or when a newer say() / stopSpeaking() cuts it off. */
+export async function say(lines: string | string[], opts: { lang?: 'en' | 'vi'; slow?: boolean } = {}): Promise<void> {
   const list = Array.isArray(lines) ? lines : [lines];
-  if (!s || list.length === 0) return Promise.resolve();
-  s.cancel();
-  return new Promise((resolve) => {
-    let left = list.length;
-    let done = false;
-    const finish = () => {
-      if (done) return;
-      done = true;
-      resolve();
-    };
-    const totalChars = list.join(' ').length;
-    const guard = setTimeout(finish, 1500 + totalChars * 120);
-    for (const text of list) {
-      const u = new SpeechSynthesisUtterance(text);
-      if (opts.lang === 'vi') {
-        if (viVoice) u.voice = viVoice;
-        u.lang = 'vi-VN';
-        u.rate = 1;
-      } else {
-        if (enVoice) u.voice = enVoice;
-        u.lang = enVoice?.lang ?? 'en-US';
-        u.rate = opts.slow ? rate * 0.8 : rate;
-        u.pitch = 1.1;
+  if (list.length === 0) return;
+  const token = ++sayToken;
+  synth()?.cancel();
+  voiceEl?.pause();
+  for (const text of list) {
+    if (token !== sayToken) return;
+    if (opts.lang !== 'vi') {
+      const key = phraseKey(text);
+      if (clipKeys.has(key)) {
+        const speed = (rate / DEFAULT_RATE) * (opts.slow ? 0.8 : 1);
+        if (await playVoiceClip(key, speed, token)) continue;
+        if (token !== sayToken) return;
       }
-      u.onend = u.onerror = () => {
-        left--;
-        if (left <= 0) {
-          clearTimeout(guard);
-          finish();
-        }
-      };
-      s.speak(u);
     }
-  });
+    await speakTts(text, opts, token);
+  }
 }
 
-export const stopSpeaking = () => synth()?.cancel();
+export const stopSpeaking = () => {
+  sayToken++;
+  synth()?.cancel();
+  voiceEl?.pause();
+};
 
 // ---------- recognition ----------
 

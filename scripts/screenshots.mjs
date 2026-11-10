@@ -17,7 +17,7 @@ const page = await browser.newPage();
 await page.setViewport(vp);
 const errors = [];
 page.on('pageerror', (e) => errors.push(e.message));
-page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+page.on('console', (m) => m.type() === 'error' && !m.text().startsWith('Failed to load resource') && errors.push(m.text()));
 
 // Make speech instant so the run is fast and deterministic.
 await page.evaluateOnNewDocument(() => {
@@ -43,6 +43,10 @@ await page.evaluateOnNewDocument(() => {
     this.abort = () => {};
   };
 });
+
+// Chặn file giọng thật để app rơi về TTS giả lập ở trên (nhanh, không chờ âm thanh).
+await page.setRequestInterception(true);
+page.on('request', (r) => (r.url().includes('/voice/') ? r.abort() : r.continue()));
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const shot = async (name) => {

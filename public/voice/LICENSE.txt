@@ -1,0 +1,5 @@
+Các file mp3 trong thư mục này được sinh bằng Piper TTS (https://github.com/rhasspy/piper)
+với giọng en_US-kristin-medium của Bryce Beattie, huấn luyện từ các bản đọc trên LibriVox
+(https://librivox.org), giấy phép: public domain.
+
+Sinh lại bằng: node scripts/gen-voice.mjs <python> <đường dẫn en_US-kristin-medium.onnx>

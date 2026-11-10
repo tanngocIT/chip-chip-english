@@ -48,7 +48,7 @@ Mỗi chủ đề có 4 trò:
 
 ## Phần dành cho bố mẹ
 
-Giữ nút ổ khóa ở góc dưới bên phải khoảng 1,5 giây, rồi chạm vào con số được viết bằng chữ (ví dụ "ba mươi bảy"). Bé nhỏ chưa đọc được nên sẽ không tự vào được.
+Giữ nút bánh răng ở góc dưới bên phải khoảng 1,5 giây, rồi chạm vào con số được viết bằng chữ (ví dụ "ba mươi bảy"). Bé nhỏ chưa đọc được nên sẽ không tự vào được.
 
 Trong đó có:
 
@@ -65,7 +65,7 @@ Toàn bộ tiến độ chỉ lưu trên máy (localStorage). App không có tà
 ## Âm thanh và hình ảnh đến từ đâu
 
 - **Hình:** [Fluent Emoji](https://github.com/microsoft/fluentui-emoji) của Microsoft, phong cách *Flat*, giấy phép **MIT**, dùng miễn phí cả cho mục đích thương mại. File SVG nằm trong `public/img`, nên app nhẹ (khoảng 2 MB) và nét ở mọi kích thước. Kiểu viền trắng như sticker cắt rời được làm bằng CSS.
-- **Giọng đọc:** giọng tiếng Anh có sẵn trên máy (Web Speech API). App tự chọn giọng tốt nhất nếu có, ví dụ "Google US English", Samantha (iOS) hoặc Aria/Jenny (Windows). Cách này không tốn tiền và chạy offline.
+- **Giọng đọc:** giọng tiếng Anh là file mp3 sinh sẵn bằng Piper (giọng `en_US-kristin-medium`, public domain), nên giống nhau trên mọi máy và chạy offline. Câu nào chưa có file thì dùng giọng có sẵn trên máy (Web Speech API). Tiếng Việt vẫn dùng giọng của máy. Cách này không tốn tiền.
 - **Nhận giọng nói:** SpeechRecognition của trình duyệt. Có trên Chrome (Android, máy tính) và Safari mới. Trình duyệt nào không hỗ trợ thì bài Say it tự ẩn đi.
 - **Hiệu ứng âm thanh** (đúng, sai, sao, sticker): tạo bằng Web Audio, không cần file.
 
@@ -98,7 +98,8 @@ src/
   lib/content.ts       # dựng câu: a/an/the, câu hỏi, câu mô tả
   lib/progress.ts      # chấm sao, hộp Leitner, chọn từ, sticker, lưu tiến độ, giới hạn giờ
   lib/match.ts         # chấm phát âm dễ tính (đồng âm + khoảng cách Levenshtein)
-  lib/voice.ts         # đọc (TTS) và nghe (SpeechRecognition)
+  lib/voice.ts         # phát mp3 sinh sẵn (thiếu thì TTS) và nghe (SpeechRecognition)
+  lib/phrases.ts       # danh sách mọi câu cần giọng, tên file mp3
   lib/sfx.ts           # hiệu ứng âm thanh Web Audio
   main.ts              # các màn hình
   style.css            # giao diện
@@ -125,7 +126,6 @@ Các cờ có thể dùng: `"plural": true` (grapes → "They're grapes"), `"mas
 
 ## Hướng phát triển tiếp
 
-- Thay giọng đọc của máy bằng file MP3 tạo sẵn từ Azure Neural TTS hoặc ElevenLabs (giọng trẻ em, đồng đều trên mọi máy).
 - Chấm phát âm chi tiết hơn bằng Azure Pronunciation Assessment.
 - Thêm trò "Find it in the picture" (tìm đồ vật trong một cảnh lớn) cho bé 5–6 tuổi, và các bài hát ngắn.
 - Gói thành app Android/iOS bằng Capacitor.

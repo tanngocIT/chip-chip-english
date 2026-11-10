@@ -42,7 +42,8 @@ src/lib/content.ts      Word/Topic, dựng câu: nounPhrase (a/an/the), describe
 src/lib/progress.ts     levelConfig theo tuổi, starsFor, Leitner (recordAnswer), pickTargets,
                         pickLearnSet, choicesFor, sticker, lưu localStorage, giới hạn phút/ngày
 src/lib/match.ts        chấm phát âm dễ tính: bảng đồng âm SOUNDS_LIKE + Levenshtein
-src/lib/voice.ts        TTS (speechSynthesis), SpeechRecognition, ghi âm MediaRecorder + phát lại
+src/lib/voice.ts        say(): phát mp3 sinh sẵn, thiếu thì TTS (speechSynthesis); SpeechRecognition; ghi âm MediaRecorder + phát lại
+src/lib/phrases.ts      danh sách mọi câu cần giọng + phraseKey (tên file); dùng cho script và test
 src/lib/sfx.ts          hiệu ứng âm thanh bằng Web Audio (không có file âm thanh)
 src/lib/vi.ts           viết số bằng chữ tiếng Việt (cho cổng phụ huynh)
 src/ui.ts               icon SVG, picture() (hình sticker; số = chữ số + N ngôi sao), stars, dots
@@ -51,6 +52,7 @@ src/main.ts             tất cả màn hình: splash, home, topic, learn, quiz 
 src/style.css           toàn bộ giao diện
 scripts/copy-assets.mjs chép SVG từ checkout Fluent Emoji vào public/img (theo words.json + stickers.json)
 scripts/make-icons.mjs  tạo icon-192/512 từ mascot
+scripts/gen-voice.mjs   sinh public/voice/*.mp3 + manifest.json bằng Piper (gọi gen-voice.py)
 scripts/screenshots.mjs chơi thử tự động bằng puppeteer-core (giả lập TTS, nhận giọng và micro)
 .github/workflows/deploy.yml  test → build → deploy Pages
 ```
@@ -58,6 +60,10 @@ scripts/screenshots.mjs chơi thử tự động bằng puppeteer-core (giả l�
 `main.ts` có biến `screenId`. Mỗi lần `show()` sẽ tăng nó lên, và các bước async kiểm tra `alive(id)` để dừng khi bé đã sang màn khác. Mọi `await` dài trong một màn đều phải giữ cách làm này.
 
 ## Quyết định đã chốt (đừng đổi khi chưa hỏi)
+
+**Ràng buộc chi phí: 0 đồng.** Mọi giải pháp phải miễn phí hoàn toàn, cả lúc làm lẫn lúc chạy. Không dùng dịch vụ trả phí hay cần thẻ thanh toán (kể cả gói free tier bắt buộc gắn thẻ), không backend phải trả tiền, không tài khoản nhà phát triển trả phí. Hosting hiện tại là GitHub Pages. Khi đề xuất giải pháp, kiểm tra điều này trước và ghi rõ nếu có chi phí ẩn.
+
+**Ràng buộc công sức: AI làm 100%.** Chủ repo chỉ đưa ý tưởng và ý kiến, không làm việc tay nào: không tự tìm nguồn (hình, âm thanh, dữ liệu), không thu âm, không tải hay chuyển file thủ công. Giải pháp nào đòi chủ repo ghi âm, tìm tài nguyên hay thao tác thủ công thì loại. AI phải tự tìm nguồn, tự tạo nội dung, tự chạy và kiểm tra. Việc thật sự không tự động hoá được (ví dụ cần đăng nhập tài khoản của họ) thì nói rõ ngay từ lúc đề xuất.
 
 **Nội dung**
 - 10 chủ đề. Mỗi chủ đề 12–40 từ:
@@ -78,7 +84,7 @@ scripts/screenshots.mjs chơi thử tự động bằng puppeteer-core (giả l�
   Màu, số và cơ thể ít từ hơn vì thiếu từ hoặc hình phù hợp.
 - Hình lấy từ **Fluent Emoji Flat** (Microsoft, MIT). Người và tay chân dùng tông da **Medium-Light** (cờ `skin`).
 - Viền trắng kiểu sticker cắt rời là dấu ấn thị giác chính. Nó được làm bằng nhiều lớp `drop-shadow` trắng trong CSS.
-- Giọng đọc dùng TTS của trình duyệt (miễn phí, offline). Chưa dùng file MP3.
+- Giọng đọc tiếng Anh dùng file mp3 sinh sẵn bằng Piper (giọng `en_US-kristin-medium`, public domain) trong `public/voice/`. Câu nào chưa có file thì rơi về TTS của trình duyệt. Tiếng Việt vẫn dùng TTS trình duyệt. Thêm từ mới thì chạy lại `node scripts/gen-voice.mjs <python> <model.onnx>` (chỉ sinh câu còn thiếu; cần piper-tts, soundfile, scipy, faster-whisper). Từ 1-2 chữ được sinh qua câu "Say, X." rồi cắt bỏ chữ "Say", vì đọc riêng từ đơn thì mô hình nuốt âm (cat nghe như tack); `npm test` sẽ báo nếu thiếu file.
 
 **Trò chơi** (mỗi chủ đề có 4 trò)
 1. Look and listen (thẻ từ)
@@ -103,7 +109,7 @@ scripts/screenshots.mjs chơi thử tự động bằng puppeteer-core (giả l�
 - `pickLearnSet` xếp từ hay nhầm lên trước, rồi đến từ chưa xem, rồi từ ít thuộc nhất; các từ cùng mức được xáo.
 
 **Phần bố mẹ**
-- Cách mở: giữ nút ổ khóa 1,5 giây, rồi chạm đúng con số được viết bằng chữ tiếng Việt.
+- Cách mở: giữ nút bánh răng 1,5 giây, rồi chạm đúng con số được viết bằng chữ tiếng Việt.
 - Cài đặt gồm: độ tuổi, tốc độ đọc, nghĩa tiếng Việt, phát lại giọng bé (mặc định bật), giới hạn phút mỗi ngày (mặc định 20).
 - Phần này còn có bảng tiến độ và nút xóa tiến độ.
 
@@ -141,13 +147,14 @@ scripts/screenshots.mjs chơi thử tự động bằng puppeteer-core (giả l�
 
 - Một số Android không cho ghi âm và nhận giọng nói cùng lúc. Khi gặp lỗi `audio-capture`, app tự tắt ghi âm (`markRecordingClash`).
 - Bài Say it bị ẩn trên trình duyệt không có SpeechRecognition (ví dụ Firefox).
-- Chất lượng giọng đọc phụ thuộc máy. Tốt nhất là "Google US English" (Chrome) hoặc Samantha (iOS).
+- Giọng tiếng Anh là mp3 nên giống nhau trên mọi máy. Giọng Việt (nếu bật) và câu chưa có mp3 vẫn phụ thuộc máy.
+- File mp3 phát qua blob URL (không dùng Range request) vì Safari phát từ service worker dễ lỗi với Range.
+- Cache offline thêm khoảng 7 MB cho giọng.
 - Bản cài như app chạy offline, nên sau khi deploy có thể phải mở lại app một lần mới thấy bản mới.
 
 ## Ý tưởng tiếp theo (chưa làm)
 
-- Thay TTS bằng MP3 tạo sẵn (Azure Neural TTS hoặc ElevenLabs) cho giọng đồng đều.
-- Chấm phát âm kỹ hơn bằng Azure Pronunciation Assessment.
+- Giọng đọc đồng đều hơn bằng cách miễn phí (xem `IMPROVEMENTS.md`). Azure, ElevenLabs và Azure Pronunciation Assessment bị loại vì trái ràng buộc 0 đồng.
 - Thêm trò "Find it in the picture" cho bé 5–6 tuổi, và bài hát ngắn.
 - Hiện chữ dưới cái bóng ở bài Find the shadow (đã hỏi chủ repo, chưa có câu trả lời).
-- Đóng gói thành app Android/iOS bằng Capacitor.
+- Đóng gói thành app Android/iOS bằng Capacitor. Lưu ý: đưa lên App Store cần tài khoản Apple Developer trả phí và Google Play cần phí đăng ký một lần, nên trái ràng buộc 0 đồng. Cứ dùng PWA.
