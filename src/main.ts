@@ -349,6 +349,23 @@ function quiz(t: Topic, mode: 'listen' | 'match') {
 
     const drop = mode === 'match' ? h('div', { class: 'drop' }, picture(w, 'lg shadow')) : null;
 
+    // The word being asked, written big so the child links the sound to the letters.
+    const wordTag =
+      mode === 'listen'
+        ? h(
+            'button',
+            {
+              class: 'target-word pop-in',
+              'aria-label': `Hear ${w.word}`,
+              onclick: () => {
+                sfx.tap();
+                void say(w.word, { slow: true });
+              },
+            },
+            w.word,
+          )
+        : null;
+
     const answered = async (btn: HTMLElement, o: Word) => {
       if (locked) return;
       if (o.id === w.id) {
@@ -393,6 +410,7 @@ function quiz(t: Topic, mode: 'listen' | 'match') {
         { class: `screen lesson quiz ${mode}`, style: `--tint:${t.color}` },
         lessonBar(t, targets.length, round, replay),
         drop && h('section', { class: 'stage' }, drop),
+        wordTag && h('section', { class: 'prompt' }, wordTag),
         h('section', { class: `options n${opts.length}` }, optEls),
       ),
     );

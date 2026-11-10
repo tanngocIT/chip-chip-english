@@ -987,3 +987,37 @@ td:not(:first-child) {
 .home .topics {
   padding-bottom: 84px;
 }
+
+/* listen and tap: the word being asked */
+
+.prompt {
+  display: grid;
+  place-items: center;
+  padding-top: clamp(4px, 3dvh, 28px);
+}
+
+.target-word {
+  background: var(--paper);
+  border-radius: 999px;
+  padding: 2px clamp(28px, 6vw, 48px) 6px;
+  font-size: clamp(44px, 9vw, 76px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  box-shadow: 0 6px 0 rgb(43 58 85 / 0.1);
+}
+
+.target-word:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 rgb(43 58 85 / 0.1);
+}
+
+.listen .options {
+  align-content: start;
+}
+
+@media (orientation: landscape) {
+  .listen .options {
+    align-content: center;
+  }
+}
