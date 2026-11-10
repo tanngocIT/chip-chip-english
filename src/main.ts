@@ -187,7 +187,7 @@ function home() {
 /** Grown-ups button: needs a 1.5 s press so little fingers don't open it by accident. */
 function holdButton(onDone: () => void) {
   let t: number | undefined;
-  const btn = h('button', { class: 'grownup', 'aria-label': 'Dành cho bố mẹ (giữ để mở)' }, icon.lock(), h('i', { class: 'fill' }));
+  const btn = h('button', { class: 'grownup', 'aria-label': 'Dành cho bố mẹ (giữ để mở)' }, icon.gear(), h('i', { class: 'fill' }));
   const start = (e: Event) => {
     e.preventDefault();
     btn.classList.add('holding');
