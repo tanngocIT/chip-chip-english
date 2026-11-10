@@ -50,11 +50,11 @@ export const emptyProgress = (): Progress => ({
 export function levelConfig(age: AgeLevel) {
   switch (age) {
     case 'small':
-      return { choices: 2, rounds: 8, sayRounds: 6, learnCount: 6 };
+      return { choices: 2, rounds: 8, sayRounds: 6, learnCount: 10 };
     case 'middle':
-      return { choices: 3, rounds: 10, sayRounds: 8, learnCount: 8 };
+      return { choices: 3, rounds: 10, sayRounds: 8, learnCount: 12 };
     case 'big':
-      return { choices: 4, rounds: 12, sayRounds: 10, learnCount: 10 };
+      return { choices: 4, rounds: 12, sayRounds: 10, learnCount: 15 };
   }
 }
 

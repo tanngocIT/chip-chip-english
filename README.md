@@ -25,7 +25,7 @@ Mỗi chủ đề có 4 trò:
 
 | Trò | Bé làm gì | Chấm điểm |
 |---|---|---|
-| **Look and listen** (thẻ từ) | Mỗi lượt 6–10 thẻ (theo tuổi): từ bé hay nhầm ra trước, rồi đến từ chưa học, thứ tự xáo mỗi lần. Xem hình, nghe từ và một câu ngắn ("It's a cat."), chạm vào thẻ để nghe lại. | Học xong lần đầu được 1 sticker |
+| **Look and listen** (thẻ từ) | Mỗi lượt 10–15 thẻ (theo tuổi): từ bé hay nhầm ra trước, rồi đến từ chưa học, thứ tự xáo mỗi lần. Xem hình, nghe từ và một câu ngắn ("It's a cat."), chạm vào thẻ để nghe lại. | Học xong lần đầu được 1 sticker |
 | **Listen and tap** | Nghe "Where is the cat?" rồi chạm đúng hình | 1–3 sao |
 | **Find the shadow** | Kéo (hoặc chạm) hình vào đúng cái bóng | 1–3 sao |
 | **Say it** | Nghe mẫu, bấm micro và nói từ đó | 1–3 sao |
@@ -42,9 +42,9 @@ Mỗi chủ đề có 4 trò:
 
 | Tuổi | Look and listen | Số hình mỗi câu | Listen and tap / Find the shadow | Say it |
 |---|---|---|---|---|
-| 2–3 | 6 thẻ | 2 | 8 câu | 6 câu |
-| 4–5 | 8 thẻ | 3 | 10 câu | 8 câu |
-| 6 | 10 thẻ | 4 | 12 câu | 10 câu |
+| 2–3 | 10 thẻ | 2 | 8 câu | 6 câu |
+| 4–5 | 12 thẻ | 3 | 10 câu | 8 câu |
+| 6 | 15 thẻ | 4 | 12 câu | 10 câu |
 
 ## Phần dành cho bố mẹ
 
