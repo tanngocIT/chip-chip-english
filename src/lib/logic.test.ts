@@ -88,6 +88,11 @@ group('scoring', () => {
   it('level config matches age', () => {
     expect(levelConfig('small').choices).toBe(2);
     expect(levelConfig('big').choices).toBe(4);
+    for (const a of ['small', 'middle', 'big'] as const) {
+      const c = levelConfig(a);
+      expect(c.rounds).toBeGreaterThanOrEqual(8);
+      expect(c.sayRounds).toBeLessThan(c.rounds);
+    }
   });
 });
 

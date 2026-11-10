@@ -42,15 +42,19 @@ export const emptyProgress = (): Progress => ({
   minutesToday: { date: '', minutes: 0 },
 });
 
-/** How many answer pictures and rounds a game has for each age group. */
+/**
+ * How many answer pictures and questions a game has for each age group.
+ * `rounds` is for Listen and tap / Find the shadow, `sayRounds` for Say it
+ * (speaking is more tiring, so it has fewer).
+ */
 export function levelConfig(age: AgeLevel) {
   switch (age) {
     case 'small':
-      return { choices: 2, rounds: 5 };
+      return { choices: 2, rounds: 8, sayRounds: 6 };
     case 'middle':
-      return { choices: 3, rounds: 6 };
+      return { choices: 3, rounds: 10, sayRounds: 8 };
     case 'big':
-      return { choices: 4, rounds: 8 };
+      return { choices: 4, rounds: 12, sayRounds: 10 };
   }
 }
 

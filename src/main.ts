@@ -470,7 +470,7 @@ function finishQuiz(t: Topic, a: Activity, firstTry: number, rounds: number) {
 
 function sayIt(t: Topic) {
   const pool = wordsIn(t.id);
-  const rounds = Math.min(5, levelConfig(P.settings.age).rounds);
+  const rounds = levelConfig(P.settings.age).sayRounds;
   const targets = pickTargets(pool, rounds, P);
   let round = 0;
   let firstTry = 0;
@@ -795,7 +795,7 @@ function parentArea() {
       h(
         'section',
         { class: 'panel' },
-        field('Độ tuổi của bé', age, 'Quyết định số hình mỗi câu (2, 3 hoặc 4) và số câu mỗi bài.'),
+        field('Độ tuổi của bé', age, '2–3 tuổi: 2 hình, 8 câu; 4–5 tuổi: 3 hình, 10 câu; 6 tuổi: 4 hình, 12 câu. Bài Say it ít hơn 2 câu.'),
         field('Tốc độ đọc', rate, 'Kéo xong sẽ đọc thử.'),
         field(
           'Đọc thêm nghĩa tiếng Việt ở thẻ từ',

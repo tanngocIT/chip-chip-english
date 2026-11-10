@@ -27,11 +27,11 @@ Mỗi chủ đề có 4 trò:
 
 **Độ khó theo tuổi** (bố mẹ chọn trong phần cài đặt):
 
-| Tuổi | Số hình mỗi câu | Số câu mỗi bài |
-|---|---|---|
-| 2–3 | 2 | 5 |
-| 4–5 | 3 | 6 |
-| 6 | 4 | 8 |
+| Tuổi | Số hình mỗi câu | Listen and tap / Find the shadow | Say it |
+|---|---|---|---|
+| 2–3 | 2 | 8 câu | 6 câu |
+| 4–5 | 3 | 10 câu | 8 câu |
+| 6 | 4 | 12 câu | 10 câu |
 
 ## Phần dành cho bố mẹ
 
