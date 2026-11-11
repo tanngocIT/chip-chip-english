@@ -21,14 +21,16 @@ Chạy được trên iPad, tablet Android, điện thoại và máy tính. Có 
 | Cơ thể | 16 |
 | Màu sắc | 12 |
 
-Mỗi chủ đề có 4 trò:
+Mỗi chủ đề có 6 trò:
 
 | Trò | Bé làm gì | Chấm điểm |
 |---|---|---|
 | **Look and listen** (thẻ từ) | Mỗi lượt 10–15 thẻ (theo tuổi): từ bé hay nhầm ra trước, rồi đến từ chưa học, thứ tự xáo mỗi lần. Xem hình, nghe từ và một câu ngắn ("It's a cat."), chạm vào thẻ để nghe lại. | Học xong lần đầu được 1 sticker |
 | **Listen and tap** | Nghe "Where is the cat?" rồi chạm đúng hình | 1–3 sao |
-| **Find the shadow** | Kéo (hoặc chạm) hình vào đúng cái bóng | 1–3 sao |
+| **Find the shadow** | Kéo (hoặc chạm) hình vào đúng cái bóng. Ghép đúng thì chữ của từ hiện ra dưới hình. | 1–3 sao |
+| **Find it** (tìm trong tranh) | Một tranh có 6–12 hình. Nghe "Where is the cat?" rồi tìm đúng hình trong tranh; hình đã tìm được thì mờ đi. | 1–3 sao |
 | **Say it** | Nghe mẫu, bấm micro và nói từ đó. App phát lại giọng bé vừa nói rồi đọc giọng mẫu để bé so sánh; nút bong bóng cho bé nghe lại giọng mình bao nhiêu lần cũng được. | 1–3 sao |
+| **Sing along** (đọc theo nhạc) | Hình nhún theo nhịp trên nền giai điệu "Twinkle, twinkle", Chip đọc theo nhịp: "cat, cat, it's a cat." Bé chỉ cần nghe và đọc theo, không có câu hỏi. | 3 sao, không có sticker |
 
 **Cách chấm điểm**
 
@@ -40,11 +42,11 @@ Mỗi chủ đề có 4 trò:
 
 **Độ khó theo tuổi** (bố mẹ chọn trong phần cài đặt):
 
-| Tuổi | Look and listen | Số hình mỗi câu | Listen and tap / Find the shadow | Say it |
-|---|---|---|---|---|
-| 2–3 | 10 thẻ | 2 | 8 câu | 6 câu |
-| 4–5 | 12 thẻ | 3 | 10 câu | 8 câu |
-| 6 | 15 thẻ | 4 | 12 câu | 10 câu |
+| Tuổi | Look and listen | Số hình mỗi câu | Listen and tap / Find the shadow | Say it | Find it | Sing along |
+|---|---|---|---|---|---|---|
+| 2–3 | 10 thẻ | 2 | 8 câu | 6 câu | tranh 6 hình, tìm 4 | 6 từ |
+| 4–5 | 12 thẻ | 3 | 10 câu | 8 câu | tranh 9 hình, tìm 6 | 8 từ |
+| 6 | 15 thẻ | 4 | 12 câu | 10 câu | tranh 12 hình, tìm 8 | 8 từ |
 
 ## Phần dành cho bố mẹ
 
@@ -59,6 +61,7 @@ Trong đó có:
 - Giới hạn thời gian chơi mỗi ngày (mặc định 20 phút). Hết giờ, bạn gà Chip sẽ nói "Time to rest" và đưa bé ra màn hình nghỉ.
 - Xem tiến độ: số từ đã thuộc và số sao của từng chủ đề, các từ bé hay nhầm, số sticker đã có.
 - Xóa tiến độ.
+- **Cài app ra màn hình chính.** Trên Android và máy tính (Chrome, Edge) có nút bấm để cài ngay. Trên iPhone/iPad, Apple không cho web tự mở hộp thoại cài nên app hiện hướng dẫn: mở bằng Safari, bấm Chia sẻ rồi chọn Thêm vào Màn hình chính.
 
 Toàn bộ tiến độ chỉ lưu trên máy (localStorage). App không có tài khoản và không gửi dữ liệu đi đâu. Ở bài Say it, tiếng của bé chỉ giữ tạm trong bộ nhớ để phát lại ngay trong câu đó, không lưu vào máy và không gửi đi đâu (có thể tắt trong phần bố mẹ).
 
@@ -67,7 +70,7 @@ Toàn bộ tiến độ chỉ lưu trên máy (localStorage). App không có tà
 - **Hình:** [Fluent Emoji](https://github.com/microsoft/fluentui-emoji) của Microsoft, phong cách *Flat*, giấy phép **MIT**, dùng miễn phí cả cho mục đích thương mại. File SVG nằm trong `public/img`, nên app nhẹ (khoảng 2 MB) và nét ở mọi kích thước. Kiểu viền trắng như sticker cắt rời được làm bằng CSS.
 - **Giọng đọc:** giọng tiếng Anh là file mp3 sinh sẵn bằng Piper (giọng `en_US-kristin-medium`, public domain), nên giống nhau trên mọi máy và chạy offline. Câu nào chưa có file thì dùng giọng có sẵn trên máy (Web Speech API). Tiếng Việt vẫn dùng giọng của máy. Cách này không tốn tiền.
 - **Nhận giọng nói:** SpeechRecognition của trình duyệt. Có trên Chrome (Android, máy tính) và Safari mới. Trình duyệt nào không hỗ trợ thì bài Say it tự ẩn đi.
-- **Hiệu ứng âm thanh** (đúng, sai, sao, sticker): tạo bằng Web Audio, không cần file.
+- **Hiệu ứng âm thanh** (đúng, sai, sao, sticker) và giai điệu bài Sing along: tạo bằng Web Audio, không cần file. Giai điệu là "Twinkle, twinkle" (dân gian, thuộc phạm vi công cộng).
 
 ## Chạy và phát triển
 
@@ -100,7 +103,8 @@ src/
   lib/match.ts         # chấm phát âm dễ tính (đồng âm + khoảng cách Levenshtein)
   lib/voice.ts         # phát mp3 sinh sẵn (thiếu thì TTS) và nghe (SpeechRecognition)
   lib/phrases.ts       # danh sách mọi câu cần giọng, tên file mp3
-  lib/sfx.ts           # hiệu ứng âm thanh Web Audio
+  lib/sfx.ts           # hiệu ứng âm thanh và giai điệu bằng Web Audio
+  lib/install.ts       # nút cài app ra màn hình chính
   main.ts              # các màn hình
   style.css            # giao diện
 scripts/

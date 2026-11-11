@@ -29,7 +29,9 @@ Hiện app dùng TTS của trình duyệt, chất lượng tuỳ máy. Các hư�
 
 Khuyên: A trước. B chỉ làm khi thấy giọng hiện tại thực sự là điểm yếu.
 
-## 1. Nút "Cài app ra màn hình chính" (PWA install prompt)
+## 1. Nút "Cài app ra màn hình chính" (PWA install prompt) — ĐÃ LÀM
+
+Đã làm trong `src/lib/install.ts` và mục "Cài app" ở phần bố mẹ. Khác kế hoạch một chỗ: manifest giữ `display: fullscreen` (vẫn cài được), và khi bố mẹ từ chối thì mục này chuyển sang hướng dẫn cài bằng menu trình duyệt thay vì ẩn hẳn. Phần dưới là kế hoạch ban đầu.
 
 **Mục tiêu:** bố mẹ chỉ cần bấm xác nhận là icon app được thêm ra màn hình chính điện thoại, không phải tự tìm trong menu trình duyệt.
 

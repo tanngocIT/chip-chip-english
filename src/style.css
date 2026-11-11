@@ -1061,3 +1061,117 @@ td:not(:first-child) {
 [hidden] {
   display: none !important;
 }
+
+/* find the shadow: the word shows up once the picture is in place */
+.drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.drop .word {
+  font-size: clamp(30px, 6vw, 46px);
+  font-weight: 800;
+  line-height: 1.1;
+  visibility: hidden;
+}
+
+.drop.filled .word {
+  visibility: visible;
+  animation: pop 0.42s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+
+/* find it: many stickers scattered on the meadow */
+.dots-wrap {
+  display: grid;
+}
+
+.find {
+  gap: 10px;
+}
+
+.scene {
+  --cols: 3;
+  --rows: 2;
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  grid-template-rows: repeat(var(--rows), 1fr);
+  place-items: center;
+  gap: 6px;
+  background: rgb(255 255 255 / 0.55);
+  border-radius: var(--r-card);
+  padding: 12px;
+  box-shadow: inset 0 -8px 0 rgb(43 58 85 / 0.05);
+}
+
+.scene.s9 { --cols: 3; --rows: 3; }
+.scene.s12 { --cols: 4; --rows: 3; }
+
+@media (orientation: portrait) {
+  .scene { --cols: 2; --rows: 3; }
+  .scene.s9 { --cols: 3; --rows: 3; }
+  .scene.s12 { --cols: 3; --rows: 4; }
+}
+
+.spot {
+  --size: min(calc((min(100vw, 940px) - 80px) / var(--cols)), calc((100dvh - 150px) / var(--rows)));
+  width: calc(var(--size) * 0.86);
+  height: calc(var(--size) * 0.86);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  transform: rotate(var(--tilt, 0deg));
+  transition: opacity 0.4s, transform 0.15s;
+  touch-action: manipulation;
+}
+
+.spot:nth-child(odd) { translate: 0 -4%; }
+.spot:nth-child(3n) { translate: 5% 5%; }
+
+.spot .pic {
+  --s: 100%;
+  width: 100%;
+}
+
+.spot:active {
+  transform: rotate(var(--tilt, 0deg)) scale(0.94);
+}
+
+.spot.found {
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+/* sing along: the picture bounces on the beat (BEAT = 0.5s in main.ts) */
+.beat {
+  animation: beat 0.5s ease-in-out infinite;
+}
+
+@keyframes beat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-5%) scale(1.04); }
+}
+
+/* grown-ups: install */
+.primary {
+  align-self: flex-start;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  background: var(--leaf);
+  color: var(--paper);
+  box-shadow: 0 4px 0 var(--leaf-deep);
+}
+
+.steps {
+  margin: 0;
+  padding-left: 1.3em;
+  line-height: 1.7;
+}
+
+.steps svg {
+  width: 22px;
+  height: 22px;
+  vertical-align: -5px;
+}

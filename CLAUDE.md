@@ -26,6 +26,7 @@ npm run dev        # http://localhost:5173, có --host để mở từ iPad/đi�
 npm test           # vitest: src/lib/logic.test.ts
 npm run build      # tsc + vite build -> dist/ (có service worker, chạy offline)
 npm run shots      # cần build trước; Chrome headless tự chơi qua mọi màn và chụp ảnh vào shots/
+                   # thêm tham số: node scripts/screenshots.mjs [phone|tablet] [small|middle|big]
                    # Windows: đặt biến CHROME="C:\Program Files\Google\Chrome\Application\chrome.exe"
 ```
 
@@ -40,14 +41,15 @@ src/data/words.json     chủ đề + 295 từ (id, topic, vi, asset, cờ)
 src/data/stickers.json  31 sticker thưởng (tên thư mục Fluent Emoji)
 src/lib/content.ts      Word/Topic, dựng câu: nounPhrase (a/an/the), describe, question
 src/lib/progress.ts     levelConfig theo tuổi, starsFor, Leitner (recordAnswer), pickTargets,
-                        pickLearnSet, choicesFor, sticker, lưu localStorage, giới hạn phút/ngày
+                        pickLearnSet, pickScene (Find it), choicesFor, sticker, lưu localStorage, giới hạn phút/ngày
 src/lib/match.ts        chấm phát âm dễ tính: bảng đồng âm SOUNDS_LIKE + Levenshtein
 src/lib/voice.ts        say(): phát mp3 sinh sẵn, thiếu thì TTS (speechSynthesis); SpeechRecognition; ghi âm MediaRecorder + phát lại
 src/lib/phrases.ts      danh sách mọi câu cần giọng + phraseKey (tên file); dùng cho script và test
-src/lib/sfx.ts          hiệu ứng âm thanh bằng Web Audio (không có file âm thanh)
+src/lib/sfx.ts          hiệu ứng âm thanh và giai điệu Sing along bằng Web Audio (không có file âm thanh)
+src/lib/install.ts      cài app: beforeinstallprompt (Android/desktop), nhận biết iOS và chế độ đã cài
 src/lib/vi.ts           viết số bằng chữ tiếng Việt (cho cổng phụ huynh)
 src/ui.ts               icon SVG, picture() (hình sticker; số = chữ số + N ngôi sao), stars, dots
-src/main.ts             tất cả màn hình: splash, home, topic, learn, quiz (listen/match), sayIt,
+src/main.ts             tất cả màn hình: splash, home, topic, learn, quiz (listen/match), findIt, singAlong, sayIt,
                         result, stickerBook, rest, parentGate, parentArea
 src/style.css           toàn bộ giao diện
 scripts/copy-assets.mjs chép SVG từ checkout Fluent Emoji vào public/img (theo words.json + stickers.json)
@@ -86,19 +88,21 @@ scripts/screenshots.mjs chơi thử tự động bằng puppeteer-core (giả l�
 - Viền trắng kiểu sticker cắt rời là dấu ấn thị giác chính. Nó được làm bằng nhiều lớp `drop-shadow` trắng trong CSS.
 - Giọng đọc tiếng Anh dùng file mp3 sinh sẵn bằng Piper (giọng `en_US-kristin-medium`, public domain) trong `public/voice/`. Câu nào chưa có file thì rơi về TTS của trình duyệt. Tiếng Việt vẫn dùng TTS trình duyệt. Thêm từ mới thì chạy lại `node scripts/gen-voice.mjs <python> <model.onnx>` (chỉ sinh câu còn thiếu; cần piper-tts, soundfile, scipy, faster-whisper). Từ 1-2 chữ được sinh qua câu "Say, X." rồi cắt bỏ chữ "Say", vì đọc riêng từ đơn thì mô hình nuốt âm (cat nghe như tack); `npm test` sẽ báo nếu thiếu file.
 
-**Trò chơi** (mỗi chủ đề có 4 trò)
+**Trò chơi** (mỗi chủ đề có 6 trò)
 1. Look and listen (thẻ từ)
 2. Listen and tap: hiện **chữ to của từ đang hỏi** để bé nhận mặt chữ; chạm vào chữ thì đọc chậm.
-3. Find the shadow
-4. Say it: phát lại giọng bé rồi đọc giọng mẫu, có nút bong bóng để nghe lại.
+3. Find the shadow: chữ của từ chỉ hiện **sau khi bé ghép đúng**. Hiện trước thì bé biết đọc sẽ đọc chữ thay vì nhìn hình dáng.
+4. Find it (tìm trong tranh): một tranh nhiều hình, nghe câu hỏi rồi tìm. Không hiện chữ. Hình đã tìm được thì mờ đi, hình sai chỉ lắc (không làm mờ, vì có thể là đáp án của câu sau). Ý tưởng ban đầu chỉ dành cho bé 5–6 tuổi, nhưng đã làm cho mọi tuổi với số hình tăng dần để màn chủ đề giống nhau ở mọi độ tuổi.
+5. Say it: phát lại giọng bé rồi đọc giọng mẫu, có nút bong bóng để nghe lại.
+6. Sing along: đọc theo nhịp trên giai điệu "Twinkle, twinkle" (dân gian, phạm vi công cộng) phát bằng Web Audio. Đây là đọc theo nhạc, không phải bài hát có giọng hát, vì chưa có cách miễn phí nào tạo giọng hát mà AI tự kiểm tra được chất lượng. Mỗi từ 4 ô nhịp (2 giây một ô): từ, từ, câu mô tả, nghỉ. Lời đọc quyết định nhịp: câu nào đọc lâu hơn một ô thì chờ đến vạch ô kế tiếp, nên tốc độ đọc chậm không bị cắt lời. Luôn được 3 sao, không có sticker (để bé không cày sticker bằng trò không cần làm gì).
 
 **Theo độ tuổi** (`levelConfig`)
 
-| Tuổi | Hình/câu | Listen & Shadow | Say it | Look and listen |
-|---|---|---|---|---|
-| 2–3 | 2 | 8 | 6 | 10 thẻ |
-| 4–5 | 3 | 10 | 8 | 12 thẻ |
-| 6 | 4 | 12 | 10 | 15 thẻ |
+| Tuổi | Hình/câu | Listen & Shadow | Say it | Look and listen | Find it (hình/câu tìm) | Sing along |
+|---|---|---|---|---|---|---|
+| 2–3 | 2 | 8 | 6 | 10 thẻ | 6 / 4 | 6 từ |
+| 4–5 | 3 | 10 | 8 | 12 thẻ | 9 / 6 | 8 từ |
+| 6 | 4 | 12 | 10 | 15 thẻ | 12 / 8 | 8 từ |
 
 **Chấm điểm và chọn từ**
 - Sao được tính theo tỉ lệ câu đúng ngay lần đầu: ≥85% được 3 sao, ≥50% được 2 sao, còn lại 1 sao. Bé luôn được ít nhất 1 sao.
@@ -106,12 +110,14 @@ scripts/screenshots.mjs chơi thử tự động bằng puppeteer-core (giả l�
 - Sai không trừ điểm và không dùng màu đỏ. Bài Say it chỉ cho tối đa 2 lần thử, sau đó khen "Good try!" rồi chuyển câu.
 - Leitner có 5 hộp (0–4): đúng thì lên một hộp, sai thì về 0.
 - `pickTargets` dùng trọng số: từ đã xem và hay sai được hỏi nhiều nhất, từ chưa xem có trọng số 0.4. Nhờ vậy trò chơi chủ yếu hỏi những gì Look and listen đã dạy. Không lặp một từ hai câu liền.
-- `pickLearnSet` xếp từ hay nhầm lên trước, rồi đến từ chưa xem, rồi từ ít thuộc nhất; các từ cùng mức được xáo.
+- `pickLearnSet` xếp từ hay nhầm lên trước, rồi đến từ chưa xem, rồi từ ít thuộc nhất; các từ cùng mức được xáo. Sing along cũng dùng hàm này.
+- `pickScene` (Find it) chọn các từ cần tìm theo cùng trọng số với `pickTargets` nhưng không lặp, rồi thêm hình gây nhiễu ngẫu nhiên.
 
 **Phần bố mẹ**
 - Cách mở: giữ nút bánh răng 1,5 giây, rồi chạm đúng con số được viết bằng chữ tiếng Việt.
 - Cài đặt gồm: độ tuổi, tốc độ đọc, nghĩa tiếng Việt, phát lại giọng bé (mặc định bật), giới hạn phút mỗi ngày (mặc định 20).
 - Phần này còn có bảng tiến độ và nút xóa tiến độ.
+- Mục "Cài app": có `beforeinstallprompt` thì hiện nút cài; trên iOS hiện các bước Chia sẻ → Thêm vào Màn hình chính; đã cài thì chỉ báo đã cài. Đặt trong phần bố mẹ để bé không bấm nhầm.
 
 **Quyền riêng tư**
 - Không có tài khoản và không có backend. Tiến độ lưu ở `localStorage` với key `be-hoc-tieng-anh:v1`.
@@ -155,6 +161,6 @@ scripts/screenshots.mjs chơi thử tự động bằng puppeteer-core (giả l�
 ## Ý tưởng tiếp theo (chưa làm)
 
 - Giọng đọc đồng đều hơn bằng cách miễn phí (xem `IMPROVEMENTS.md`). Azure, ElevenLabs và Azure Pronunciation Assessment bị loại vì trái ràng buộc 0 đồng.
-- Thêm trò "Find it in the picture" cho bé 5–6 tuổi, và bài hát ngắn.
-- Hiện chữ dưới cái bóng ở bài Find the shadow (đã hỏi chủ repo, chưa có câu trả lời).
+- Bài hát có giọng hát thật (hiện Sing along chỉ là đọc theo nhịp). Cần một cách miễn phí tạo giọng hát và cách tự kiểm tra chất lượng.
+- Giọng tiếng Việt bằng mp3 sinh sẵn (Piper có giọng `vi_VN`), để mục "nghĩa tiếng Việt" chạy trên cả máy không có giọng Việt. Chưa làm vì cần kiểm tra giấy phép từng giọng và AI chưa có cách tự đánh giá giọng Việt nghe có tự nhiên không.
 - Đóng gói thành app Android/iOS bằng Capacitor. Lưu ý: đưa lên App Store cần tài khoản Apple Developer trả phí và Google Play cần phí đăng ký một lần, nên trái ràng buộc 0 đồng. Cứ dùng PWA.

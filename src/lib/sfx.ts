@@ -15,7 +15,7 @@ export const setMuted = (m: boolean) => {
 };
 
 function tone(freq: number, start: number, dur: number, type: OscillatorType = 'sine', vol = 0.18, slideTo?: number) {
-  if (!ctx || muted) return;
+  if (!ctx || muted) return null;
   const t0 = ctx.currentTime + start;
   const osc = ctx.createOscillator();
   const g = ctx.createGain();
@@ -28,6 +28,39 @@ function tone(freq: number, start: number, dur: number, type: OscillatorType = '
   osc.connect(g).connect(ctx.destination);
   osc.start(t0);
   osc.stop(t0 + dur + 0.05);
+  return osc;
+}
+
+/** Note names used by the Sing along tune. */
+const NOTE: Record<string, number> = { C: 261.63, D: 293.66, E: 329.63, F: 349.23, G: 392.0, A: 440.0 };
+
+/**
+ * Play a few notes, one per beat ('-' is a rest), with a soft bass note under the first.
+ * Returns a function that silences whatever has not sounded yet (used when the child leaves the screen).
+ */
+export function playNotes(notes: string[], beat: number): () => void {
+  const oscs: OscillatorNode[] = [];
+  notes.forEach((n, i) => {
+    const f = NOTE[n];
+    if (!f) return;
+    const o = tone(f * 2, i * beat, beat * 0.9, 'triangle', 0.07);
+    if (o) oscs.push(o);
+  });
+  const first = NOTE[notes[0]];
+  if (first) {
+    const b = tone(first / 2, 0, beat * notes.length * 0.9, 'sine', 0.06);
+    if (b) oscs.push(b);
+  }
+  return () => {
+    for (const o of oscs) {
+      try {
+        o.stop();
+        o.disconnect();
+      } catch {
+        /* already ended */
+      }
+    }
+  };
 }
 
 export const sfx = {

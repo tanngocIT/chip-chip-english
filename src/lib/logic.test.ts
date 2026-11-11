@@ -17,10 +17,13 @@ import {
   stat,
   pickLearnSet,
   recordSeen,
+  pickScene,
+  topicStars,
 } from './progress';
 import { passes, scoreHeard, levenshtein } from './match';
 import { words, topics, wordsIn, nounPhrase, describe, question, stickers } from './content';
 import { viNumber } from './vi';
+import { isIos, isStandalone } from './install';
 
 const seeded = (seed = 1) => () => {
   seed = (seed * 16807) % 2147483647;
@@ -230,5 +233,69 @@ group('grown-ups gate', () => {
     expect(viNumber(45)).toBe('bốn mươi lăm');
     expect(viNumber(70)).toBe('bảy mươi');
     expect(viNumber(99)).toBe('chín mươi chín');
+  });
+});
+
+group('find it scene', () => {
+  it('shows distinct pictures and asks only for ones in the scene, without repeats', () => {
+    for (const t of topics) {
+      for (const a of ['small', 'middle', 'big'] as const) {
+        const c = levelConfig(a);
+        const pool = wordsIn(t.id);
+        const { items, targets } = pickScene(pool, c.sceneItems, c.finds, emptyProgress(), seeded(3));
+        expect(items.length, t.id).toBe(c.sceneItems);
+        expect(new Set(items.map((w) => w.id)).size).toBe(items.length);
+        expect(targets.length).toBe(c.finds);
+        expect(new Set(targets.map((w) => w.id)).size).toBe(targets.length);
+        for (const w of targets) expect(items).toContain(w);
+      }
+    }
+  });
+
+  it('copes with a pool smaller than the scene', () => {
+    const pool = wordsIn('animals').slice(0, 3);
+    const { items, targets } = pickScene(pool, 6, 4, emptyProgress(), seeded(5));
+    expect(items.length).toBe(3);
+    expect(targets.length).toBe(3);
+    expect(pickScene([], 6, 4, emptyProgress()).targets).toEqual([]);
+  });
+
+  it('asks for words the child keeps missing before well-known ones', () => {
+    const pool = wordsIn('animals');
+    const p = emptyProgress();
+    for (const w of pool) for (let i = 0; i < 4; i++) recordAnswer(p, w.id, true);
+    recordAnswer(p, 'cat', false);
+    let hits = 0;
+    for (let s = 1; s <= 200; s++) if (pickScene(pool, 6, 4, p, seeded(s)).targets.some((w) => w.id === 'cat')) hits++;
+    expect(hits).toBeGreaterThan(60); // chance alone would be about 20 of 200
+  });
+
+  it('new games count toward topic stars', () => {
+    const p = emptyProgress();
+    recordStars(p, 'animals', 'find', 3);
+    recordStars(p, 'animals', 'sing', 3);
+    recordStars(p, 'animals', 'listen', 2);
+    expect(topicStars(p, 'animals')).toBe(8);
+  });
+});
+
+group('install prompt', () => {
+  it('tells iPhone and iPad apart from other devices', () => {
+    expect(isIos({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)' })).toBe(true);
+    expect(isIos({ userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)', platform: 'MacIntel', maxTouchPoints: 5 })).toBe(true);
+    expect(isIos({ userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)', platform: 'MacIntel', maxTouchPoints: 0 })).toBe(false);
+    expect(isIos({ userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 8)' })).toBe(false);
+  });
+
+  it('knows when it already runs as an installed app', () => {
+    const win = (mode: string, standalone = false) => ({
+      navigator: { standalone },
+      matchMedia: (q: string) => ({ matches: q === `(display-mode: ${mode})` }),
+    });
+    expect(isStandalone(win('browser'))).toBe(false);
+    expect(isStandalone(win('fullscreen'))).toBe(true);
+    expect(isStandalone(win('standalone'))).toBe(true);
+    expect(isStandalone(win('browser', true))).toBe(true);
+    expect(isStandalone({})).toBe(false);
   });
 });

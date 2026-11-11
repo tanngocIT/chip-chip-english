@@ -36,6 +36,8 @@ export const icon = {
     ),
   // bánh răng: nút vào phần dành cho bố mẹ
   gear: () => svg(`<path d="M19.27 9.78L21.85 10.26L21.85 13.74L19.27 14.22L18.71 15.57L20.19 17.74L17.74 20.19L15.57 18.71L14.22 19.27L13.74 21.85L10.26 21.85L9.78 19.27L8.43 18.71L6.26 20.19L3.81 17.74L5.29 15.57L4.73 14.22L2.15 13.74L2.15 10.26L4.73 9.78L5.29 8.43L3.81 6.26L6.26 3.81L8.43 5.29L9.78 4.73L10.26 2.15L13.74 2.15L14.22 4.73L15.57 5.29L17.74 3.81L20.19 6.26L18.71 8.43zM12 8.6a3.4 3.4 0 1 0 0 6.8a3.4 3.4 0 1 0 0-6.8z" fill="currentColor" fill-rule="evenodd"/>`),
+  // nút Chia sẻ của iOS, dùng trong hướng dẫn cài app
+  share: () => svg(stroke('M12 15V3.5M8 7l4-3.5L16 7M7 11H5.5v9.5h13V11H17')),
   star: () =>
     svg(
       `<path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>`,

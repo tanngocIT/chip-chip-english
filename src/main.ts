@@ -29,6 +29,7 @@ import {
   learnedCount,
   pickTargets,
   pickLearnSet,
+  pickScene,
   choicesFor,
   addMinutes,
   overLimit,
@@ -55,13 +56,15 @@ import {
 } from './lib/voice';
 import { passes } from './lib/match';
 import { viNumber } from './lib/vi';
-import { sfx, unlockAudio } from './lib/sfx';
+import { sfx, unlockAudio, playNotes } from './lib/sfx';
+import { initInstall, installState, promptInstall, onInstallChange } from './lib/install';
 import { icon, picture, starsRow, mascot, roundBtn, progressDots } from './ui';
 
 const app = document.getElementById('app')!;
 const P = load();
 setRate(P.settings.rate);
 initVoice();
+initInstall();
 
 let cleanup: (() => void) | null = null;
 let inParentArea = false;
@@ -216,7 +219,9 @@ const ACTIVITIES: { id: Activity; name: string; img: string; silhouette?: boolea
   { id: 'learn', name: 'Look and listen', img: imgUrl('eye') },
   { id: 'listen', name: 'Listen and tap', img: imgUrl('ear') },
   { id: 'match', name: 'Find the shadow', img: '', silhouette: true },
+  { id: 'find', name: 'Find it', img: imgUrl('find') },
   { id: 'say', name: 'Say it', img: imgUrl('mouth') },
+  { id: 'sing', name: 'Sing along', img: imgUrl('drum') },
 ];
 
 function topicScreen(t: Topic) {
@@ -263,6 +268,8 @@ function startActivity(t: Topic, a: Activity) {
   if (a === 'learn') return learn(t);
   if (a === 'listen') return quiz(t, 'listen');
   if (a === 'match') return quiz(t, 'match');
+  if (a === 'find') return findIt(t);
+  if (a === 'sing') return singAlong(t);
   return sayIt(t);
 }
 
@@ -366,7 +373,10 @@ function quiz(t: Topic, mode: 'listen' | 'match') {
       void (mode === 'listen' ? say(question(w), { slow: true }) : say(['Which one fits the shadow?']));
     }, 'soft');
 
-    const drop = mode === 'match' ? h('div', { class: 'drop' }, picture(w, 'lg shadow')) : null;
+    // The word appears under the shadow only after the right picture is in place,
+    // so the game stays about shapes but still ends on the written word.
+    const shadowWord = h('span', { class: 'word' }, w.word);
+    const drop = mode === 'match' ? h('div', { class: 'drop' }, picture(w, 'lg shadow'), shadowWord) : null;
 
     // The word being asked, written big so the child links the sound to the letters.
     const wordTag =
@@ -394,7 +404,7 @@ function quiz(t: Topic, mode: 'listen' | 'match') {
         btn.classList.add('right');
         confetti(btn);
         if (drop) {
-          drop.replaceChildren(picture(w, 'lg pop-in'));
+          drop.replaceChildren(picture(w, 'lg pop-in'), shadowWord);
           drop.classList.add('filled');
           btn.classList.add('gone');
         }
@@ -483,6 +493,164 @@ function finishQuiz(t: Topic, a: Activity, firstTry: number, rounds: number) {
   const sticker = stars >= 2 ? awardSticker(P, stickers.map((s) => s.id)) : null;
   persist();
   result(t, a, stars, sticker);
+}
+
+// ---------- find it in the picture ----------
+
+function findIt(t: Topic) {
+  const cfg = levelConfig(P.settings.age);
+  const { items, targets } = pickScene(wordsIn(t.id), cfg.sceneItems, cfg.finds, P);
+  let round = 0;
+  let firstTry = 0;
+  let missed = false;
+  let locked = false;
+  const found = new Set<string>();
+  const dots = h('div', { class: 'dots-wrap' }, progressDots(targets.length, 0));
+
+  const ask = (slow = false) => say(question(targets[round]), { slow });
+
+  const replay = roundBtn(icon.speaker(), 'Hear again', () => {
+    sfx.tap();
+    if (!locked) void ask(true);
+  }, 'soft');
+
+  const tapped = async (btn: HTMLElement, o: Word) => {
+    if (locked || found.has(o.id)) return;
+    const w = targets[round];
+    const id = screenId;
+    if (o.id !== w.id) {
+      missed = true;
+      sfx.oops();
+      pulse(btn, 'shake');
+      void say(['Try again.', question(w)]);
+      return;
+    }
+    locked = true;
+    found.add(w.id);
+    sfx.right();
+    confetti(btn);
+    btn.classList.add('found');
+    recordAnswer(P, w.id, !missed);
+    if (!missed) firstTry++;
+    persist();
+    round++;
+    dots.replaceChildren(progressDots(targets.length, round));
+    await say([w.word, missed ? 'Yes!' : pick(['Great!', 'Yes!', 'Super!', 'Well done!'])]);
+    await wait(300);
+    if (!alive(id)) return;
+    if (round >= targets.length) return finishQuiz(t, 'find', firstTry, targets.length);
+    missed = false;
+    locked = false;
+    void ask();
+  };
+
+  const tilt = [-5, 4, -2, 6, -6, 3, 5, -3];
+  const spots = items.map((o, i) => {
+    const b = h(
+      'button',
+      { class: 'spot', 'aria-label': o.word, style: `--tilt:${tilt[i % tilt.length]}deg` },
+      picture(o),
+    );
+    b.addEventListener('click', () => void tapped(b, o));
+    return b;
+  });
+
+  show(
+    h(
+      'main',
+      { class: 'screen lesson find', style: `--tint:${t.color}` },
+      h(
+        'header',
+        { class: 'bar' },
+        roundBtn(icon.back(), 'Back', () => {
+          sfx.tap();
+          topicScreen(t);
+        }),
+        dots,
+        replay,
+      ),
+      h('section', { class: `scene s${items.length}` }, spots),
+    ),
+  );
+  setTimeout(() => void ask(), 400);
+}
+
+// ---------- sing along ----------
+
+/** "Twinkle, twinkle" (dân gian, thuộc phạm vi công cộng): bốn ô nhịp, mỗi nốt một phách. */
+const TUNE = [
+  ['C', 'C', 'G', 'G'],
+  ['A', 'A', 'G', '-'],
+  ['F', 'F', 'E', 'E'],
+  ['D', 'D', 'C', '-'],
+];
+const BEAT = 0.5; // giây
+
+/**
+ * A short chant over a tune: for each word the picture bounces on the beat while Chip says
+ * "cat, cat, it's a cat." Speech sets the pace: each line waits for the next bar line, so slow
+ * reading speeds or slow devices never get cut off.
+ */
+function singAlong(t: Topic) {
+  const list = pickLearnSet(wordsIn(t.id), levelConfig(P.settings.age).singCount, P);
+  let stopNotes: (() => void) | null = null;
+  const dots = h('div', { class: 'dots-wrap' }, progressDots(list.length, 0));
+  const stage = h('section', { class: 'stage' });
+
+  show(
+    h(
+      'main',
+      { class: 'screen lesson sing', style: `--tint:${t.color}` },
+      h(
+        'header',
+        { class: 'bar' },
+        roundBtn(icon.back(), 'Back', () => {
+          sfx.tap();
+          topicScreen(t);
+        }),
+        dots,
+        h('span', { class: 'spacer' }),
+      ),
+      stage,
+    ),
+    () => stopNotes?.(),
+  );
+  const id = screenId;
+
+  /** One bar: start its notes, say the line, then wait for the bar line (a later one if speech ran long). */
+  const bar = async (notes: string[], line: string) => {
+    const start = performance.now();
+    stopNotes = playNotes(notes, BEAT);
+    if (line) await say(line);
+    const barMs = notes.length * BEAT * 1000;
+    const spent = performance.now() - start;
+    const bars = Math.max(1, Math.ceil((spent - 80) / barMs));
+    await wait(Math.max(0, bars * barMs - spent));
+    return alive(id);
+  };
+
+  void (async () => {
+    await wait(350);
+    for (let i = 0; i < list.length && alive(id); i++) {
+      const w = list[i];
+      recordSeen(P, w.id);
+      persist();
+      dots.replaceChildren(progressDots(list.length, i));
+      stage.replaceChildren(
+        h('div', { class: 'card flash pop-in' }, h('div', { class: 'beat' }, picture(w, 'lg')), h('span', { class: 'word' }, w.word)),
+      );
+      const half = (i % 2) * 2;
+      if (!(await bar(TUNE[half], w.word))) return;
+      if (!(await bar(TUNE[half + 1], w.word))) return;
+      // the sentence gets the same two bars again
+      if (!(await bar(TUNE[half], describe(w)))) return;
+      if (!(await bar(TUNE[half + 1], ''))) return;
+    }
+    if (!alive(id)) return;
+    recordStars(P, t.id, 'sing', 3);
+    persist();
+    result(t, 'sing', 3, null);
+  })();
 }
 
 // ---------- say it ----------
@@ -698,7 +866,7 @@ function rest() {
       { class: 'screen splash rest' },
       mascot('hero sleepy'),
       h('h1', { class: 'brand small' }, 'Time to rest'),
-      h('p', { class: 'note' }, 'Hôm nay bé đã chơi đủ giờ rồi. Bố mẹ giữ nút khóa để mở thêm.'),
+      h('p', { class: 'note' }, 'Hôm nay bé đã chơi đủ giờ rồi. Bố mẹ giữ nút bánh răng để mở thêm.'),
       holdButton(() => parentGate()),
     ),
   );
@@ -844,6 +1012,32 @@ function parentArea() {
     },
   }, 'Xóa tiến độ');
 
+  // Cài app ra màn hình chính
+  const refresh = () => {
+    if (inParentArea && app.querySelector('.grown:not(.gate)')) parentArea();
+  };
+  const inst = installState();
+  const installBtn = h('button', { class: 'primary', onclick: () => void promptInstall().then(refresh) }, 'Cài app ra màn hình chính');
+  const installBody =
+    inst === 'installed'
+      ? [h('p', {}, 'App đã được cài trên máy này.')]
+      : inst === 'prompt'
+        ? [h('p', {}, 'Thêm Chip Chip English ra màn hình chính để bé mở như một app, chơi được cả khi không có mạng.'), installBtn]
+        : inst === 'ios'
+          ? [
+              h('p', {}, 'Trên iPhone và iPad, hãy mở trang này bằng Safari rồi:'),
+              h(
+                'ol',
+                { class: 'steps' },
+                h('li', {}, 'Bấm nút ', h('b', {}, 'Chia sẻ'), ' ', icon.share(), ' (ô vuông có mũi tên lên).'),
+                h('li', {}, 'Chọn ', h('b', {}, 'Thêm vào Màn hình chính'), '.'),
+                h('li', {}, 'Bấm ', h('b', {}, 'Thêm'), '.'),
+              ),
+            ]
+          : [h('p', {}, 'Mở menu của trình duyệt rồi chọn “Cài đặt ứng dụng” hoặc “Thêm vào màn hình chính”. Nên dùng Chrome (Android, máy tính) hoặc Safari (iPhone, iPad).')];
+  // Trình duyệt có thể báo cài được sau khi màn này đã mở
+  onInstallChange(refresh);
+
   show(
     h(
       'main',
@@ -861,7 +1055,7 @@ function parentArea() {
       h(
         'section',
         { class: 'panel' },
-        field('Độ tuổi của bé', age, '2–3 tuổi: 2 hình, 8 câu, 10 thẻ từ; 4–5 tuổi: 3 hình, 10 câu, 12 thẻ từ; 6 tuổi: 4 hình, 12 câu, 15 thẻ từ. Bài Say it ít hơn 2 câu.'),
+        field('Độ tuổi của bé', age, '2–3 tuổi: 2 hình, 8 câu, 10 thẻ từ; 4–5 tuổi: 3 hình, 10 câu, 12 thẻ từ; 6 tuổi: 4 hình, 12 câu, 15 thẻ từ. Bài Say it ít hơn 2 câu. Bài Find it có 6, 9 hoặc 12 hình trong tranh.'),
         field('Tốc độ đọc', rate, 'Kéo xong sẽ đọc thử.'),
         field(
           'Đọc thêm nghĩa tiếng Việt ở thẻ từ',
@@ -892,6 +1086,7 @@ function parentArea() {
         weak.length > 0 &&
           h('p', {}, 'Từ bé hay nhầm: ', h('b', {}, weak.map((w) => `${w.word} (${w.vi})`).join(', '))),
       ),
+      h('section', { class: 'panel install' }, h('h3', {}, 'Cài app'), installBody),
       h(
         'section',
         { class: 'panel' },
@@ -902,6 +1097,7 @@ function parentArea() {
         h('p', { class: 'credit' }, 'Hình minh họa: Fluent Emoji của Microsoft (giấy phép MIT).'),
       ),
     ),
+    () => onInstallChange(null),
   );
 }
 

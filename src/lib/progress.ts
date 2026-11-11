@@ -1,6 +1,7 @@
 // Scoring, word mastery (simple Leitner boxes) and saved progress.
 
-export type Activity = 'learn' | 'listen' | 'match' | 'say';
+export type Activity = 'learn' | 'listen' | 'match' | 'say' | 'find' | 'sing';
+export const ACTIVITY_IDS: Activity[] = ['learn', 'listen', 'match', 'say', 'find', 'sing'];
 export type AgeLevel = 'small' | 'middle' | 'big'; // 2–3, 4–5, 6
 
 export interface WordStat {
@@ -47,16 +48,18 @@ export const emptyProgress = (): Progress => ({
 /**
  * How many answer pictures and questions a game has for each age group.
  * `rounds` is for Listen and tap / Find the shadow, `sayRounds` for Say it
- * (speaking is more tiring, so it has fewer).
+ * (speaking is more tiring, so it has fewer). `sceneItems` / `finds` are for
+ * Find it (pictures in the scene / how many the child is asked to find),
+ * `singCount` is how many words one Sing along has.
  */
 export function levelConfig(age: AgeLevel) {
   switch (age) {
     case 'small':
-      return { choices: 2, rounds: 8, sayRounds: 6, learnCount: 10 };
+      return { choices: 2, rounds: 8, sayRounds: 6, learnCount: 10, sceneItems: 6, finds: 4, singCount: 6 };
     case 'middle':
-      return { choices: 3, rounds: 10, sayRounds: 8, learnCount: 12 };
+      return { choices: 3, rounds: 10, sayRounds: 8, learnCount: 12, sceneItems: 9, finds: 6, singCount: 8 };
     case 'big':
-      return { choices: 4, rounds: 12, sayRounds: 10, learnCount: 15 };
+      return { choices: 4, rounds: 12, sayRounds: 10, learnCount: 15, sceneItems: 12, finds: 8, singCount: 8 };
   }
 }
 
@@ -158,6 +161,39 @@ export function pickTargets<T extends { id: string }>(
   return out;
 }
 
+/**
+ * One Find it scene: `items` distinct words to show (shuffled) and which `finds`
+ * of them to ask for, in order. Targets are weighted like pickTargets, without repeats.
+ */
+export function pickScene<T extends { id: string }>(
+  pool: T[],
+  items: number,
+  finds: number,
+  p: Progress,
+  rand: () => number = Math.random,
+): { items: T[]; targets: T[] } {
+  const left = pool.slice();
+  const targets: T[] = [];
+  const nItems = Math.min(items, pool.length);
+  const nFinds = Math.min(finds, nItems);
+  while (targets.length < nFinds) {
+    const weights = left.map((w) => weightOf(stat(p, w.id)));
+    const total = weights.reduce((a, b) => a + b, 0);
+    let r = rand() * total;
+    let j = left.length - 1;
+    for (let k = 0; k < left.length; k++) {
+      r -= weights[k];
+      if (r <= 0) {
+        j = k;
+        break;
+      }
+    }
+    targets.push(left.splice(j, 1)[0]);
+  }
+  const others = shuffle(left, rand).slice(0, nItems - nFinds);
+  return { items: shuffle([...targets, ...others], rand), targets };
+}
+
 /** Target plus distinct distractors from the same pool, shuffled. */
 export function choicesFor<T extends { id: string }>(
   target: T,
@@ -202,7 +238,7 @@ export function awardSticker(p: Progress, all: string[], rand: () => number = Ma
 }
 
 export function topicStars(p: Progress, topic: string): number {
-  return (['learn', 'listen', 'match', 'say'] as Activity[]).reduce(
+  return ACTIVITY_IDS.reduce(
     (sum, a) => sum + (p.best[`${topic}:${a}`] ?? 0),
     0,
   );
