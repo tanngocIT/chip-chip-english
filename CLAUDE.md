@@ -49,8 +49,18 @@ src/lib/sfx.ts          hiệu ứng âm thanh và giai điệu Sing along bằn
 src/lib/install.ts      cài app: beforeinstallprompt (Android/desktop), nhận biết iOS và chế độ đã cài
 src/lib/vi.ts           viết số bằng chữ tiếng Việt (cho cổng phụ huynh)
 src/ui.ts               icon SVG, picture() (hình sticker; số = chữ số + N ngôi sao), stars, dots
-src/main.ts             tất cả màn hình: splash, home, topic, learn, quiz (listen/match), findIt, singAlong, sayIt,
-                        result, stickerBook, rest, parentGate, parentArea
+src/screens/core.ts     trạng thái chung (app, P, screenId, session, inParentArea), show(), persist(), startActivity,
+                        buổi học Play (startToday, nextStep, leave), announce, lessonBar
+src/screens/home.ts     splash, home, holdButton, stickerBook, rest
+src/screens/topic.ts    topicScreen (danh sách trò của một chủ đề)
+src/screens/learn.ts    Look and listen
+src/screens/quiz.ts     runQuiz dùng chung cho Listen and tap, Find the shadow và Review
+src/screens/find.ts     Find it
+src/screens/sing.ts     Sing along
+src/screens/say.ts      Say it
+src/screens/result.ts   result (theo chủ đề hoặc buổi học) và resultScreen
+src/screens/parents.ts  parentGate, parentArea
+src/main.ts             nạp CSS, bộ đếm phút chơi, gọi splash()
 src/style.css           toàn bộ giao diện
 scripts/copy-assets.mjs chép SVG từ checkout Fluent Emoji vào public/img (theo words.json + stickers.json)
 scripts/make-icons.mjs  tạo icon-192/512 từ mascot
@@ -59,7 +69,9 @@ scripts/screenshots.mjs chơi thử tự động bằng puppeteer-core (giả l�
 .github/workflows/deploy.yml  test → build → deploy Pages
 ```
 
-`main.ts` có biến `screenId`. Mỗi lần `show()` sẽ tăng nó lên, và các bước async kiểm tra `alive(id)` để dừng khi bé đã sang màn khác. Mọi `await` dài trong một màn đều phải giữ cách làm này.
+`screens/core.ts` có biến `screenId`. Mỗi lần `show()` sẽ tăng nó lên, và các bước async kiểm tra `alive(id)` để dừng khi bé đã sang màn khác. Mọi `await` dài trong một màn đều phải giữ cách làm này.
+
+Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơi → result → home). Việc này chạy được vì chúng chỉ gọi hàm của nhau lúc bé thao tác, không gọi ở cấp cao nhất của file. Giữ nguyên tắc đó: code cấp cao nhất của một file màn hình chỉ được dùng `lib/` và `ui.ts`. Các biến `session`, `inParentArea`, `screenId` chỉ được gán trong `core.ts` (qua `endSession()`, `setInParentArea()`, `show()`); file khác chỉ đọc.
 
 ## Quyết định đã chốt (đừng đổi khi chưa hỏi)
 
@@ -110,9 +122,9 @@ scripts/screenshots.mjs chơi thử tự động bằng puppeteer-core (giả l�
 6. Sing along: đọc theo nhịp trên giai điệu "Twinkle, twinkle" (dân gian, phạm vi công cộng) phát bằng Web Audio. Đây là đọc theo nhạc, không phải bài hát có giọng hát, vì chưa có cách miễn phí nào tạo giọng hát mà AI tự kiểm tra được chất lượng. Mỗi từ 4 ô nhịp (2 giây một ô): từ, từ, câu mô tả, nghỉ. Lời đọc quyết định nhịp: câu nào đọc lâu hơn một ô thì chờ đến vạch ô kế tiếp, nên tốc độ đọc chậm không bị cắt lời. Luôn được 3 sao, không có sticker (để bé không cày sticker bằng trò không cần làm gì).
 
 **Màn hình chính** có thêm hai nút to phía trên các chủ đề:
-- **Play** (buổi học một chạm, biến `session` trong `main.ts`): chạy 4 trò liền nhau trong một chủ đề theo thứ tự cố định Look and listen → Listen and tap → Find it → Sing along. Không có Say it (cần xin quyền micro) và Find the shadow (để buổi học ngắn, khoảng 5 phút). Trong buổi học, màn kết quả chỉ có nút đi tiếp và các chấm tiến độ, không có nút chơi lại; nút Back đưa về màn hình chính. `pickTodayTopic` chọn chủ đề: đang học dở (nhiều từ đã gặp nhất) → chủ đề chưa mở kế tiếp → chủ đề thuộc ít nhất.
+- **Play** (buổi học một chạm, biến `session` trong `screens/core.ts`): chạy 4 trò liền nhau trong một chủ đề theo thứ tự cố định Look and listen → Listen and tap → Find it → Sing along. Không có Say it (cần xin quyền micro) và Find the shadow (để buổi học ngắn, khoảng 5 phút). Trong buổi học, màn kết quả chỉ có nút đi tiếp và các chấm tiến độ, không có nút chơi lại; nút Back đưa về màn hình chính. `pickTodayTopic` chọn chủ đề: đang học dở (nhiều từ đã gặp nhất) → chủ đề chưa mở kế tiếp → chủ đề thuộc ít nhất.
 - **Review**: Listen and tap với từ lấy từ mọi chủ đề (`pickReviewSet`): chỉ từ đã gặp và chưa thuộc (hộp < 3), từ hay nhầm trước, mỗi từ một câu. Hình gây nhiễu lấy từ cùng chủ đề với từ đang hỏi để câu hỏi vẫn hợp lý. Nút chỉ hiện khi có ít nhất 4 từ (`REVIEW_MIN`). Có sao và sticker, nhưng sao không cộng vào chủ đề nào.
-- Chạm Play thì Chip nói "Let's play!", chạm Review thì nói "Let's play again!", nói xong mới vào trò (`announce()` trong `main.ts`, bỏ qua các lần chạm thừa trong lúc đang nói).
+- Chạm Play thì Chip nói "Let's play!", chạm Review thì nói "Let's play again!", nói xong mới vào trò (`announce()` trong `screens/core.ts`, bỏ qua các lần chạm thừa trong lúc đang nói).
 
 **Theo độ tuổi** (`levelConfig`)
 
