@@ -87,6 +87,11 @@ scripts/screenshots.mjs chơi thử tự động bằng puppeteer-core (giả l�
 - Hình lấy từ **Fluent Emoji Flat** (Microsoft, MIT). Người và tay chân dùng tông da **Medium-Light** (cờ `skin`).
 - Viền trắng kiểu sticker cắt rời là dấu ấn thị giác chính. Nó được làm bằng nhiều lớp `drop-shadow` trắng trong CSS.
 - Giọng đọc tiếng Anh dùng file mp3 sinh sẵn bằng Piper (giọng `en_US-kristin-medium`, public domain) trong `public/voice/`. Câu nào chưa có file thì rơi về TTS của trình duyệt. Tiếng Việt vẫn dùng TTS trình duyệt. Thêm từ mới thì chạy lại `node scripts/gen-voice.mjs <python> <model.onnx>` (chỉ sinh câu còn thiếu; cần piper-tts, soundfile, scipy, faster-whisper). Từ 1-2 chữ được sinh qua câu "Say, X." rồi cắt bỏ chữ "Say", vì đọc riêng từ đơn thì mô hình nuốt âm (cat nghe như tack); `npm test` sẽ báo nếu thiếu file.
+- Cài Piper trên máy mới (miễn phí, đã làm được trên máy Windows có proxy công ty):
+  1. `python -m venv .venv-voice` rồi `.venv-voice/Scripts/pip install piper-tts soundfile scipy faster-whisper`. Thư mục `.venv-voice` và `voice-model` đã nằm trong `.gitignore`.
+  2. Tải `en_US-kristin-medium.onnx` và `.onnx.json` từ `https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/kristin/medium/` vào `voice-model/`.
+  3. Nếu Python không tải được từ Hugging Face (lỗi chứng chỉ SSL do proxy), tải bằng Node (`fetch`) và tải luôn mô hình Whisper: 4 file `config.json`, `tokenizer.json`, `vocabulary.txt`, `model.bin` từ `https://huggingface.co/Systran/faster-whisper-small.en/resolve/main/` vào `voice-model/whisper-small.en/`, rồi đặt biến `WHISPER_MODEL` trỏ tới thư mục đó khi chạy `gen-voice.mjs`. Không tắt kiểm tra chứng chỉ.
+  4. Sau khi sinh, **dùng Whisper nghe lại từng file mới** và so với câu gốc. Câu 1–2 từ đi qua bước cắt chữ "Say" và có thể bị cắt lố: "Let's practice!" từng chỉ còn "practice". Gặp vậy thì đổi sang câu từ 3 từ trở lên (được đọc nguyên câu) hoặc đổi câu khác.
 
 **Trò chơi** (mỗi chủ đề có 6 trò)
 1. Look and listen (thẻ từ)
@@ -99,7 +104,7 @@ scripts/screenshots.mjs chơi thử tự động bằng puppeteer-core (giả l�
 **Màn hình chính** có thêm hai nút to phía trên các chủ đề:
 - **Play** (buổi học một chạm, biến `session` trong `main.ts`): chạy 4 trò liền nhau trong một chủ đề theo thứ tự cố định Look and listen → Listen and tap → Find it → Sing along. Không có Say it (cần xin quyền micro) và Find the shadow (để buổi học ngắn, khoảng 5 phút). Trong buổi học, màn kết quả chỉ có nút đi tiếp và các chấm tiến độ, không có nút chơi lại; nút Back đưa về màn hình chính. `pickTodayTopic` chọn chủ đề: đang học dở (nhiều từ đã gặp nhất) → chủ đề chưa mở kế tiếp → chủ đề thuộc ít nhất.
 - **Review**: Listen and tap với từ lấy từ mọi chủ đề (`pickReviewSet`): chỉ từ đã gặp và chưa thuộc (hộp < 3), từ hay nhầm trước, mỗi từ một câu. Hình gây nhiễu lấy từ cùng chủ đề với từ đang hỏi để câu hỏi vẫn hợp lý. Nút chỉ hiện khi có ít nhất 4 từ (`REVIEW_MIN`). Có sao và sticker, nhưng sao không cộng vào chủ đề nào.
-- Hai nút này không đọc thành tiếng khi chạm, vì chưa có mp3 cho câu mới (máy làm việc này không có Piper). Thêm câu mới thì phải sinh mp3 và thêm vào `FIXED_PHRASES`.
+- Chạm Play thì Chip nói "Let's play!", chạm Review thì nói "Let's play again!", nói xong mới vào trò (`announce()` trong `main.ts`, bỏ qua các lần chạm thừa trong lúc đang nói).
 
 **Theo độ tuổi** (`levelConfig`)
 

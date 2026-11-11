@@ -8,6 +8,7 @@ Cần: pip install piper-tts soundfile scipy faster-whisper
 """
 import io
 import json
+import os
 import sys
 import wave
 
@@ -19,7 +20,8 @@ from scipy.signal import resample_poly
 
 job = json.load(open(sys.argv[1], encoding="utf-8"))
 voice = PiperVoice.load(job["model"])
-asr = WhisperModel("small.en", compute_type="int8")
+# WHISPER_MODEL: path to a downloaded faster-whisper model, for machines where Python cannot download it.
+asr = WhisperModel(os.environ.get("WHISPER_MODEL", "small.en"), compute_type="int8")
 
 
 def synth(text):

@@ -34,7 +34,7 @@ Mỗi chủ đề có 6 trò:
 
 Ở màn hình chính còn có hai nút to:
 
-- **Play** (buổi học một chạm): bé không phải chọn gì. App tự chọn chủ đề (chủ đề bé đang học dở, hết thì mở chủ đề mới, học hết cả rồi thì quay lại chủ đề bé thuộc ít nhất) và dẫn bé qua 4 trò liền nhau: Look and listen → Listen and tap → Find it → Sing along. Xong mỗi trò bé bấm mũi tên để sang trò kế, xong cả bốn thì về màn hình chính.
+- **Play** (buổi học một chạm): bé không phải chọn gì. Chip nói "Let's play!" rồi bắt đầu. App tự chọn chủ đề (chủ đề bé đang học dở, hết thì mở chủ đề mới, học hết cả rồi thì quay lại chủ đề bé thuộc ít nhất) và dẫn bé qua 4 trò liền nhau: Look and listen → Listen and tap → Find it → Sing along. Xong mỗi trò bé bấm mũi tên để sang trò kế, xong cả bốn thì về màn hình chính.
 - **Review** (ôn tập): một lượt Listen and tap gồm các từ bé đã gặp nhưng chưa thuộc, lấy từ **mọi chủ đề**, từ hay nhầm được ưu tiên. Nút chỉ hiện khi có ít nhất 4 từ cần ôn. Chấm 1–3 sao và thưởng sticker như các trò khác.
 
 **Cách chấm điểm**

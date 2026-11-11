@@ -21,6 +21,8 @@ export const FIXED_PHRASES = [
   'Time to rest.',
   'See you later!',
   'Where is the cat?',
+  "Let's play!",
+  "Let's play again!",
 ];
 
 /** Mọi câu tiếng Anh cần có file âm thanh. Dùng cho script sinh giọng. */

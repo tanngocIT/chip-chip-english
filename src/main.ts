@@ -109,6 +109,18 @@ function nextStep() {
   startActivity(s.topic, SESSION_STEPS[s.i]);
 }
 
+/** Say a short line while the button wiggles, then go. Extra taps meanwhile are ignored. */
+let announcing = false;
+async function announce(btn: HTMLElement, line: string, go: () => void) {
+  if (announcing) return;
+  announcing = true;
+  const id = screenId;
+  pulse(btn, 'wiggle');
+  await say(line);
+  announcing = false;
+  if (alive(id)) go();
+}
+
 /** Back button inside a game. */
 const leave = (t: Topic) => (session ? home() : topicScreen(t));
 
@@ -157,7 +169,7 @@ function home() {
       'aria-label': `Play: ${todayTopic.en}`,
       onclick: () => {
         sfx.tap();
-        startToday(todayTopic);
+        void announce(today, "Let's play!", () => startToday(todayTopic));
       },
     },
     picture(wordById(todayTopic.icon)!, 'sm'),
@@ -174,9 +186,9 @@ function home() {
       {
         class: 'quick review',
         'aria-label': 'Review',
-        onclick: () => {
+        onclick: (e: Event) => {
           sfx.tap();
-          review();
+          void announce(e.currentTarget as HTMLElement, "Let's play again!", review);
         },
       },
       h('span', { class: 'pile' }, reviewWords.slice(0, 3).map((w) => picture(w, 'sm'))),
