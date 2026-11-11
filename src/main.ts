@@ -305,7 +305,7 @@ function topicScreen(t: Topic) {
   session = null;
   if (overLimit(P)) return rest();
   const iconWord = wordById(t.icon)!;
-  const acts = ACTIVITIES.filter((a) => a.id !== 'say' || canListen()).map((a) => {
+  const acts = ACTIVITIES.filter((a) => (a.id !== 'say' || canListen()) && !(a.id === 'match' && t.noShadow)).map((a) => {
     const best = P.best[`${t.id}:${a.id}`] ?? 0;
     const art = a.silhouette ? picture(iconWord, 'shadow') : h('div', { class: 'pic' }, h('img', { src: a.img, alt: '' }));
     return h(

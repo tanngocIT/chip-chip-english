@@ -6,7 +6,7 @@ Chạy được trên iPad, tablet Android, điện thoại và máy tính. Có 
 
 ## Bé học được gì
 
-**10 chủ đề, 295 từ:**
+**13 chủ đề, 334 từ:**
 
 | Chủ đề | Số từ |
 |---|---|
@@ -19,7 +19,10 @@ Chạy được trên iPad, tablet Android, điện thoại và máy tính. Có 
 | Gia đình & nghề | 24 |
 | Con số 1–20 (có chữ số và số ngôi sao để đếm) | 20 |
 | Cơ thể | 16 |
+| Hành động (run, swim, dance…; câu "I can run.") | 15 |
 | Màu sắc | 12 |
+| Hình khối (circle, square, triangle…) | 12 |
+| Cảm xúc (happy, sad, angry…; câu "I am happy.") | 12 |
 
 Mỗi chủ đề có 6 trò:
 
@@ -27,7 +30,7 @@ Mỗi chủ đề có 6 trò:
 |---|---|---|
 | **Look and listen** (thẻ từ) | Mỗi lượt 10–15 thẻ (theo tuổi): từ bé hay nhầm ra trước, rồi đến từ chưa học, thứ tự xáo mỗi lần. Xem hình, nghe từ và một câu ngắn ("It's a cat."), chạm vào thẻ để nghe lại. | Học xong lần đầu được 1 sticker |
 | **Listen and tap** | Nghe "Where is the cat?" rồi chạm đúng hình | 1–3 sao |
-| **Find the shadow** | Kéo (hoặc chạm) hình vào đúng cái bóng. Ghép đúng thì chữ của từ hiện ra dưới hình. | 1–3 sao |
+| **Find the shadow** | Kéo (hoặc chạm) hình vào đúng cái bóng. Ghép đúng thì chữ của từ hiện ra dưới hình. Chủ đề Cảm xúc không có trò này vì các khuôn mặt có bóng giống hệt nhau. | 1–3 sao |
 | **Find it** (tìm trong tranh) | Một tranh có 6–12 hình. Nghe "Where is the cat?" rồi tìm đúng hình trong tranh; hình đã tìm được thì mờ đi. | 1–3 sao |
 | **Say it** | Nghe mẫu, bấm micro và nói từ đó. App phát lại giọng bé vừa nói rồi đọc giọng mẫu để bé so sánh; nút bong bóng cho bé nghe lại giọng mình bao nhiêu lần cũng được. | 1–3 sao |
 | **Sing along** (đọc theo nhạc) | Hình nhún theo nhịp trên nền giai điệu "Twinkle, twinkle", Chip đọc theo nhịp: "cat, cat, it's a cat." Bé chỉ cần nghe và đọc theo, không có câu hỏi. | 3 sao, không có sticker |
@@ -72,6 +75,7 @@ Toàn bộ tiến độ chỉ lưu trên máy (localStorage). App không có tà
 
 ## Âm thanh và hình ảnh đến từ đâu
 
+- **Hình khối:** 12 hình của chủ đề Hình khối được vẽ riêng cho app (file `public/img/shape-*.svg`).
 - **Hình:** [Fluent Emoji](https://github.com/microsoft/fluentui-emoji) của Microsoft, phong cách *Flat*, giấy phép **MIT**, dùng miễn phí cả cho mục đích thương mại. File SVG nằm trong `public/img`, nên app nhẹ (khoảng 2 MB) và nét ở mọi kích thước. Kiểu viền trắng như sticker cắt rời được làm bằng CSS.
 - **Giọng đọc:** giọng tiếng Anh là file mp3 sinh sẵn bằng Piper (giọng `en_US-kristin-medium`, public domain), nên giống nhau trên mọi máy và chạy offline. Câu nào chưa có file thì dùng giọng có sẵn trên máy (Web Speech API). Tiếng Việt vẫn dùng giọng của máy. Cách này không tốn tiền.
 - **Nhận giọng nói:** SpeechRecognition của trình duyệt. Có trên Chrome (Android, máy tính) và Safari mới. Trình duyệt nào không hỗ trợ thì bài Say it tự ẩn đi.
@@ -137,7 +141,7 @@ scripts/
    Bỏ qua bước này thì từ mới vẫn đọc được bằng giọng của máy, nhưng `npm test` sẽ báo thiếu file mp3.
 5. Chạy `npm test`.
 
-Các cờ có thể dùng: `"plural": true` (grapes → "They're grapes"), `"mass": true` (milk → "It's milk"), `"the": true` (the sun), `"skin": true` (hình người dùng màu da trung tính), `"kind": "color" | "number" | "person"`.
+Các cờ có thể dùng: `"plural": true` (grapes → "They're grapes"), `"mass": true` (milk → "It's milk"), `"the": true` (the sun), `"skin": true` (hình người dùng màu da trung tính), `"kind": "color" | "number" | "person" | "feeling" | "action"`.
 
 ## Hướng phát triển tiếp
 
@@ -145,7 +149,7 @@ Dự án giữ nguyên tắc miễn phí hoàn toàn, nên chỉ xét các hư�
 
 - Bài hát có giọng hát thật (Sing along hiện là đọc theo nhịp nhạc).
 - Giọng tiếng Việt bằng mp3 sinh sẵn, để mục "nghĩa tiếng Việt" chạy trên cả máy không có giọng Việt.
-- Thêm chủ đề: hành động, cảm xúc, hình khối; và câu ngắn cho bé 5–6 tuổi.
+- Câu ngắn cho bé 5–6 tuổi, ghép từ các chủ đề đã có ("The cat is sleeping.").
 
 Đã loại vì tốn tiền: chấm phát âm bằng Azure Pronunciation Assessment, đưa lên App Store / Google Play (cần tài khoản nhà phát triển trả phí). App dùng dạng PWA cài từ trình duyệt.
 

@@ -69,6 +69,28 @@
    "vi": "Thiên nhiên",
    "icon": "sun",
    "color": "#DDF5EE"
+  },
+  {
+   "id": "shapes",
+   "en": "Shapes",
+   "vi": "Hình khối",
+   "icon": "triangle",
+   "color": "#E6F5C9"
+  },
+  {
+   "id": "feelings",
+   "en": "Feelings",
+   "vi": "Cảm xúc",
+   "icon": "happy",
+   "color": "#FFE8A8",
+   "noShadow": true
+  },
+  {
+   "id": "actions",
+   "en": "Actions",
+   "vi": "Hành động",
+   "icon": "run",
+   "color": "#D5F0F7"
   }
  ],
  "words": [
@@ -1999,6 +2021,296 @@
    "vi": "băng",
    "asset": "Ice",
    "mass": true
+  },
+  {
+   "id": "circle",
+   "topic": "shapes",
+   "vi": "hình tròn",
+   "asset": "Shape circle",
+   "custom": true
+  },
+  {
+   "id": "square",
+   "topic": "shapes",
+   "vi": "hình vuông",
+   "asset": "Shape square",
+   "custom": true
+  },
+  {
+   "id": "triangle",
+   "topic": "shapes",
+   "vi": "hình tam giác",
+   "asset": "Shape triangle",
+   "custom": true
+  },
+  {
+   "id": "rectangle",
+   "topic": "shapes",
+   "vi": "hình chữ nhật",
+   "asset": "Shape rectangle",
+   "custom": true
+  },
+  {
+   "id": "oval",
+   "topic": "shapes",
+   "vi": "hình bầu dục",
+   "asset": "Shape oval",
+   "custom": true
+  },
+  {
+   "id": "star-shape",
+   "topic": "shapes",
+   "vi": "hình ngôi sao",
+   "asset": "Shape star",
+   "custom": true,
+   "word": "star"
+  },
+  {
+   "id": "heart-shape",
+   "topic": "shapes",
+   "vi": "hình trái tim",
+   "asset": "Shape heart",
+   "custom": true,
+   "word": "heart"
+  },
+  {
+   "id": "diamond",
+   "topic": "shapes",
+   "vi": "hình thoi",
+   "asset": "Shape diamond",
+   "custom": true
+  },
+  {
+   "id": "arrow",
+   "topic": "shapes",
+   "vi": "mũi tên",
+   "asset": "Shape arrow",
+   "custom": true
+  },
+  {
+   "id": "cross",
+   "topic": "shapes",
+   "vi": "dấu cộng",
+   "asset": "Shape cross",
+   "custom": true
+  },
+  {
+   "id": "ring",
+   "topic": "shapes",
+   "vi": "hình vòng tròn",
+   "asset": "Shape ring",
+   "custom": true
+  },
+  {
+   "id": "spiral",
+   "topic": "shapes",
+   "vi": "hình xoắn ốc",
+   "asset": "Shape spiral",
+   "custom": true
+  },
+  {
+   "id": "happy",
+   "topic": "feelings",
+   "vi": "vui",
+   "asset": "Grinning face with smiling eyes",
+   "kind": "feeling"
+  },
+  {
+   "id": "sad",
+   "topic": "feelings",
+   "vi": "buồn",
+   "asset": "Crying face",
+   "kind": "feeling"
+  },
+  {
+   "id": "angry",
+   "topic": "feelings",
+   "vi": "tức giận",
+   "asset": "Pouting face",
+   "kind": "feeling"
+  },
+  {
+   "id": "scared",
+   "topic": "feelings",
+   "vi": "sợ",
+   "asset": "Face screaming in fear",
+   "kind": "feeling"
+  },
+  {
+   "id": "sleepy",
+   "topic": "feelings",
+   "vi": "buồn ngủ",
+   "asset": "Sleeping face",
+   "kind": "feeling"
+  },
+  {
+   "id": "surprised",
+   "topic": "feelings",
+   "vi": "ngạc nhiên",
+   "asset": "Astonished face",
+   "kind": "feeling"
+  },
+  {
+   "id": "sick",
+   "topic": "feelings",
+   "vi": "ốm",
+   "asset": "Face with thermometer",
+   "kind": "feeling"
+  },
+  {
+   "id": "hot",
+   "topic": "feelings",
+   "vi": "nóng",
+   "asset": "Hot face",
+   "kind": "feeling"
+  },
+  {
+   "id": "cold",
+   "topic": "feelings",
+   "vi": "lạnh",
+   "asset": "Cold face",
+   "kind": "feeling"
+  },
+  {
+   "id": "silly",
+   "topic": "feelings",
+   "vi": "nghịch ngợm",
+   "asset": "Zany face",
+   "kind": "feeling"
+  },
+  {
+   "id": "hungry",
+   "topic": "feelings",
+   "vi": "đói",
+   "asset": "Drooling face",
+   "kind": "feeling"
+  },
+  {
+   "id": "excited",
+   "topic": "feelings",
+   "vi": "hào hứng",
+   "asset": "Partying face",
+   "kind": "feeling"
+  },
+  {
+   "id": "run",
+   "topic": "actions",
+   "vi": "chạy",
+   "asset": "Person running",
+   "kind": "action",
+   "skin": true
+  },
+  {
+   "id": "walk",
+   "topic": "actions",
+   "vi": "đi bộ",
+   "asset": "Person walking",
+   "kind": "action",
+   "skin": true
+  },
+  {
+   "id": "swim",
+   "topic": "actions",
+   "vi": "bơi",
+   "asset": "Person swimming",
+   "kind": "action",
+   "skin": true
+  },
+  {
+   "id": "dance",
+   "topic": "actions",
+   "vi": "nhảy múa",
+   "asset": "Woman dancing",
+   "kind": "action",
+   "skin": true
+  },
+  {
+   "id": "sleep",
+   "topic": "actions",
+   "vi": "ngủ",
+   "asset": "Person in bed",
+   "kind": "action",
+   "skin": true
+  },
+  {
+   "id": "climb",
+   "topic": "actions",
+   "vi": "leo trèo",
+   "asset": "Person climbing",
+   "kind": "action",
+   "skin": true
+  },
+  {
+   "id": "ride",
+   "topic": "actions",
+   "vi": "đạp xe",
+   "asset": "Person biking",
+   "kind": "action",
+   "skin": true
+  },
+  {
+   "id": "surf",
+   "topic": "actions",
+   "vi": "lướt sóng",
+   "asset": "Person surfing",
+   "kind": "action",
+   "skin": true
+  },
+  {
+   "id": "ski",
+   "topic": "actions",
+   "vi": "trượt tuyết",
+   "asset": "Skier",
+   "kind": "action",
+   "skin": true
+  },
+  {
+   "id": "row",
+   "topic": "actions",
+   "vi": "chèo thuyền",
+   "asset": "Person rowing boat",
+   "kind": "action",
+   "skin": true
+  },
+  {
+   "id": "sit",
+   "topic": "actions",
+   "vi": "ngồi",
+   "asset": "Person in lotus position",
+   "kind": "action",
+   "skin": true
+  },
+  {
+   "id": "stand",
+   "topic": "actions",
+   "vi": "đứng",
+   "asset": "Person standing",
+   "kind": "action",
+   "skin": true
+  },
+  {
+   "id": "juggle",
+   "topic": "actions",
+   "vi": "tung hứng",
+   "asset": "Person juggling",
+   "kind": "action",
+   "skin": true
+  },
+  {
+   "id": "clap",
+   "topic": "actions",
+   "vi": "vỗ tay",
+   "asset": "Clapping hands",
+   "kind": "action",
+   "skin": true
+  },
+  {
+   "id": "hug",
+   "topic": "actions",
+   "vi": "ôm",
+   "asset": "People hugging",
+   "kind": "action",
+   "skin": true
   }
  ]
 }

@@ -7,9 +7,11 @@ export interface Topic {
   vi: string;
   icon: string;
   color: string;
+  /** Pictures in this topic share one outline (faces), so Find the shadow is left out. */
+  noShadow?: boolean;
 }
 
-export type WordKind = 'thing' | 'color' | 'number' | 'person';
+export type WordKind = 'thing' | 'color' | 'number' | 'person' | 'feeling' | 'action';
 
 export interface Word {
   id: string;
@@ -72,7 +74,7 @@ const startsWithVowelSound = (s: string) => /^[aeiou]/i.test(s);
 
 /** "a cat", "an apple", "the sun", "grapes", "milk", "mom" */
 export function nounPhrase(w: Word): string {
-  if (w.kind === 'person' || w.plural || w.mass || w.kind === 'color' || w.kind === 'number') {
+  if (w.kind !== 'thing' || w.plural || w.mass) {
     return w.word;
   }
   if (w.the) return `the ${w.word}`;
@@ -88,6 +90,10 @@ export function describe(w: Word): string {
       return `${capitalize(w.word)}!`;
     case 'person':
       return `This is ${w.word}.`;
+    case 'feeling':
+      return `I am ${w.word}.`;
+    case 'action':
+      return `I can ${w.word}.`;
   }
   if (w.plural) return `They're ${w.word}.`;
   return `It's ${nounPhrase(w)}.`;
@@ -102,6 +108,10 @@ export function question(w: Word): string {
       return `Find ${w.word}.`;
     case 'person':
       return `Where is ${w.word}?`;
+    case 'feeling':
+      return `Who is ${w.word}?`;
+    case 'action':
+      return `Who can ${w.word}?`;
   }
   if (w.plural) return `Where are the ${w.word}?`;
   return `Where is the ${w.word}?`;

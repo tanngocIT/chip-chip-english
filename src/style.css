@@ -1260,3 +1260,18 @@ td:not(:first-child) {
 .result .dots {
   margin-bottom: 4px;
 }
+
+/* 13 topics: on tablets and wider, seven per row keeps the home screen to two rows */
+@media (min-width: 900px) {
+  .topics {
+    grid-template-columns: repeat(7, 1fr);
+  }
+  .topic {
+    padding-inline: 6px;
+  }
+  .topic .label {
+    font-size: 17px;
+    line-height: 1.15;
+    text-align: center;
+  }
+}

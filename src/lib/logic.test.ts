@@ -359,3 +359,31 @@ group('today session', () => {
     expect(pickTodayTopic(topics, idsOf, p).id).toBe(topics[6].id);
   });
 });
+
+group('new topics', () => {
+  const w = (id: string) => words.find((x) => x.id === id)!;
+
+  it('feelings and actions get their own sentences', () => {
+    expect(describe(w('happy'))).toBe('I am happy.');
+    expect(question(w('happy'))).toBe('Who is happy?');
+    expect(describe(w('run'))).toBe('I can run.');
+    expect(question(w('run'))).toBe('Who can run?');
+    expect(nounPhrase(w('sad'))).toBe('sad');
+  });
+
+  it('shapes are ordinary nouns, and the two shared words keep their spoken form', () => {
+    expect(describe(w('circle'))).toBe("It's a circle.");
+    expect(describe(w('oval'))).toBe("It's an oval.");
+    expect(question(w('triangle'))).toBe('Where is the triangle?');
+    expect(w('star-shape').word).toBe('star');
+    expect(w('heart-shape').word).toBe('heart');
+  });
+
+  it('only the feelings topic hides Find the shadow, and no topic has two words that sound the same', () => {
+    expect(topics.filter((t) => t.noShadow).map((t) => t.id)).toEqual(['feelings']);
+    for (const t of topics) {
+      const spoken = wordsIn(t.id).map((x) => x.word);
+      expect(new Set(spoken).size, t.id).toBe(spoken.length);
+    }
+  });
+});
