@@ -115,6 +115,7 @@ src/
 scripts/
   copy-assets.mjs      # chép hình từ bộ Fluent Emoji vào public/img
   make-icons.mjs       # tạo icon app
+  gen-voice.mjs        # sinh file giọng mp3 bằng Piper cho các câu còn thiếu (gọi gen-voice.py)
   screenshots.mjs      # chơi thử tự động + chụp màn hình
 ```
 
@@ -128,16 +129,25 @@ scripts/
    git clone --depth 1 --filter=blob:none --sparse https://github.com/microsoft/fluentui-emoji.git /tmp/fe
    (cd /tmp/fe && git sparse-checkout set --no-cone '/assets/*/Flat/*' '/assets/*/Medium-Light/Flat/*' '/LICENSE')
    node scripts/copy-assets.mjs /tmp/fe
-   npm test
    ```
+4. Sinh giọng đọc cho từ mới (cần Piper, cách cài ghi trong `CLAUDE.md`):
+   ```bash
+   node scripts/gen-voice.mjs <python> <đường dẫn en_US-kristin-medium.onnx>
+   ```
+   Bỏ qua bước này thì từ mới vẫn đọc được bằng giọng của máy, nhưng `npm test` sẽ báo thiếu file mp3.
+5. Chạy `npm test`.
 
 Các cờ có thể dùng: `"plural": true` (grapes → "They're grapes"), `"mass": true` (milk → "It's milk"), `"the": true` (the sun), `"skin": true` (hình người dùng màu da trung tính), `"kind": "color" | "number" | "person"`.
 
 ## Hướng phát triển tiếp
 
-- Chấm phát âm chi tiết hơn bằng Azure Pronunciation Assessment.
-- Thêm trò "Find it in the picture" (tìm đồ vật trong một cảnh lớn) cho bé 5–6 tuổi, và các bài hát ngắn.
-- Gói thành app Android/iOS bằng Capacitor.
+Dự án giữ nguyên tắc miễn phí hoàn toàn, nên chỉ xét các hướng không tốn tiền:
+
+- Bài hát có giọng hát thật (Sing along hiện là đọc theo nhịp nhạc).
+- Giọng tiếng Việt bằng mp3 sinh sẵn, để mục "nghĩa tiếng Việt" chạy trên cả máy không có giọng Việt.
+- Thêm chủ đề: hành động, cảm xúc, hình khối; và câu ngắn cho bé 5–6 tuổi.
+
+Đã loại vì tốn tiền: chấm phát âm bằng Azure Pronunciation Assessment, đưa lên App Store / Google Play (cần tài khoản nhà phát triển trả phí). App dùng dạng PWA cài từ trình duyệt.
 
 ## Giấy phép
 
