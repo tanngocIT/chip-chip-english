@@ -18,6 +18,9 @@ import {
   pickLearnSet,
   recordSeen,
   pickScene,
+  pickReviewSet,
+  pickTodayTopic,
+  REVIEW_MIN,
   topicStars,
 } from './progress';
 import { passes, scoreHeard, levenshtein } from './match';
@@ -297,5 +300,62 @@ group('install prompt', () => {
     expect(isStandalone(win('standalone'))).toBe(true);
     expect(isStandalone(win('browser', true))).toBe(true);
     expect(isStandalone({})).toBe(false);
+  });
+});
+
+group('review', () => {
+  it('only asks words the child has met and does not know well yet', () => {
+    const p = emptyProgress();
+    expect(pickReviewSet(words, 8, p)).toEqual([]);
+    recordSeen(p, 'cat'); // met on a flashcard, never answered
+    recordAnswer(p, 'apple', false); // missed
+    recordAnswer(p, 'bus', true); // box 1
+    for (let i = 0; i < 4; i++) recordAnswer(p, 'dog', true); // well known
+    const ids = pickReviewSet(words, 8, p, seeded(2)).map((w) => w.id).sort();
+    expect(ids).toEqual(['apple', 'bus', 'cat']);
+    expect(ids.length).toBeLessThan(REVIEW_MIN);
+  });
+
+  it('mixes topics, never repeats, and keeps the missed words when there are too many', () => {
+    const p = emptyProgress();
+    for (const w of words.slice(0, 60)) recordSeen(p, w.id);
+    const missed = ['sun', 'red', 'three', 'bus', 'nose'];
+    for (const id of missed) recordAnswer(p, id, false);
+    for (let s = 1; s <= 20; s++) {
+      const set = pickReviewSet(words, 8, p, seeded(s));
+      expect(set.length).toBe(8);
+      expect(new Set(set.map((w) => w.id)).size).toBe(8);
+      for (const id of missed) expect(set.map((w) => w.id)).toContain(id);
+      expect(new Set(set.map((w) => w.topic)).size).toBeGreaterThan(1);
+    }
+  });
+});
+
+group('today session', () => {
+  const idsOf = (t: { id: string }) => wordsIn(t.id).map((w) => w.id);
+
+  it('starts with the first topic for a new child', () => {
+    expect(pickTodayTopic(topics, idsOf, emptyProgress()).id).toBe(topics[0].id);
+  });
+
+  it('keeps going with the topic the child is in the middle of', () => {
+    const p = emptyProgress();
+    for (const id of idsOf(topics[0])) recordSeen(p, id); // first topic fully met
+    for (const id of idsOf(topics[3]).slice(0, 5)) recordSeen(p, id);
+    for (const id of idsOf(topics[5]).slice(0, 2)) recordSeen(p, id);
+    expect(pickTodayTopic(topics, idsOf, p).id).toBe(topics[3].id);
+  });
+
+  it('opens the next new topic when nothing is half done', () => {
+    const p = emptyProgress();
+    for (const id of idsOf(topics[0])) recordSeen(p, id);
+    expect(pickTodayTopic(topics, idsOf, p).id).toBe(topics[1].id);
+  });
+
+  it('returns to the least known topic once everything has been met', () => {
+    const p = emptyProgress();
+    for (const t of topics) for (const id of idsOf(t)) for (let i = 0; i < 3; i++) recordAnswer(p, id, true);
+    for (const id of idsOf(topics[6])) recordAnswer(p, id, false);
+    expect(pickTodayTopic(topics, idsOf, p).id).toBe(topics[6].id);
   });
 });

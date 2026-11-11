@@ -41,7 +41,7 @@ src/data/words.json     chủ đề + 295 từ (id, topic, vi, asset, cờ)
 src/data/stickers.json  31 sticker thưởng (tên thư mục Fluent Emoji)
 src/lib/content.ts      Word/Topic, dựng câu: nounPhrase (a/an/the), describe, question
 src/lib/progress.ts     levelConfig theo tuổi, starsFor, Leitner (recordAnswer), pickTargets,
-                        pickLearnSet, pickScene (Find it), choicesFor, sticker, lưu localStorage, giới hạn phút/ngày
+                        pickLearnSet, pickScene (Find it), pickReviewSet, pickTodayTopic, choicesFor, sticker, lưu localStorage, giới hạn phút/ngày
 src/lib/match.ts        chấm phát âm dễ tính: bảng đồng âm SOUNDS_LIKE + Levenshtein
 src/lib/voice.ts        say(): phát mp3 sinh sẵn, thiếu thì TTS (speechSynthesis); SpeechRecognition; ghi âm MediaRecorder + phát lại
 src/lib/phrases.ts      danh sách mọi câu cần giọng + phraseKey (tên file); dùng cho script và test
@@ -96,6 +96,11 @@ scripts/screenshots.mjs chơi thử tự động bằng puppeteer-core (giả l�
 5. Say it: phát lại giọng bé rồi đọc giọng mẫu, có nút bong bóng để nghe lại.
 6. Sing along: đọc theo nhịp trên giai điệu "Twinkle, twinkle" (dân gian, phạm vi công cộng) phát bằng Web Audio. Đây là đọc theo nhạc, không phải bài hát có giọng hát, vì chưa có cách miễn phí nào tạo giọng hát mà AI tự kiểm tra được chất lượng. Mỗi từ 4 ô nhịp (2 giây một ô): từ, từ, câu mô tả, nghỉ. Lời đọc quyết định nhịp: câu nào đọc lâu hơn một ô thì chờ đến vạch ô kế tiếp, nên tốc độ đọc chậm không bị cắt lời. Luôn được 3 sao, không có sticker (để bé không cày sticker bằng trò không cần làm gì).
 
+**Màn hình chính** có thêm hai nút to phía trên các chủ đề:
+- **Play** (buổi học một chạm, biến `session` trong `main.ts`): chạy 4 trò liền nhau trong một chủ đề theo thứ tự cố định Look and listen → Listen and tap → Find it → Sing along. Không có Say it (cần xin quyền micro) và Find the shadow (để buổi học ngắn, khoảng 5 phút). Trong buổi học, màn kết quả chỉ có nút đi tiếp và các chấm tiến độ, không có nút chơi lại; nút Back đưa về màn hình chính. `pickTodayTopic` chọn chủ đề: đang học dở (nhiều từ đã gặp nhất) → chủ đề chưa mở kế tiếp → chủ đề thuộc ít nhất.
+- **Review**: Listen and tap với từ lấy từ mọi chủ đề (`pickReviewSet`): chỉ từ đã gặp và chưa thuộc (hộp < 3), từ hay nhầm trước, mỗi từ một câu. Hình gây nhiễu lấy từ cùng chủ đề với từ đang hỏi để câu hỏi vẫn hợp lý. Nút chỉ hiện khi có ít nhất 4 từ (`REVIEW_MIN`). Có sao và sticker, nhưng sao không cộng vào chủ đề nào.
+- Hai nút này không đọc thành tiếng khi chạm, vì chưa có mp3 cho câu mới (máy làm việc này không có Piper). Thêm câu mới thì phải sinh mp3 và thêm vào `FIXED_PHRASES`.
+
 **Theo độ tuổi** (`levelConfig`)
 
 | Tuổi | Hình/câu | Listen & Shadow | Say it | Look and listen | Find it (hình/câu tìm) | Sing along |
@@ -116,6 +121,7 @@ scripts/screenshots.mjs chơi thử tự động bằng puppeteer-core (giả l�
 **Phần bố mẹ**
 - Cách mở: giữ nút bánh răng 1,5 giây, rồi chạm đúng con số được viết bằng chữ tiếng Việt.
 - Cài đặt gồm: độ tuổi, tốc độ đọc, nghĩa tiếng Việt, phát lại giọng bé (mặc định bật), giới hạn phút mỗi ngày (mặc định 20).
+- Hết giờ không bao giờ cắt ngang một trò hay màn kết quả: bé chơi nốt, xem sao và sticker, bấm nút nào ở màn kết quả cũng chuyển sang màn nghỉ. Màn hình chính và màn chủ đề thì chuyển sang màn nghỉ ngay.
 - Phần này còn có bảng tiến độ và nút xóa tiến độ.
 - Mục "Cài app": có `beforeinstallprompt` thì hiện nút cài; trên iOS hiện các bước Chia sẻ → Thêm vào Màn hình chính; đã cài thì chỉ báo đã cài. Đặt trong phần bố mẹ để bé không bấm nhầm.
 

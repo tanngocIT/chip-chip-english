@@ -32,6 +32,11 @@ Mỗi chủ đề có 6 trò:
 | **Say it** | Nghe mẫu, bấm micro và nói từ đó. App phát lại giọng bé vừa nói rồi đọc giọng mẫu để bé so sánh; nút bong bóng cho bé nghe lại giọng mình bao nhiêu lần cũng được. | 1–3 sao |
 | **Sing along** (đọc theo nhạc) | Hình nhún theo nhịp trên nền giai điệu "Twinkle, twinkle", Chip đọc theo nhịp: "cat, cat, it's a cat." Bé chỉ cần nghe và đọc theo, không có câu hỏi. | 3 sao, không có sticker |
 
+Ở màn hình chính còn có hai nút to:
+
+- **Play** (buổi học một chạm): bé không phải chọn gì. App tự chọn chủ đề (chủ đề bé đang học dở, hết thì mở chủ đề mới, học hết cả rồi thì quay lại chủ đề bé thuộc ít nhất) và dẫn bé qua 4 trò liền nhau: Look and listen → Listen and tap → Find it → Sing along. Xong mỗi trò bé bấm mũi tên để sang trò kế, xong cả bốn thì về màn hình chính.
+- **Review** (ôn tập): một lượt Listen and tap gồm các từ bé đã gặp nhưng chưa thuộc, lấy từ **mọi chủ đề**, từ hay nhầm được ưu tiên. Nút chỉ hiện khi có ít nhất 4 từ cần ôn. Chấm 1–3 sao và thưởng sticker như các trò khác.
+
 **Cách chấm điểm**
 
 - Sao tính theo số câu bé làm đúng **ngay lần đầu**: từ 85% trở lên được 3 sao, từ 50% được 2 sao, còn lại 1 sao. Bé luôn được ít nhất 1 sao.
@@ -58,7 +63,7 @@ Trong đó có:
 - Chỉnh tốc độ đọc. Kéo xong app sẽ đọc thử.
 - Bật đọc thêm nghĩa tiếng Việt ở thẻ từ (cần máy có giọng đọc tiếng Việt).
 - Bật/tắt phát lại giọng bé ở bài Say it (mặc định bật).
-- Giới hạn thời gian chơi mỗi ngày (mặc định 20 phút). Hết giờ, bạn gà Chip sẽ nói "Time to rest" và đưa bé ra màn hình nghỉ.
+- Giới hạn thời gian chơi mỗi ngày (mặc định 20 phút). Hết giờ, bạn gà Chip sẽ nói "Time to rest" và đưa bé ra màn hình nghỉ. Nếu hết giờ khi bé đang giữa một trò, bé được chơi nốt trò đó và xem sao, sticker rồi mới nghỉ.
 - Xem tiến độ: số từ đã thuộc và số sao của từng chủ đề, các từ bé hay nhầm, số sticker đã có.
 - Xóa tiến độ.
 - **Cài app ra màn hình chính.** Trên Android và máy tính (Chrome, Edge) có nút bấm để cài ngay. Trên iPhone/iPad, Apple không cho web tự mở hộp thoại cài nên app hiện hướng dẫn: mở bằng Safari, bấm Chia sẻ rồi chọn Thêm vào Màn hình chính.

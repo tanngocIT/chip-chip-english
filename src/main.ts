@@ -6,6 +6,7 @@ import './style.css';
 import { h, wait, pulse, confetti } from './lib/dom';
 import {
   topics,
+  words,
   wordsIn,
   wordById,
   topicById,
@@ -30,6 +31,9 @@ import {
   pickTargets,
   pickLearnSet,
   pickScene,
+  pickReviewSet,
+  pickTodayTopic,
+  REVIEW_MIN,
   choicesFor,
   addMinutes,
   overLimit,
@@ -86,6 +90,28 @@ function show(node: HTMLElement, onLeave?: () => void) {
 
 const persist = () => save(P);
 
+/**
+ * The one-tap "today" session: a fixed run of games in one topic. While it is on, each
+ * result screen leads to the next game and Back leaves to the home screen.
+ */
+const SESSION_STEPS: Activity[] = ['learn', 'listen', 'find', 'sing'];
+let session: { topic: Topic; i: number } | null = null;
+
+function startToday(t: Topic) {
+  if (overLimit(P)) return rest();
+  session = { topic: t, i: 0 };
+  startActivity(t, SESSION_STEPS[0]);
+}
+
+function nextStep() {
+  const s = session;
+  if (!s || ++s.i >= SESSION_STEPS.length) return home();
+  startActivity(s.topic, SESSION_STEPS[s.i]);
+}
+
+/** Back button inside a game. */
+const leave = (t: Topic) => (session ? home() : topicScreen(t));
+
 // ---------- splash ----------
 
 function splash() {
@@ -118,7 +144,45 @@ function splash() {
 // ---------- home ----------
 
 function home() {
+  session = null;
   if (overLimit(P)) return rest();
+
+  // One tap starts today's session, so a small child does not have to choose anything.
+  const todayTopic = pickTodayTopic(topics, (t) => wordsIn(t.id).map((w) => w.id), P);
+  const today = h(
+    'button',
+    {
+      class: 'quick today',
+      style: `--tint:${todayTopic.color}`,
+      'aria-label': `Play: ${todayTopic.en}`,
+      onclick: () => {
+        sfx.tap();
+        startToday(todayTopic);
+      },
+    },
+    picture(wordById(todayTopic.icon)!, 'sm'),
+    h('span', { class: 'label' }, 'Play'),
+    h('span', { class: 'go-mark' }, h('span', { class: 'tri' })),
+  );
+
+  // Review: words from every topic that the child has met but does not know yet.
+  const reviewWords = pickReviewSet(words, levelConfig(P.settings.age).rounds, P);
+  const reviewBtn =
+    reviewWords.length >= REVIEW_MIN &&
+    h(
+      'button',
+      {
+        class: 'quick review',
+        'aria-label': 'Review',
+        onclick: () => {
+          sfx.tap();
+          review();
+        },
+      },
+      h('span', { class: 'pile' }, reviewWords.slice(0, 3).map((w) => picture(w, 'sm'))),
+      h('span', { class: 'label' }, 'Review'),
+    );
+
   const total = topics.reduce((s, t) => s + topicStars(P, t.id), 0);
   const tiles = topics.map((t) => {
     const iconWord = wordById(t.icon)!;
@@ -163,6 +227,7 @@ function home() {
         ),
         h('div', { class: 'total' }, icon.star(), h('b', {}, total)),
       ),
+      h('section', { class: 'quicks' }, today, reviewBtn),
       h('section', { class: 'topics' }, tiles),
       h(
         'footer',
@@ -225,6 +290,8 @@ const ACTIVITIES: { id: Activity; name: string; img: string; silhouette?: boolea
 ];
 
 function topicScreen(t: Topic) {
+  session = null;
+  if (overLimit(P)) return rest();
   const iconWord = wordById(t.icon)!;
   const acts = ACTIVITIES.filter((a) => a.id !== 'say' || canListen()).map((a) => {
     const best = P.best[`${t.id}:${a.id}`] ?? 0;
@@ -273,13 +340,13 @@ function startActivity(t: Topic, a: Activity) {
   return sayIt(t);
 }
 
-function lessonBar(t: Topic, total: number, done: number, extra?: HTMLElement) {
+function lessonBar(back: () => void, total: number, done: number, extra?: HTMLElement) {
   return h(
     'header',
     { class: 'bar' },
     roundBtn(icon.back(), 'Back', () => {
       sfx.tap();
-      topicScreen(t);
+      back();
     }),
     progressDots(total, done),
     extra ?? h('span', { class: 'spacer' }),
@@ -341,7 +408,7 @@ function learn(t: Topic) {
       h(
         'main',
         { class: 'screen lesson', style: `--tint:${t.color}` },
-        lessonBar(t, list.length, i),
+        lessonBar(() => leave(t), list.length, i),
         h('section', { class: 'stage' }, card),
         h('nav', { class: 'pager' }, prev, next),
       ),
@@ -356,13 +423,56 @@ function learn(t: Topic) {
 
 function quiz(t: Topic, mode: 'listen' | 'match') {
   const pool = wordsIn(t.id);
-  const { choices, rounds } = levelConfig(P.settings.age);
-  const targets = pickTargets(pool, rounds, P);
+  runQuiz({
+    mode,
+    targets: pickTargets(pool, levelConfig(P.settings.age).rounds, P),
+    poolFor: () => pool,
+    tintFor: () => t.color,
+    back: () => leave(t),
+    done: (firstTry, rounds) => finishQuiz(t, mode, firstTry, rounds),
+  });
+}
+
+/** Review: Listen and tap over the words the child finds hard, from every topic. */
+function review() {
+  if (overLimit(P)) return rest();
+  const targets = pickReviewSet(words, levelConfig(P.settings.age).rounds, P);
+  if (targets.length < REVIEW_MIN) return home();
+  const tint = (w: Word) => topicById(w.topic)?.color ?? '#ffe3b8';
+  runQuiz({
+    mode: 'listen',
+    targets,
+    // other pictures come from the word's own topic, so the question still makes sense
+    poolFor: (w) => wordsIn(w.topic),
+    tintFor: tint,
+    back: home,
+    done: (firstTry, rounds) => {
+      const stars = starsFor(firstTry, rounds);
+      const sticker = stars >= 2 ? awardSticker(P, stickers.map((s) => s.id)) : null;
+      persist();
+      resultScreen({ tint: tint(targets[targets.length - 1]), stars, sticker, again: review, done: home });
+    },
+  });
+}
+
+interface QuizSpec {
+  mode: 'listen' | 'match';
+  targets: Word[];
+  poolFor: (w: Word) => Word[];
+  tintFor: (w: Word) => string;
+  back: () => void;
+  done: (firstTry: number, rounds: number) => void;
+}
+
+function runQuiz(q: QuizSpec) {
+  const { mode, targets } = q;
+  const { choices } = levelConfig(P.settings.age);
   let round = 0;
   let firstTry = 0;
 
   const play = () => {
     const w = targets[round];
+    const pool = q.poolFor(w);
     const opts = choicesFor(w, pool, Math.min(choices, pool.length));
     let missed = false;
     let locked = false;
@@ -416,7 +526,7 @@ function quiz(t: Topic, mode: 'listen' | 'match') {
         if (!alive(id)) return;
         round++;
         if (round < targets.length) play();
-        else finishQuiz(t, mode, firstTry, targets.length);
+        else q.done(firstTry, targets.length);
       } else {
         missed = true;
         sfx.oops();
@@ -436,8 +546,8 @@ function quiz(t: Topic, mode: 'listen' | 'match') {
     show(
       h(
         'main',
-        { class: `screen lesson quiz ${mode}`, style: `--tint:${t.color}` },
-        lessonBar(t, targets.length, round, replay),
+        { class: `screen lesson quiz ${mode}`, style: `--tint:${q.tintFor(w)}` },
+        lessonBar(q.back, targets.length, round, replay),
         drop && h('section', { class: 'stage' }, drop),
         wordTag && h('section', { class: 'prompt' }, wordTag),
         h('section', { class: `options n${opts.length}` }, optEls),
@@ -564,7 +674,7 @@ function findIt(t: Topic) {
         { class: 'bar' },
         roundBtn(icon.back(), 'Back', () => {
           sfx.tap();
-          topicScreen(t);
+          leave(t);
         }),
         dots,
         replay,
@@ -606,7 +716,7 @@ function singAlong(t: Topic) {
         { class: 'bar' },
         roundBtn(icon.back(), 'Back', () => {
           sfx.tap();
-          topicScreen(t);
+          leave(t);
         }),
         dots,
         h('span', { class: 'spacer' }),
@@ -771,7 +881,7 @@ function sayIt(t: Topic) {
       h(
         'main',
         { class: 'screen lesson sayit', style: `--tint:${t.color}` },
-        lessonBar(t, targets.length, round),
+        lessonBar(() => leave(t), targets.length, round),
         h('section', { class: 'stage' }, card),
         h('nav', { class: 'pager' }, hear, mic, mine),
         status,
@@ -784,28 +894,47 @@ function sayIt(t: Topic) {
 
 // ---------- result ----------
 
+/** Result of a game in a topic. In a today session it leads to the next game instead. */
 function result(t: Topic, a: Activity, stars: number, sticker: string | null) {
+  if (session) {
+    return resultScreen({ tint: t.color, stars, sticker, done: nextStep, steps: [SESSION_STEPS.length, session.i + 1] });
+  }
+  resultScreen({ tint: t.color, stars, sticker, again: () => startActivity(t, a), done: () => topicScreen(t) });
+}
+
+interface ResultSpec {
+  tint: string;
+  stars: number;
+  sticker: string | null;
+  again?: () => void;
+  done: () => void;
+  /** [total, finished] games of a today session */
+  steps?: [number, number];
+}
+
+function resultScreen({ tint, stars, sticker, again, done, steps }: ResultSpec) {
   const row = starsRow(0, 3, 'big');
   const stickerImg = sticker ? stickers.find((s) => s.id === sticker)!.img : null;
   const prize = h('div', { class: 'prize' });
+  // Play time may have run out during the game: the child still gets this screen, then rests.
+  const go = (fn: () => void) => () => {
+    sfx.tap();
+    if (overLimit(P)) return rest();
+    fn();
+  };
   show(
     h(
       'main',
-      { class: 'screen result', style: `--tint:${t.color}` },
+      { class: 'screen result', style: `--tint:${tint}` },
       mascot('hero bob'),
       row,
       prize,
+      steps && progressDots(steps[0], steps[1]),
       h(
         'nav',
         { class: 'pager' },
-        roundBtn(icon.again(), 'Play again', () => {
-          sfx.tap();
-          startActivity(t, a);
-        }, 'big soft'),
-        roundBtn(icon.next(), 'Done', () => {
-          sfx.tap();
-          topicScreen(t);
-        }, 'big go'),
+        again && roundBtn(icon.again(), 'Play again', go(again), 'big soft'),
+        roundBtn(icon.next(), steps ? 'Next' : 'Done', go(done), 'big go'),
       ),
     ),
   );
@@ -860,6 +989,7 @@ function stickerBook() {
 // ---------- rest (daily limit) ----------
 
 function rest() {
+  session = null;
   show(
     h(
       'main',
@@ -1115,7 +1245,8 @@ setInterval(() => {
   if (app.querySelector('.splash')) return;
   addMinutes(P, 1);
   persist();
-  if (overLimit(P) && app.querySelector('.lesson') === null && !app.querySelector('.rest')) rest();
+  // A game in progress and its result screen are never cut off: the child finishes, then rests.
+  if (overLimit(P) && !app.querySelector('.lesson, .result, .rest')) rest();
 }, 60_000);
 
 // expose for debugging / tests

@@ -161,6 +161,55 @@ export function pickTargets<T extends { id: string }>(
   return out;
 }
 
+/** Review needs at least this many words to be worth a game. */
+export const REVIEW_MIN = 4;
+
+/**
+ * Words for a Review game, from every topic: only words the child has met and does not know
+ * well yet (box below 3). Words they keep missing come first, then the least known.
+ * The chosen words are shuffled so the hard ones are not all at the start.
+ */
+export function pickReviewSet<T extends { id: string }>(
+  pool: T[],
+  n: number,
+  p: Progress,
+  rand: () => number = Math.random,
+): T[] {
+  const rank = (w: T) => {
+    const s = stat(p, w.id);
+    return s.wrong > 0 && s.box <= 1 ? 0 : 1 + s.box;
+  };
+  const picked = shuffle(pool, rand)
+    .filter((w) => {
+      const s = stat(p, w.id);
+      return s.seen > 0 && s.box < 3;
+    })
+    .map((w) => ({ w, r: rank(w) }))
+    .sort((a, b) => a.r - b.r)
+    .slice(0, n)
+    .map((x) => x.w);
+  return shuffle(picked, rand);
+}
+
+/**
+ * Topic for the one-tap "today" session: keep going with the topic the child is in the
+ * middle of (the one with most words met), else open the next untouched topic,
+ * else go back to the topic they know least.
+ */
+export function pickTodayTopic<T>(topics: T[], idsOf: (t: T) => string[], p: Progress): T {
+  const info = topics.map((t) => {
+    const ids = idsOf(t);
+    const seen = ids.filter((id) => stat(p, id).seen > 0).length;
+    const boxes = ids.reduce((sum, id) => sum + stat(p, id).box, 0);
+    return { t, seen, total: ids.length, avg: ids.length ? boxes / ids.length : 0 };
+  });
+  const started = info.filter((x) => x.seen > 0 && x.seen < x.total).sort((a, b) => b.seen - a.seen);
+  if (started.length) return started[0].t;
+  const fresh = info.find((x) => x.seen === 0);
+  if (fresh) return fresh.t;
+  return info.slice().sort((a, b) => a.avg - b.avg)[0].t;
+}
+
 /**
  * One Find it scene: `items` distinct words to show (shuffled) and which `finds`
  * of them to ask for, in order. Targets are weighted like pickTargets, without repeats.

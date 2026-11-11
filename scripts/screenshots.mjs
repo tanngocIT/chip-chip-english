@@ -218,6 +218,87 @@ else {
 }
 await page.screenshot({ path: `shots/${tag}-15-parents-full.png`, fullPage: true });
 
+// ---- today session, review and the daily limit ----
+
+/** Plays whatever game is on screen until `until` shows up. */
+async function autoplay(until, maxMs = 240000) {
+  const t0 = Date.now();
+  while (Date.now() - t0 < maxMs) {
+    if (await page.$(until)) return true;
+    if (await page.$('.result')) {
+      await wait(500);
+      await click('.pager .go');
+    } else if (await page.$('.quiz')) {
+      await page.evaluate(() => document.querySelector('.option:not(.dim):not(.right)')?.click());
+      await wait(450);
+    } else if (await page.$('.find')) {
+      for (const sp of await page.$$('.spot:not(.found)')) {
+        const before = await page.$$eval('.spot.found', (f) => f.length).catch(() => -1);
+        await sp.click().catch(() => {});
+        await wait(120);
+        const after = await page.$$eval('.spot.found', (f) => f.length).catch(() => -1);
+        if (after !== before) break;
+      }
+      await wait(500);
+    } else if (await page.$('.sing')) {
+      await wait(1000);
+    } else if (await page.$('.lesson .flash')) {
+      await click('.pager .go');
+    } else {
+      await wait(300);
+    }
+  }
+  return false;
+}
+
+await click('.bar .round'); // parents -> home
+await shot('20-home-quick');
+if (!(await page.$('.quick.today'))) errors.push('today button missing on home');
+if (!(await page.$('.quick.review'))) errors.push('review button missing although words were played');
+
+// Today: learn -> listen -> find -> sing, each result leads on, the last one back home.
+await click('.quick.today');
+if (!(await page.$('.lesson .flash'))) errors.push('today session did not start with Look and listen');
+const seenScreens = new Set();
+const watcher = setInterval(async () => {
+  const c = await page.$eval('main', (m) => m.className).catch(() => '');
+  for (const k of ['quiz', 'find', 'sing', 'result']) if (c.includes(k)) seenScreens.add(k);
+  if (c.includes('result') && !seenScreens.has('shot')) {
+    seenScreens.add('shot');
+    await page.screenshot({ path: `shots/${tag}-21-today-result.png` }).catch(() => {});
+    if (await page.$('.result .soft')) errors.push('today session result shows Play again');
+    if (!(await page.$('.result .dots'))) errors.push('today session result has no step dots');
+  }
+}, 150);
+if (!(await autoplay('.home'))) errors.push('today session did not come back home');
+clearInterval(watcher);
+for (const k of ['quiz', 'find', 'sing', 'result']) if (!seenScreens.has(k)) errors.push(`today session skipped: ${k}`);
+
+// Review: plays to a result, Done goes home.
+await click('.quick.review');
+await shot('22-review');
+if (!(await page.$('.quiz.listen'))) errors.push('review did not open a Listen and tap game');
+if (!(await autoplay('.result'))) errors.push('review did not reach the result screen');
+if (!(await page.$('.result .soft'))) errors.push('review result has no Play again');
+await click('.pager .go');
+if (!(await page.$('.home'))) errors.push('review Done did not go home');
+
+// Daily limit runs out in the middle of a game: finish it, see the result, then rest.
+await click('.topic');
+await click('.act-listen');
+await page.evaluate(() => {
+  const P = window.__app.P;
+  const d = new Date();
+  const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  P.minutesToday = { date, minutes: 999 };
+});
+if (!(await autoplay('.result'))) errors.push('game was cut off when play time ran out');
+await wait(1500);
+if (!(await page.$('.result'))) errors.push('result screen was replaced when play time ran out');
+await click('.pager .go');
+await shot('23-rest');
+if (!(await page.$('.rest'))) errors.push('no rest screen after the result when play time ran out');
+
 console.log(errors.length ? `ERRORS:\n${errors.join('\n')}` : 'no page errors');
 await browser.close();
 server.httpServer.close();
