@@ -114,7 +114,9 @@ src/
   lib/phrases.ts       # danh sách mọi câu cần giọng, tên file mp3
   lib/sfx.ts           # hiệu ứng âm thanh và giai điệu bằng Web Audio
   lib/install.ts       # nút cài app ra màn hình chính
-  main.ts              # các màn hình
+  screens/             # mỗi màn hình một file: core (trạng thái chung, điều hướng), home, topic,
+                       # learn, quiz (Listen and tap, Find the shadow, Review), find, sing, say, result, parents
+  main.ts              # khởi động app và bộ đếm phút chơi
   style.css            # giao diện
 scripts/
   copy-assets.mjs      # chép hình từ bộ Fluent Emoji vào public/img
