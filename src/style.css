@@ -1275,3 +1275,172 @@ td:not(:first-child) {
     text-align: center;
   }
 }
+
+/* home: Play takes the row, Review and Sentences are small tiles beside or below it */
+.quicks {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.quick.today {
+  flex: 1 1 100%;
+}
+
+.quick.small {
+  flex: 1 1 130px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 10px;
+}
+
+.quick.small .label {
+  flex: none;
+  font-size: 20px;
+  line-height: 1.1;
+  text-align: center;
+}
+
+@media (min-width: 900px) {
+  .quicks {
+    flex-wrap: nowrap;
+  }
+  .quick.today {
+    flex: 2 1 0;
+  }
+  .quick.small {
+    flex: 1 1 0;
+  }
+}
+
+/* sticker book: owned stickers show and say their name */
+.slot.have {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8% 6% 2%;
+  gap: 2px;
+}
+
+.slot.have img {
+  flex: 1;
+  min-height: 0;
+}
+
+.slot .name {
+  font-size: clamp(13px, 2.6vw, 17px);
+  font-weight: 700;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+/* memory: cards that turn over */
+.scene.s8 { --cols: 4; --rows: 2; }
+
+@media (orientation: portrait) {
+  .scene.s8 { --cols: 2; --rows: 4; }
+}
+
+.flip {
+  --size: min(calc((min(100vw, 940px) - 80px) / var(--cols)), calc((100dvh - 150px) / var(--rows)));
+  width: calc(var(--size) * 0.9);
+  height: calc(var(--size) * 0.9);
+  perspective: 700px;
+  touch-action: manipulation;
+}
+
+.flip-in {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.35s;
+}
+
+.flip.up .flip-in {
+  transform: rotateY(180deg);
+}
+
+.flip .back,
+.flip .front {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 22px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  box-shadow: 0 5px 0 rgb(43 58 85 / 0.1);
+}
+
+.flip .back {
+  background: var(--sun);
+  box-shadow: 0 5px 0 var(--sun-deep);
+}
+
+.flip .back img {
+  width: 48%;
+  height: 48%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.flip .front {
+  background: var(--paper);
+  transform: rotateY(180deg);
+  padding: 10%;
+}
+
+.flip .front .pic {
+  --s: 100%;
+  width: 100%;
+}
+
+.flip.matched .front {
+  box-shadow: 0 5px 0 var(--leaf), inset 0 0 0 5px var(--leaf);
+}
+
+/* sentences: a small scene on each answer card */
+.sentences .target-word {
+  font-size: clamp(24px, 5.2vw, 46px);
+  border-radius: 30px;
+  padding: 6px clamp(18px, 4vw, 36px) 10px;
+  line-height: 1.2;
+}
+
+.mini {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  gap: 4%;
+}
+
+.option .mini .pic {
+  --s: 44%;
+  width: var(--s);
+}
+
+.option .mini.m3 .pic {
+  --s: 42%;
+}
+
+.option .mini.m5 .pic {
+  --s: 30%;
+}
+
+.option .mini.m4 .pic {
+  --s: 40%;
+}
+
+.option .mini.size .pic.big {
+  --s: 96%;
+}
+
+.option .mini.size .pic.small {
+  --s: 34%;
+}

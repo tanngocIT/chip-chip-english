@@ -1,7 +1,7 @@
 // Scoring, word mastery (simple Leitner boxes) and saved progress.
 
-export type Activity = 'learn' | 'listen' | 'match' | 'say' | 'find' | 'sing';
-export const ACTIVITY_IDS: Activity[] = ['learn', 'listen', 'match', 'say', 'find', 'sing'];
+export type Activity = 'learn' | 'listen' | 'match' | 'say' | 'find' | 'sing' | 'memory';
+export const ACTIVITY_IDS: Activity[] = ['learn', 'listen', 'match', 'say', 'find', 'sing', 'memory'];
 export type AgeLevel = 'small' | 'middle' | 'big'; // 2–3, 4–5, 6
 
 export interface WordStat {
@@ -50,16 +50,17 @@ export const emptyProgress = (): Progress => ({
  * `rounds` is for Listen and tap / Find the shadow, `sayRounds` for Say it
  * (speaking is more tiring, so it has fewer). `sceneItems` / `finds` are for
  * Find it (pictures in the scene / how many the child is asked to find),
- * `singCount` is how many words one Sing along has.
+ * `singCount` is how many words one Sing along has, `pairs` how many pairs Memory has.
+ * Sentences is only for the older two groups: `sentenceRounds` is 0 for the youngest.
  */
 export function levelConfig(age: AgeLevel) {
   switch (age) {
     case 'small':
-      return { choices: 2, rounds: 8, sayRounds: 6, learnCount: 10, sceneItems: 6, finds: 4, singCount: 6 };
+      return { choices: 2, rounds: 8, sayRounds: 6, learnCount: 10, sceneItems: 6, finds: 4, singCount: 6, pairs: 3, sentenceRounds: 0, sentenceChoices: 2 };
     case 'middle':
-      return { choices: 3, rounds: 10, sayRounds: 8, learnCount: 12, sceneItems: 9, finds: 6, singCount: 8 };
+      return { choices: 3, rounds: 10, sayRounds: 8, learnCount: 12, sceneItems: 9, finds: 6, singCount: 8, pairs: 4, sentenceRounds: 6, sentenceChoices: 2 };
     case 'big':
-      return { choices: 4, rounds: 12, sayRounds: 10, learnCount: 15, sceneItems: 12, finds: 8, singCount: 8 };
+      return { choices: 4, rounds: 12, sayRounds: 10, learnCount: 15, sceneItems: 12, finds: 8, singCount: 8, pairs: 6, sentenceRounds: 8, sentenceChoices: 3 };
   }
 }
 
@@ -69,6 +70,16 @@ export function starsFor(firstTry: number, rounds: number): 1 | 2 | 3 {
   const r = firstTry / rounds;
   if (r >= 0.85) return 3;
   if (r >= 0.5) return 2;
+  return 1;
+}
+
+/**
+ * Stars for Memory, from how many times two cards were turned over. Finding pairs is partly
+ * luck, so it is generous: up to two turns per pair is 3 stars, up to three is 2 stars.
+ */
+export function memoryStars(tries: number, pairs: number): 1 | 2 | 3 {
+  if (pairs <= 0 || tries <= pairs * 2) return 3;
+  if (tries <= pairs * 3) return 2;
   return 1;
 }
 

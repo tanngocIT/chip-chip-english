@@ -1,4 +1,5 @@
-import { words, topics, describe, question } from './content';
+import { words, topics, stickers, describe, question } from './content';
+import { allSentences } from './sentences';
 
 /** Câu cố định app đọc (ngoài từ, câu mô tả và câu hỏi sinh từ words.json). */
 export const FIXED_PHRASES = [
@@ -34,6 +35,8 @@ export function allPhrases(): string[] {
     set.add(describe(w));
     set.add(question(w));
   }
+  for (const s of stickers) set.add(s.name);
+  for (const s of allSentences()) set.add(s.text);
   return [...set];
 }
 

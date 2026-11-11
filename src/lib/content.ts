@@ -61,8 +61,25 @@ export const words: Word[] = (data.words as RawWord[]).map((w) => ({
   the: w.the,
 }));
 
+/** What Chip says for a sticker, where the picture's own name is not a child's word. */
+const STICKER_NAMES: Record<string, string> = {
+  'T-rex': 'T-rex',
+  Sauropod: 'dinosaur',
+  'Spouting whale': 'whale',
+  'Lady beetle': 'ladybug',
+  'Hatching chick': 'chick',
+  'Party popper': 'party',
+  Doughnut: 'donut',
+  Shortcake: 'cake',
+  Hibiscus: 'flower',
+  'Four leaf clover': 'clover',
+  'Teacup without handle': 'tea',
+  'Carousel horse': 'carousel',
+};
+
 export const stickers = (stickerNames as string[]).map((s) => ({
   id: slug(s),
+  name: STICKER_NAMES[s] ?? s.toLowerCase(),
   img: `${base}img/stickers/${slug(s)}.svg`,
 }));
 

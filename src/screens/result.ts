@@ -69,7 +69,7 @@ export function resultScreen({ tint, stars, sticker, again, done, steps }: Resul
       prize.replaceChildren(h('img', { class: 'sticker pop-in', src: stickerImg, alt: 'New sticker' }));
       sfx.sticker();
       confetti(prize, 20);
-      void say('A new sticker for you!');
+      void say(['A new sticker for you!', stickers.find((s) => s.id === sticker)!.name]);
     }
   })();
 }

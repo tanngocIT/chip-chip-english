@@ -137,6 +137,43 @@ await wait(2500);
 await shot('18-find-result');
 await click('.pager .go');
 
+// Memory: remember each card that was turned and pair them up.
+await click('.act-memory');
+await shot('24-memory');
+const deckOverflow = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
+if (deckOverflow > 2) errors.push(`memory deck is taller than the screen by ${deckOverflow}px`);
+const cardCount = await page.$$eval('.flip', (c) => c.length);
+if (cardCount % 2 || cardCount < 6) errors.push(`memory deck has ${cardCount} cards`);
+await page.evaluate(async () => {
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const cards = [...document.querySelectorAll('.flip')];
+  const known = new Map(); // word -> card
+  const settle = async () => {
+    for (let i = 0; i < 40 && cards.some((c) => c.classList.contains('up') && !c.classList.contains('matched')); i++) await sleep(100);
+  };
+  for (let guard = 0; guard < 60 && document.querySelector('.memory'); guard++) {
+    const first = cards.find((c) => !c.classList.contains('matched') && ![...known.values()].includes(c)) ?? cards.find((c) => !c.classList.contains('matched'));
+    if (!first) break;
+    first.click();
+    await sleep(60);
+    const word = first.getAttribute('aria-label');
+    let second = known.get(word);
+    if (!second || second === first) second = cards.find((c) => c !== first && !c.classList.contains('matched') && ![...known.values()].includes(c)) ?? cards.find((c) => c !== first && !c.classList.contains('matched'));
+    known.set(word, first);
+    if (!second) break;
+    second.click();
+    await sleep(60);
+    known.set(second.getAttribute('aria-label'), second);
+    if (guard === 0) window.__memoryFirstPair = [word, second.getAttribute('aria-label')];
+    await sleep(300);
+    await settle();
+  }
+});
+await page.waitForSelector('.result', { timeout: 8000 }).catch(() => errors.push('Memory did not reach the result screen'));
+await wait(2500);
+await shot('25-memory-result');
+await click('.pager .go');
+
 // Sing along: plays by itself to the result screen.
 await click('.act-sing');
 await wait(1200);
@@ -175,6 +212,19 @@ await click('.bar .round');
 
 await click('.book-btn');
 await shot('12-stickers');
+// An owned sticker shows its name and says it when tapped.
+const owned = await page.$$eval('.slot.have .name', (n) => n.map((x) => x.textContent));
+if (!owned.length || owned.some((n) => !n)) errors.push(`owned stickers have no name: ${JSON.stringify(owned)}`);
+else {
+  await page.evaluate(() => {
+    window.__said = [];
+    const orig = window.speechSynthesis.speak;
+    window.speechSynthesis.speak = (u) => (window.__said.push(u.text), orig(u));
+  });
+  await click('.slot.have');
+  const said = await page.evaluate(() => window.__said);
+  if (said[0] !== owned[0]) errors.push(`sticker said ${JSON.stringify(said)} instead of ${owned[0]}`);
+}
 await click('.bar .round');
 
 // Grown-ups: hold the lock button.
@@ -273,6 +323,22 @@ const watcher = setInterval(async () => {
 if (!(await autoplay('.home'))) errors.push('today session did not come back home');
 clearInterval(watcher);
 for (const k of ['quiz', 'find', 'sing', 'result']) if (!seenScreens.has(k)) errors.push(`today session skipped: ${k}`);
+
+// Sentences: only from the middle age group up.
+const hasSentences = !!(await page.$('.sentences-btn'));
+if (hasSentences !== (age !== 'small')) errors.push(`sentences button shown=${hasSentences} for age ${age}`);
+if (hasSentences) {
+  await click('.sentences-btn');
+  await shot('26-sentences');
+  if (!(await page.$('.sentences'))) errors.push('Sentences did not open');
+  const fit = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
+  if (fit > 2) errors.push(`sentences screen is taller than the screen by ${fit}px`);
+  const empty = await page.$$eval('.sentences .option', (o) => o.filter((x) => !x.querySelector('img')).length);
+  if (empty) errors.push('a sentence option has no picture');
+  if (!(await autoplay('.result'))) errors.push('Sentences did not reach the result screen');
+  await click('.pager .go');
+  if (!(await page.$('.home'))) errors.push('Sentences Done did not go home');
+}
 
 // Review: plays to a result, Done goes home.
 await click('.quick.review');

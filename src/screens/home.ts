@@ -8,6 +8,7 @@ import { sfx, unlockAudio } from '../lib/sfx';
 import { icon, picture, mascot, roundBtn } from '../ui';
 import { P, show, startToday, announce, endSession } from './core';
 import { topicScreen } from './topic';
+import { sentences } from './sentences';
 import { review } from './quiz';
 import { parentGate } from './parents';
 
@@ -71,7 +72,7 @@ export function home() {
     h(
       'button',
       {
-        class: 'quick review',
+        class: 'quick small review',
         'aria-label': 'Review',
         onclick: (e: Event) => {
           sfx.tap();
@@ -80,6 +81,23 @@ export function home() {
       },
       h('span', { class: 'pile' }, reviewWords.slice(0, 3).map((w) => picture(w, 'sm'))),
       h('span', { class: 'label' }, 'Review'),
+    );
+
+  // Sentences: only for the older children (the youngest group has no rounds).
+  const sentenceBtn =
+    levelConfig(P.settings.age).sentenceRounds > 0 &&
+    h(
+      'button',
+      {
+        class: 'quick small sentences-btn',
+        'aria-label': 'Sentences',
+        onclick: (e: Event) => {
+          sfx.tap();
+          void announce(e.currentTarget as HTMLElement, "Let's play!", sentences);
+        },
+      },
+      h('span', { class: 'pile' }, ['cat', 'dog'].map((id) => picture(wordById(id)!, 'sm'))),
+      h('span', { class: 'label' }, 'Sentences'),
     );
 
   const total = topics.reduce((s, t) => s + topicStars(P, t.id), 0);
@@ -126,7 +144,7 @@ export function home() {
         ),
         h('div', { class: 'total' }, icon.star(), h('b', {}, total)),
       ),
-      h('section', { class: 'quicks' }, today, reviewBtn),
+      h('section', { class: 'quicks' }, today, reviewBtn, sentenceBtn),
       h('section', { class: 'topics' }, tiles),
       h(
         'footer',
@@ -182,10 +200,20 @@ export function holdButton(onDone: () => void) {
 export function stickerBook() {
   const items = stickers.map((s) => {
     const have = P.stickers.includes(s.id);
+    if (!have) return h('div', { class: 'slot' }, h('img', { src: s.img, alt: '', draggable: false }));
+    // a sticker the child owns says its name
     return h(
-      'div',
-      { class: `slot ${have ? 'have' : ''}` },
-      h('img', { src: s.img, alt: have ? s.id : '', draggable: false }),
+      'button',
+      {
+        class: 'slot have',
+        'aria-label': s.name,
+        onclick: (e: Event) => {
+          pulse(e.currentTarget as Element, 'wiggle');
+          void say(s.name);
+        },
+      },
+      h('img', { src: s.img, alt: '', draggable: false }),
+      h('span', { class: 'name' }, s.name),
     );
   });
   show(

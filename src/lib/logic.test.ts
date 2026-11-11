@@ -21,12 +21,14 @@ import {
   pickReviewSet,
   pickTodayTopic,
   REVIEW_MIN,
+  memoryStars,
   topicStars,
 } from './progress';
 import { passes, scoreHeard, levenshtein } from './match';
 import { words, topics, wordsIn, nounPhrase, describe, question, stickers } from './content';
 import { viNumber } from './vi';
 import { isIos, isStandalone } from './install';
+import { allSentences, sentenceOptions, pickSentences, SENTENCE_NOUNS, type Sentence } from './sentences';
 
 const seeded = (seed = 1) => () => {
   seed = (seed * 16807) % 2147483647;
@@ -384,6 +386,108 @@ group('new topics', () => {
     for (const t of topics) {
       const spoken = wordsIn(t.id).map((x) => x.word);
       expect(new Set(spoken).size, t.id).toBe(spoken.length);
+    }
+  });
+});
+
+group('memory', () => {
+  it('is generous with stars and always gives at least one', () => {
+    expect(memoryStars(3, 3)).toBe(3);
+    expect(memoryStars(6, 3)).toBe(3);
+    expect(memoryStars(7, 3)).toBe(2);
+    expect(memoryStars(9, 3)).toBe(2);
+    expect(memoryStars(10, 3)).toBe(1);
+    expect(memoryStars(99, 6)).toBe(1);
+  });
+
+  it('has an even deck that fits every topic at every age', () => {
+    for (const a of ['small', 'middle', 'big'] as const) {
+      const { pairs } = levelConfig(a);
+      for (const t of topics) {
+        const chosen = pickScene(wordsIn(t.id), pairs, pairs, emptyProgress(), seeded(4)).targets;
+        expect(new Set(chosen.map((w) => w.id)).size, t.id).toBe(pairs);
+      }
+    }
+  });
+});
+
+group('sticker names', () => {
+  it('every sticker has a short spoken name and keeps its saved id', () => {
+    expect(stickers.length).toBe(31);
+    for (const s of stickers) expect(s.name, s.id).toMatch(/^[A-Za-z][a-z -]+$/);
+    const byId = Object.fromEntries(stickers.map((s) => [s.id, s.name]));
+    // ids are stored in the child's progress, so they must never change
+    expect(byId['unicorn']).toBe('unicorn');
+    expect(byId['spouting-whale']).toBe('whale');
+    expect(byId['lady-beetle']).toBe('ladybug');
+    expect(byId['teacup-without-handle']).toBe('tea');
+    expect(byId['t-rex']).toBe('T-rex');
+  });
+});
+
+group('sentences', () => {
+  const all = allSentences();
+  // what the child sees: two sentences with the same key would draw the same picture
+  const look = (s: Sentence) =>
+    s.kind + ':' + s.parts.map((p) => `${p.word.id}x${p.n}${p.size ?? ''}`).sort().join('+');
+
+  it('builds a fixed list of natural sentences from words that exist', () => {
+    for (const id of SENTENCE_NOUNS) expect(words.some((w) => w.id === id), id).toBe(true);
+    expect(all.length).toBe(SENTENCE_NOUNS.length * 8);
+    expect(new Set(all.map((s) => s.text)).size).toBe(all.length);
+    expect(new Set(all.map(look)).size).toBe(all.length);
+    const texts = all.map((s) => s.text);
+    expect(texts).toContain('I see three cats.');
+    expect(texts).toContain('I see a cat and a dog.');
+    expect(texts).toContain('I see an apple and a banana.');
+    expect(texts).toContain('The ball is big.');
+    expect(texts).toContain('The egg is small.');
+  });
+
+  it('offers the right picture once, among different pictures of the same kind', () => {
+    for (const s of all) {
+      for (const n of [2, 3]) {
+        const opts = sentenceOptions(s, n, seeded(all.indexOf(s) + 1));
+        expect(opts.length).toBe(n);
+        expect(opts.filter((o) => o.text === s.text).length).toBe(1);
+        expect(new Set(opts.map(look)).size).toBe(n);
+        for (const o of opts) expect(o.kind).toBe(s.kind);
+      }
+    }
+  });
+
+  it('wrong pictures share something with the sentence', () => {
+    const target = all.find((s) => s.text === 'I see three cats.')!;
+    for (let seed = 1; seed <= 20; seed++) {
+      const wrong = sentenceOptions(target, 3, seeded(seed)).filter((o) => o.text !== target.text);
+      for (const o of wrong) expect(o.parts[0].word.id === 'cat' || o.parts[0].n === 3, o.text).toBe(true);
+    }
+  });
+
+  it('a game has different sentences of all three kinds, and none for the youngest', () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      const game = pickSentences(8, seeded(seed));
+      expect(game.length).toBe(8);
+      expect(new Set(game.map((s) => s.text)).size).toBe(8);
+      expect(new Set(game.map((s) => s.kind)).size).toBe(3);
+    }
+    expect(levelConfig('small').sentenceRounds).toBe(0);
+    expect(levelConfig('middle').sentenceRounds).toBeGreaterThan(0);
+    expect(pickSentences(0)).toEqual([]);
+  });
+});
+
+group('sentence options test the whole sentence', () => {
+  it('always shows the same thing in another number or size, so the noun alone is not enough', () => {
+    const shares = (a: Sentence, b: Sentence) => a.parts.some((p) => b.parts.some((q) => q.word.id === p.word.id));
+    for (const s of allSentences()) {
+      for (const n of [2, 3]) {
+        for (let seed = 1; seed <= 5; seed++) {
+          const wrong = sentenceOptions(s, n, seeded(seed)).filter((o) => o.text !== s.text);
+          expect(wrong.some((o) => shares(o, s)), `${s.text} / ${wrong.map((o) => o.text).join(' | ')}`).toBe(true);
+          if (n === 3) expect(wrong.some((o) => !shares(o, s)), s.text).toBe(true);
+        }
+      }
     }
   });
 });

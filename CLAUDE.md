@@ -48,6 +48,7 @@ src/lib/phrases.ts      danh sách mọi câu cần giọng + phraseKey (tên fi
 src/lib/sfx.ts          hiệu ứng âm thanh và giai điệu Sing along bằng Web Audio (không có file âm thanh)
 src/lib/install.ts      cài app: beforeinstallprompt (Android/desktop), nhận biết iOS và chế độ đã cài
 src/lib/vi.ts           viết số bằng chữ tiếng Việt (cho cổng phụ huynh)
+src/lib/sentences.ts    bộ 96 câu ngắn (allSentences), chọn câu cho một ván (pickSentences), chọn hình đáp án (sentenceOptions)
 src/ui.ts               icon SVG, picture() (hình sticker; số = chữ số + N ngôi sao), stars, dots
 src/screens/core.ts     trạng thái chung (app, P, screenId, session, inParentArea), show(), persist(), startActivity,
                         buổi học Play (startToday, nextStep, leave), announce, lessonBar
@@ -58,6 +59,8 @@ src/screens/quiz.ts     runQuiz dùng chung cho Listen and tap, Find the shadow 
 src/screens/find.ts     Find it
 src/screens/sing.ts     Sing along
 src/screens/say.ts      Say it
+src/screens/memory.ts   Memory (lật thẻ ghép đôi)
+src/screens/sentences.ts  Sentences (câu ngắn, mở từ màn hình chính)
 src/screens/result.ts   result (theo chủ đề hoặc buổi học) và resultScreen
 src/screens/parents.ts  parentGate, parentArea
 src/main.ts             nạp CSS, bộ đếm phút chơi, gọi splash()
@@ -111,28 +114,33 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
   2. Tải `en_US-kristin-medium.onnx` và `.onnx.json` từ `https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/kristin/medium/` vào `voice-model/`.
   3. Nếu Python không tải được từ Hugging Face (lỗi chứng chỉ SSL do proxy), tải bằng Node (`fetch`) và tải luôn mô hình Whisper: 4 file `config.json`, `tokenizer.json`, `vocabulary.txt`, `model.bin` từ `https://huggingface.co/Systran/faster-whisper-small.en/resolve/main/` vào `voice-model/whisper-small.en/`, rồi đặt biến `WHISPER_MODEL` trỏ tới thư mục đó khi chạy `gen-voice.mjs`. Không tắt kiểm tra chứng chỉ.
   4. Mốc so sánh khi nghe lại: Whisper nghe lệch khoảng 29% số từ đơn của lô cũ (24/83, ví dụ pig → "PEGI", owl → "I'll"), nên một từ đơn lệch chưa chắc là file hỏng. Khi lệch, sinh lại vài bản (Piper mỗi lần ra hơi khác) với câu mồi "Say, X!" và chọn bản Whisper nghe đúng; walk, row, ride đã được thay theo cách này.
-  5. Sau khi sinh, **dùng Whisper nghe lại từng file mới** và so với câu gốc. Câu 1–2 từ đi qua bước cắt chữ "Say" và có thể bị cắt lố: "Let's practice!" từng chỉ còn "practice". Gặp vậy thì đổi sang câu từ 3 từ trở lên (được đọc nguyên câu) hoặc đổi câu khác.
+  5. Whisper hay nghe "the" trước nguyên âm thành "this/that" ("The apple is small." lệch qua 8 lần sinh lại) và "and a" thành "in a"; các lệch kiểu này không phải file hỏng. Tên ghép như "ladybug" sinh tốt hơn khi viết tách "Lady bug.".
+  6. Sau khi sinh, **dùng Whisper nghe lại từng file mới** và so với câu gốc. Câu 1–2 từ đi qua bước cắt chữ "Say" và có thể bị cắt lố: "Let's practice!" từng chỉ còn "practice". Gặp vậy thì đổi sang câu từ 3 từ trở lên (được đọc nguyên câu) hoặc đổi câu khác.
 
-**Trò chơi** (mỗi chủ đề có 6 trò)
+**Trò chơi** (mỗi chủ đề có 7 trò)
 1. Look and listen (thẻ từ)
 2. Listen and tap: hiện **chữ to của từ đang hỏi** để bé nhận mặt chữ; chạm vào chữ thì đọc chậm.
 3. Find the shadow: chữ của từ chỉ hiện **sau khi bé ghép đúng**. Hiện trước thì bé biết đọc sẽ đọc chữ thay vì nhìn hình dáng.
 4. Find it (tìm trong tranh): một tranh nhiều hình, nghe câu hỏi rồi tìm. Không hiện chữ. Hình đã tìm được thì mờ đi, hình sai chỉ lắc (không làm mờ, vì có thể là đáp án của câu sau). Ý tưởng ban đầu chỉ dành cho bé 5–6 tuổi, nhưng đã làm cho mọi tuổi với số hình tăng dần để màn chủ đề giống nhau ở mọi độ tuổi.
 5. Say it: phát lại giọng bé rồi đọc giọng mẫu, có nút bong bóng để nghe lại.
 6. Sing along: đọc theo nhịp trên giai điệu "Twinkle, twinkle" (dân gian, phạm vi công cộng) phát bằng Web Audio. Đây là đọc theo nhạc, không phải bài hát có giọng hát, vì chưa có cách miễn phí nào tạo giọng hát mà AI tự kiểm tra được chất lượng. Mỗi từ 4 ô nhịp (2 giây một ô): từ, từ, câu mô tả, nghỉ. Lời đọc quyết định nhịp: câu nào đọc lâu hơn một ô thì chờ đến vạch ô kế tiếp, nên tốc độ đọc chậm không bị cắt lời. Luôn được 3 sao, không có sticker (để bé không cày sticker bằng trò không cần làm gì).
+7. Memory (lật thẻ ghép đôi): 3/4/6 cặp theo tuổi, chọn từ bằng `pickScene` (ưu tiên từ bé chưa thuộc). Mỗi thẻ lật lên đọc tên; hai thẻ khác nhau thì đọc tên rồi úp lại, không có tiếng "sai". Sao theo số lượt lật (`memoryStars`): tối đa 2 lượt mỗi cặp được 3 sao, tối đa 3 lượt được 2 sao. Trò này phần lớn là may rủi nên chỉ ghi `recordSeen`, không đổi hộp Leitner.
 
-**Màn hình chính** có thêm hai nút to phía trên các chủ đề:
+**Album sticker:** sticker bé đã có hiện tên tiếng Anh và đọc tên khi chạm; màn kết quả cũng đọc tên sticker mới. Tên lấy từ `STICKER_NAMES` trong `content.ts` khi tên thư mục hình không phải từ của bé ("Spouting whale" → "whale", "Hibiscus" → "flower"). **Không đổi id sticker** (suy ra từ tên thư mục), vì id nằm trong tiến độ đã lưu của bé.
+
+**Màn hình chính** có thêm ba nút phía trên các chủ đề:
 - **Play** (buổi học một chạm, biến `session` trong `screens/core.ts`): chạy 4 trò liền nhau trong một chủ đề theo thứ tự cố định Look and listen → Listen and tap → Find it → Sing along. Không có Say it (cần xin quyền micro) và Find the shadow (để buổi học ngắn, khoảng 5 phút). Trong buổi học, màn kết quả chỉ có nút đi tiếp và các chấm tiến độ, không có nút chơi lại; nút Back đưa về màn hình chính. `pickTodayTopic` chọn chủ đề: đang học dở (nhiều từ đã gặp nhất) → chủ đề chưa mở kế tiếp → chủ đề thuộc ít nhất.
 - **Review**: Listen and tap với từ lấy từ mọi chủ đề (`pickReviewSet`): chỉ từ đã gặp và chưa thuộc (hộp < 3), từ hay nhầm trước, mỗi từ một câu. Hình gây nhiễu lấy từ cùng chủ đề với từ đang hỏi để câu hỏi vẫn hợp lý. Nút chỉ hiện khi có ít nhất 4 từ (`REVIEW_MIN`). Có sao và sticker, nhưng sao không cộng vào chủ đề nào.
+- **Sentences** (câu ngắn, ý tưởng ban đầu là cho bé 5–6 tuổi): chỉ hiện ở nhóm 4–5 và 6 tuổi (`sentenceRounds` > 0). Bé nghe và đọc một câu rồi chạm hình đúng. Ba kiểu câu, chọn vì vẽ được bằng hình sẵn có: số lượng ("I see three cats.", vẽ 3 con mèo), hai vật ("I see a cat and a dog."), kích thước ("The dog is big.", vẽ hình to hoặc nhỏ). Bộ câu **cố định 96 câu** từ 12 danh từ (`SENTENCE_NOUNS`: số nhiều chỉ thêm "s", hình rõ khi vẽ nhỏ), vì mỗi câu cần một file mp3; thêm danh từ hay kiểu câu thì phải sinh giọng. `sentenceOptions` luôn đưa một hình sai cùng vật nhưng khác số lượng/kích thước, và (khi có 3 hình) một hình khác vật, để bé phải hiểu cả câu chứ không chỉ danh từ. Có sao và sticker, không ghi vào Leitner.
 - Chạm Play thì Chip nói "Let's play!", chạm Review thì nói "Let's play again!", nói xong mới vào trò (`announce()` trong `screens/core.ts`, bỏ qua các lần chạm thừa trong lúc đang nói).
 
 **Theo độ tuổi** (`levelConfig`)
 
-| Tuổi | Hình/câu | Listen & Shadow | Say it | Look and listen | Find it (hình/câu tìm) | Sing along |
-|---|---|---|---|---|---|---|
-| 2–3 | 2 | 8 | 6 | 10 thẻ | 6 / 4 | 6 từ |
-| 4–5 | 3 | 10 | 8 | 12 thẻ | 9 / 6 | 8 từ |
-| 6 | 4 | 12 | 10 | 15 thẻ | 12 / 8 | 8 từ |
+| Tuổi | Hình/câu | Listen & Shadow | Say it | Look and listen | Find it (hình/câu tìm) | Sing along | Memory | Sentences (câu / hình) |
+|---|---|---|---|---|---|---|---|---|
+| 2–3 | 2 | 8 | 6 | 10 thẻ | 6 / 4 | 6 từ | 3 cặp | không có |
+| 4–5 | 3 | 10 | 8 | 12 thẻ | 9 / 6 | 8 từ | 4 cặp | 6 / 2 |
+| 6 | 4 | 12 | 10 | 15 thẻ | 12 / 8 | 8 từ | 6 cặp | 8 / 3 |
 
 **Chấm điểm và chọn từ**
 - Sao được tính theo tỉ lệ câu đúng ngay lần đầu: ≥85% được 3 sao, ≥50% được 2 sao, còn lại 1 sao. Bé luôn được ít nhất 1 sao.
@@ -191,7 +199,7 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 - Bài Say it bị ẩn trên trình duyệt không có SpeechRecognition (ví dụ Firefox).
 - Giọng tiếng Anh là mp3 nên giống nhau trên mọi máy. Giọng Việt (nếu bật) và câu chưa có mp3 vẫn phụ thuộc máy.
 - File mp3 phát qua blob URL (không dùng Range request) vì Safari phát từ service worker dễ lỗi với Range.
-- Cache offline thêm khoảng 8 MB cho giọng (1.028 file).
+- Cache offline thêm khoảng 9 MB cho giọng (1.137 file).
 - Bản cài như app chạy offline, nên sau khi deploy có thể phải mở lại app một lần mới thấy bản mới.
 
 ## Ý tưởng tiếp theo (chưa làm)

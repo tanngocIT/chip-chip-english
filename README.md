@@ -24,7 +24,7 @@ Chạy được trên iPad, tablet Android, điện thoại và máy tính. Có 
 | Hình khối (circle, square, triangle…) | 12 |
 | Cảm xúc (happy, sad, angry…; câu "I am happy.") | 12 |
 
-Mỗi chủ đề có 6 trò:
+Mỗi chủ đề có 7 trò:
 
 | Trò | Bé làm gì | Chấm điểm |
 |---|---|---|
@@ -33,28 +33,31 @@ Mỗi chủ đề có 6 trò:
 | **Find the shadow** | Kéo (hoặc chạm) hình vào đúng cái bóng. Ghép đúng thì chữ của từ hiện ra dưới hình. Chủ đề Cảm xúc không có trò này vì các khuôn mặt có bóng giống hệt nhau. | 1–3 sao |
 | **Find it** (tìm trong tranh) | Một tranh có 6–12 hình. Nghe "Where is the cat?" rồi tìm đúng hình trong tranh; hình đã tìm được thì mờ đi. | 1–3 sao |
 | **Say it** | Nghe mẫu, bấm micro và nói từ đó. App phát lại giọng bé vừa nói rồi đọc giọng mẫu để bé so sánh; nút bong bóng cho bé nghe lại giọng mình bao nhiêu lần cũng được. | 1–3 sao |
+| **Memory** (lật thẻ ghép đôi) | Lật hai thẻ mỗi lượt để tìm cặp hình giống nhau; mỗi thẻ lật lên đều đọc tên. Không có đáp án sai, hai thẻ khác nhau chỉ úp lại. | 1–3 sao theo số lượt lật |
 | **Sing along** (đọc theo nhạc) | Hình nhún theo nhịp trên nền giai điệu "Twinkle, twinkle", Chip đọc theo nhịp: "cat, cat, it's a cat." Bé chỉ cần nghe và đọc theo, không có câu hỏi. | 3 sao, không có sticker |
 
-Ở màn hình chính còn có hai nút to:
+Ở màn hình chính còn có ba nút:
 
 - **Play** (buổi học một chạm): bé không phải chọn gì. Chip nói "Let's play!" rồi bắt đầu. App tự chọn chủ đề (chủ đề bé đang học dở, hết thì mở chủ đề mới, học hết cả rồi thì quay lại chủ đề bé thuộc ít nhất) và dẫn bé qua 4 trò liền nhau: Look and listen → Listen and tap → Find it → Sing along. Xong mỗi trò bé bấm mũi tên để sang trò kế, xong cả bốn thì về màn hình chính.
 - **Review** (ôn tập): một lượt Listen and tap gồm các từ bé đã gặp nhưng chưa thuộc, lấy từ **mọi chủ đề**, từ hay nhầm được ưu tiên. Nút chỉ hiện khi có ít nhất 4 từ cần ôn. Chấm 1–3 sao và thưởng sticker như các trò khác.
 
+- **Sentences** (câu ngắn, chỉ hiện từ 4–5 tuổi): bé nghe và đọc một câu như "I see three cats.", "I see a cat and a dog." hoặc "The dog is big.", rồi chạm vào hình đúng. Các hình sai luôn có một hình cùng con vật nhưng khác số lượng hay kích thước, nên bé phải hiểu cả câu. Có 96 câu, ghép từ 12 từ quen thuộc. Chấm 1–3 sao và thưởng sticker.
+
 **Cách chấm điểm**
 
 - Sao tính theo số câu bé làm đúng **ngay lần đầu**: từ 85% trở lên được 3 sao, từ 50% được 2 sao, còn lại 1 sao. Bé luôn được ít nhất 1 sao.
-- Đạt từ 2 sao trở lên được thưởng **một sticker mới** cho album (31 sticker).
+- Đạt từ 2 sao trở lên được thưởng **một sticker mới** cho album (31 sticker). Trong album, mỗi sticker bé đã có hiện tên tiếng Anh bên dưới và đọc tên khi bé chạm vào.
 - Chọn sai không bị trừ điểm. App chỉ phát tiếng "boop" nhẹ, làm mờ hình sai và đọc lại câu hỏi.
 - Bài **Say it** chấm dễ: chấp nhận từ đồng âm ("for" → four, "I" → eye) và phát âm gần đúng. Nói hai lần chưa được thì app vẫn khen "Good try!", đọc mẫu rồi chuyển câu, để bé không bị kẹt.
 - App ghi nhớ từ nào bé hay nhầm (theo kiểu hộp Leitner) và cho từ đó xuất hiện nhiều hơn ở các lần chơi sau. Các trò chơi chủ yếu hỏi những từ bé đã xem ở Look and listen, thỉnh thoảng mới có từ mới.
 
 **Độ khó theo tuổi** (bố mẹ chọn trong phần cài đặt):
 
-| Tuổi | Look and listen | Số hình mỗi câu | Listen and tap / Find the shadow | Say it | Find it | Sing along |
-|---|---|---|---|---|---|---|
-| 2–3 | 10 thẻ | 2 | 8 câu | 6 câu | tranh 6 hình, tìm 4 | 6 từ |
-| 4–5 | 12 thẻ | 3 | 10 câu | 8 câu | tranh 9 hình, tìm 6 | 8 từ |
-| 6 | 15 thẻ | 4 | 12 câu | 10 câu | tranh 12 hình, tìm 8 | 8 từ |
+| Tuổi | Look and listen | Số hình mỗi câu | Listen and tap / Find the shadow | Say it | Find it | Memory | Sing along | Sentences |
+|---|---|---|---|---|---|---|---|---|
+| 2–3 | 10 thẻ | 2 | 8 câu | 6 câu | tranh 6 hình, tìm 4 | 3 cặp | 6 từ | không có |
+| 4–5 | 12 thẻ | 3 | 10 câu | 8 câu | tranh 9 hình, tìm 6 | 4 cặp | 8 từ | 6 câu, 2 hình |
+| 6 | 15 thẻ | 4 | 12 câu | 10 câu | tranh 12 hình, tìm 8 | 6 cặp | 8 từ | 8 câu, 3 hình |
 
 ## Phần dành cho bố mẹ
 
@@ -114,8 +117,10 @@ src/
   lib/phrases.ts       # danh sách mọi câu cần giọng, tên file mp3
   lib/sfx.ts           # hiệu ứng âm thanh và giai điệu bằng Web Audio
   lib/install.ts       # nút cài app ra màn hình chính
+  lib/sentences.ts     # bộ câu ngắn và cách chọn hình đáp án
   screens/             # mỗi màn hình một file: core (trạng thái chung, điều hướng), home, topic,
-                       # learn, quiz (Listen and tap, Find the shadow, Review), find, sing, say, result, parents
+                       # learn, quiz (Listen and tap, Find the shadow, Review), find, memory, sing, say,
+                       # sentences, result, parents
   main.ts              # khởi động app và bộ đếm phút chơi
   style.css            # giao diện
 scripts/
@@ -151,7 +156,7 @@ Dự án giữ nguyên tắc miễn phí hoàn toàn, nên chỉ xét các hư�
 
 - Bài hát có giọng hát thật (Sing along hiện là đọc theo nhịp nhạc).
 - Giọng tiếng Việt bằng mp3 sinh sẵn, để mục "nghĩa tiếng Việt" chạy trên cả máy không có giọng Việt.
-- Câu ngắn cho bé 5–6 tuổi, ghép từ các chủ đề đã có ("The cat is sleeping.").
+- Thêm kiểu câu cho bài Sentences (ví dụ có động từ: "The cat is sleeping."); cần hình ghép mà bộ hình hiện tại chưa có.
 
 Đã loại vì tốn tiền: chấm phát âm bằng Azure Pronunciation Assessment, đưa lên App Store / Google Play (cần tài khoản nhà phát triển trả phí). App dùng dạng PWA cài từ trình duyệt.
 

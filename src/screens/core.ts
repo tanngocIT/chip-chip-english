@@ -14,6 +14,7 @@ import { quiz } from './quiz';
 import { findIt } from './find';
 import { singAlong } from './sing';
 import { sayIt } from './say';
+import { memory } from './memory';
 
 export const app = document.getElementById('app')!;
 export const P = load();
@@ -90,6 +91,7 @@ export function startActivity(t: Topic, a: Activity) {
   if (a === 'match') return quiz(t, 'match');
   if (a === 'find') return findIt(t);
   if (a === 'sing') return singAlong(t);
+  if (a === 'memory') return memory(t);
   return sayIt(t);
 }
 
