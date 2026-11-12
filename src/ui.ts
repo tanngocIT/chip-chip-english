@@ -89,3 +89,12 @@ export function progressDots(total: number, done: number) {
     Array.from({ length: total }, (_, i) => h('i', { class: i < done ? 'done' : i === done ? 'now' : '' })),
   );
 }
+
+/** Chip pops up from the bottom edge, wiggles with joy and drops back. Touches nothing on the screen. */
+export function chipCheer() {
+  if (globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelector('.chip-peek')?.remove();
+  const el = h('img', { class: 'chip-peek', src: imgUrl('mascot'), alt: '', draggable: false });
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1150);
+}

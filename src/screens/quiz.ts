@@ -5,8 +5,8 @@ import { words, wordsIn, topicById, stickers, question, type Topic, type Word } 
 import { levelConfig, starsFor, recordAnswer, recordStars, awardSticker, pickTargets, pickReviewSet, REVIEW_MIN, overLimit, choicesFor, type Activity } from '../lib/progress';
 import { say } from '../lib/voice';
 import { sfx } from '../lib/sfx';
-import { icon, picture, roundBtn } from '../ui';
-import { P, screenId, alive, show, persist, leave, lessonBar, pick } from './core';
+import { icon, picture, roundBtn, chipCheer } from '../ui';
+import { P, screenId, alive, show, persist, leave, lessonBar } from './core';
 import { home, rest } from './home';
 import { result, resultScreen } from './result';
 
@@ -102,6 +102,7 @@ export function runQuiz(q: QuizSpec) {
         locked = true;
         const id = screenId;
         sfx.right();
+        chipCheer();
         btn.classList.add('right');
         confetti(btn);
         if (drop) {
@@ -112,7 +113,7 @@ export function runQuiz(q: QuizSpec) {
         recordAnswer(P, w.id, !missed);
         if (!missed) firstTry++;
         persist();
-        await say([w.word, missed ? 'Yes!' : pick(['Great!', 'Yes!', 'Super!', 'Well done!'])]);
+        await say(w.word);
         await wait(300);
         if (!alive(id)) return;
         round++;

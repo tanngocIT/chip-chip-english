@@ -67,10 +67,11 @@ export const sfx = {
   tap() {
     tone(660, 0, 0.08, 'sine', 0.08, 880);
   },
+  /** A short bright "ti-ding": the only thing a right answer gets, no spoken praise. */
   right() {
-    tone(784, 0, 0.18, 'sine', 0.16);
-    tone(988, 0.1, 0.18, 'sine', 0.16);
-    tone(1319, 0.2, 0.32, 'sine', 0.14);
+    tone(1047, 0, 0.09, 'sine', 0.16);
+    tone(1568, 0.08, 0.26, 'sine', 0.15);
+    tone(3136, 0.08, 0.14, 'sine', 0.04);
   },
   oops() {
     tone(330, 0, 0.22, 'triangle', 0.12, 260);

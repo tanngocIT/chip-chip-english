@@ -6,8 +6,8 @@ import { levelConfig, starsFor, awardSticker, overLimit } from '../lib/progress'
 import { pickSentences, sentenceOptions, type Sentence } from '../lib/sentences';
 import { say } from '../lib/voice';
 import { sfx } from '../lib/sfx';
-import { icon, picture, roundBtn } from '../ui';
-import { P, screenId, alive, show, persist, lessonBar, pick } from './core';
+import { icon, picture, roundBtn, chipCheer } from '../ui';
+import { P, screenId, alive, show, persist, lessonBar } from './core';
 import { home, rest } from './home';
 import { resultScreen } from './result';
 
@@ -68,11 +68,12 @@ export function sentences() {
       locked = true;
       const id = screenId;
       sfx.right();
+      chipCheer();
       btn.classList.add('right');
       confetti(btn);
       if (!missed) firstTry++;
-      await say([s.text, missed ? 'Yes!' : pick(['Great!', 'Yes!', 'Super!', 'Well done!'])]);
-      await wait(300);
+      // the sentence was just heard: the tick is enough
+      await wait(900);
       if (!alive(id)) return;
       round++;
       if (round < targets.length) return play();

@@ -11,6 +11,23 @@ import { result } from './result';
 
 // ---------- learn (flashcards) ----------
 
+/** How a picture moves when it is tapped: animals hop, cars drive off and back, fruit rolls. */
+const REACTIONS: Record<string, string> = {
+  animals: 'hop',
+  actions: 'hop',
+  family: 'hop',
+  vehicles: 'drive',
+  fruits: 'roll',
+  food: 'roll',
+  toys: 'roll',
+  shapes: 'spin',
+  colors: 'spin',
+  feelings: 'zoom',
+  numbers: 'zoom',
+  body: 'zoom',
+  nature: 'sway',
+};
+
 export function learn(t: Topic) {
   const list = pickLearnSet(wordsIn(t.id), levelConfig(P.settings.age).learnCount, P);
   let i = 0;
@@ -27,17 +44,19 @@ export function learn(t: Topic) {
         if (alive(id) && P.settings.vietnamese && hasVietnameseVoice()) void say(w.vi, { lang: 'vi' });
       });
     };
+    const pic = picture(w, 'lg');
+    const react = REACTIONS[t.id] ?? 'wiggle';
     const card = h(
       'button',
       {
         class: 'card flash pop-in',
         'aria-label': w.word,
         onclick: () => {
-          pulse(card, 'wiggle');
+          pulse(pic, react);
           speak();
         },
       },
-      picture(w, 'lg'),
+      pic,
       h('span', { class: 'word' }, w.word),
     );
     const prev = roundBtn(icon.back(), 'Previous', () => {
@@ -71,6 +90,7 @@ export function learn(t: Topic) {
     );
     // show() bumped screenId, so id === screenId now
     setTimeout(speak, 250);
+    setTimeout(() => alive(id) && pulse(pic, react), 1100);
   };
   render();
 }

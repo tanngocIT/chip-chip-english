@@ -5,7 +5,7 @@ import { wordsIn, stickers, imgUrl, type Topic, type Word } from '../lib/content
 import { levelConfig, memoryStars, pickScene, shuffle, recordSeen, recordStars, awardSticker } from '../lib/progress';
 import { say } from '../lib/voice';
 import { sfx } from '../lib/sfx';
-import { icon, picture, roundBtn, progressDots } from '../ui';
+import { icon, picture, roundBtn, progressDots, chipCheer } from '../ui';
 import { P, screenId, alive, show, persist, leave } from './core';
 import { result } from './result';
 
@@ -53,10 +53,11 @@ export function memory(t: Topic) {
       await wait(250);
       if (!alive(id)) return;
       sfx.right();
+      chipCheer();
       a.btn.classList.add('matched');
       b.btn.classList.add('matched');
       confetti(btn);
-      await say([w.word, 'Yes!']);
+      await say(w.word);
       if (!alive(id)) return;
       if (found === chosen.length) {
         await wait(400);

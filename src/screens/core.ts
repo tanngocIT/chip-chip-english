@@ -23,6 +23,7 @@ initVoice();
 initInstall();
 
 let cleanup: (() => void) | null = null;
+let lastKind = '';
 export let inParentArea = false;
 
 /** Each navigation bumps this so that stale async steps of an old screen stop. */
@@ -36,6 +37,8 @@ export function show(node: HTMLElement, onLeave?: () => void) {
   stopClip();
   if (!node.classList.contains('sayit')) closeMic();
   screenId++;
+  if (node.className !== lastKind) node.classList.add('enter');
+  lastKind = node.className.replace(' enter', '');
   app.replaceChildren(node);
   window.scrollTo(0, 0);
 }
@@ -107,5 +110,3 @@ export function lessonBar(back: () => void, total: number, done: number, extra?:
     extra ?? h('span', { class: 'spacer' }),
   );
 }
-
-export const pick = <T,>(a: T[]) => a[Math.floor(Math.random() * a.length)];

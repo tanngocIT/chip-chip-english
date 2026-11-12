@@ -65,3 +65,21 @@ export function confetti(from: Element, count = 14) {
     setTimeout(() => d.remove(), 900);
   }
 }
+
+/** Confetti falling over the whole screen, for the big moments (three stars, a new sticker). */
+export function confettiRain(count = 40) {
+  if (reducedMotion()) return;
+  const colors = ['#FFC54D', '#7FD1A8', '#8CC8F5', '#F7A8BC', '#B9A5F2'];
+  for (let i = 0; i < count; i++) {
+    const d = document.createElement('i');
+    d.className = 'rain';
+    d.style.left = `${Math.random() * 100}vw`;
+    d.style.background = colors[i % colors.length];
+    d.style.animationDelay = `${Math.random() * 0.7}s`;
+    d.style.animationDuration = `${1.6 + Math.random() * 1.2}s`;
+    d.style.setProperty('--sway', `${(Math.random() - 0.5) * 120}px`);
+    if (i % 3 === 0) d.style.borderRadius = '50%';
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 3700);
+  }
+}

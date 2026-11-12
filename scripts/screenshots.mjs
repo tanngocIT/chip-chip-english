@@ -32,6 +32,7 @@ await page.evaluateOnNewDocument((age) => {
     addEventListener() {},
     cancel() {},
     speak(u) {
+      (window.__allSaid ??= []).push(u.text);
       setTimeout(() => u.onend && u.onend(), 30);
     },
   };
@@ -80,6 +81,7 @@ await click('.bar .round');
 // Listen & tap: answer each round, first one wrong on purpose.
 await click('.act-listen');
 await shot('06-listen');
+let sawChip = false;
 let guard = 0;
 while ((await page.$('.quiz')) && guard++ < 60) {
   const opts = await page.$$('.option:not(.dim)');
@@ -91,8 +93,11 @@ while ((await page.$('.quiz')) && guard++ < 60) {
     const after = await page.$eval('.dots', (d) => d.querySelectorAll('.done').length).catch(() => -1);
     if (after !== before || !(await page.$('.quiz'))) break;
   }
+  // a right answer makes Chip pop up
+  sawChip ||= !!(await page.$('.chip-peek'));
   if (guard === 1) await shot('07-listen-answered');
 }
+if (!sawChip) errors.push('Chip did not pop up after a right answer');
 await wait(2500);
 await shot('08-result');
 await click('.pager .go');
@@ -170,8 +175,20 @@ await page.evaluate(async () => {
   }
 });
 await page.waitForSelector('.result', { timeout: 8000 }).catch(() => errors.push('Memory did not reach the result screen'));
-await wait(2500);
-await shot('25-memory-result');
+// With two stars or more the sticker comes in a gift box that the child opens.
+await wait(1800);
+const memStars = await page.$$eval('.stars.big .on', (s) => s.length);
+if (memStars >= 2) {
+  await page.waitForSelector('.gift', { timeout: 4000 }).catch(() => errors.push('no gift box on the result screen'));
+  await shot('25-memory-result');
+  await page.evaluate(() => document.querySelector('.gift')?.click());
+  await wait(500);
+  const prize = await page.evaluate(() => ({ img: !!document.querySelector('.prize .sticker'), name: document.querySelector('.sticker-name')?.textContent ?? '' }));
+  if (!prize.img || !prize.name) errors.push(`gift did not open into a named sticker: ${JSON.stringify(prize)}`);
+  await shot('25b-gift-open');
+} else {
+  await shot('25-memory-result');
+}
 await click('.pager .go');
 
 // Sing along: plays by itself to the result screen.
@@ -364,6 +381,9 @@ if (!(await page.$('.result'))) errors.push('result screen was replaced when pla
 await click('.pager .go');
 await shot('23-rest');
 if (!(await page.$('.rest'))) errors.push('no rest screen after the result when play time ran out');
+
+const praise = (await page.evaluate(() => window.__allSaid ?? [])).filter((t) => ['Yes!', 'Great!', 'Super!', 'Wonderful!'].includes(t));
+if (praise.length) errors.push(`spoken praise after an answer: ${praise.join(', ')}`);
 
 console.log(errors.length ? `ERRORS:\n${errors.join('\n')}` : 'no page errors');
 await browser.close();

@@ -6,8 +6,8 @@ import { levelConfig, recordAnswer, pickTargets } from '../lib/progress';
 import { say, stopSpeaking, listen, canRecord, openMic, startRecording, playClip, stopClip, markRecordingClash } from '../lib/voice';
 import { passes } from '../lib/match';
 import { sfx } from '../lib/sfx';
-import { icon, picture, roundBtn } from '../ui';
-import { P, screenId, alive, show, persist, leave, lessonBar, pick } from './core';
+import { icon, picture, roundBtn, chipCheer } from '../ui';
+import { P, screenId, alive, show, persist, leave, lessonBar } from './core';
 import { finishQuiz } from './quiz';
 
 // ---------- say it ----------
@@ -103,7 +103,8 @@ export function sayIt(t: Topic) {
         sfx.right();
         confetti(card);
         pulse(card, 'wiggle');
-        await say(pick(['Great job!', 'Yes!', 'Super!', 'Wonderful!']));
+        chipCheer();
+        await wait(450);
         await echo(heard);
         if (!alive(id)) return;
         await say(w.word);

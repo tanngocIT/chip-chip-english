@@ -25,13 +25,14 @@ export function topicScreen(t: Topic) {
   endSession();
   if (overLimit(P)) return rest();
   const iconWord = wordById(t.icon)!;
-  const acts = ACTIVITIES.filter((a) => (a.id !== 'say' || canListen()) && !(a.id === 'match' && t.noShadow)).map((a) => {
+  const acts = ACTIVITIES.filter((a) => (a.id !== 'say' || canListen()) && !(a.id === 'match' && t.noShadow)).map((a, i) => {
     const best = P.best[`${t.id}:${a.id}`] ?? 0;
     const art = a.silhouette ? picture(iconWord, 'shadow') : h('div', { class: 'pic' }, h('img', { src: a.img, alt: '' }));
     return h(
       'button',
       {
         class: `activity act-${a.id}`,
+        style: `--i:${i}`,
         onclick: () => {
           sfx.tap();
           startActivity(t, a.id);

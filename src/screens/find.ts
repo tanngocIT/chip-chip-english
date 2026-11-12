@@ -5,8 +5,8 @@ import { wordsIn, question, type Topic, type Word } from '../lib/content';
 import { levelConfig, recordAnswer, pickScene } from '../lib/progress';
 import { say } from '../lib/voice';
 import { sfx } from '../lib/sfx';
-import { icon, picture, roundBtn, progressDots } from '../ui';
-import { P, screenId, alive, show, persist, leave, pick } from './core';
+import { icon, picture, roundBtn, progressDots, chipCheer } from '../ui';
+import { P, screenId, alive, show, persist, leave } from './core';
 import { finishQuiz } from './quiz';
 
 // ---------- find it in the picture ----------
@@ -42,6 +42,7 @@ export function findIt(t: Topic) {
     locked = true;
     found.add(w.id);
     sfx.right();
+    chipCheer();
     confetti(btn);
     btn.classList.add('found');
     recordAnswer(P, w.id, !missed);
@@ -49,7 +50,7 @@ export function findIt(t: Topic) {
     persist();
     round++;
     dots.replaceChildren(progressDots(targets.length, round));
-    await say([w.word, missed ? 'Yes!' : pick(['Great!', 'Yes!', 'Super!', 'Well done!'])]);
+    await say(w.word);
     await wait(300);
     if (!alive(id)) return;
     if (round >= targets.length) return finishQuiz(t, 'find', firstTry, targets.length);

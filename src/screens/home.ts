@@ -43,6 +43,8 @@ export function splash() {
 
 // ---------- home ----------
 
+let shownTotal: number | null = null;
+
 export function home() {
   endSession();
   if (overLimit(P)) return rest();
@@ -101,14 +103,32 @@ export function home() {
     );
 
   const total = topics.reduce((s, t) => s + topicStars(P, t.id), 0);
-  const tiles = topics.map((t) => {
+  // New stars since the child last saw this screen are counted up one by one.
+  const from = Math.min(shownTotal ?? total, total);
+  shownTotal = total;
+  const count = h('b', {}, from);
+  const totalEl = h('div', { class: 'total' }, icon.star(), count);
+  if (total > from) {
+    let n = from;
+    const step = Math.max(1, Math.ceil((total - from) / 12));
+    const tick = () => {
+      if (!count.isConnected) return;
+      n = Math.min(total, n + step);
+      count.textContent = String(n);
+      pulse(totalEl, 'bump');
+      sfx.star(1);
+      if (n < total) setTimeout(tick, 140);
+    };
+    setTimeout(tick, 500);
+  }
+  const tiles = topics.map((t, i) => {
     const iconWord = wordById(t.icon)!;
     const stars = topicStars(P, t.id);
     return h(
       'button',
       {
         class: 'topic',
-        style: `--tint:${t.color}`,
+        style: `--tint:${t.color}; --i:${i}`,
         onclick: () => {
           sfx.tap();
           void say(t.en);
@@ -142,7 +162,7 @@ export function home() {
           },
           mascot(),
         ),
-        h('div', { class: 'total' }, icon.star(), h('b', {}, total)),
+        totalEl,
       ),
       h('section', { class: 'quicks' }, today, reviewBtn, sentenceBtn),
       h('section', { class: 'topics' }, tiles),

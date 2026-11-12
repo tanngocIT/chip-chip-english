@@ -1,7 +1,7 @@
 // Stars and sticker after a game.
 
-import { h, wait, confetti } from '../lib/dom';
-import { stickers, type Topic } from '../lib/content';
+import { h, wait, confetti, confettiRain } from '../lib/dom';
+import { imgUrl, stickers, type Topic } from '../lib/content';
 import { overLimit, type Activity } from '../lib/progress';
 import { say } from '../lib/voice';
 import { sfx } from '../lib/sfx';
@@ -65,11 +65,29 @@ export function resultScreen({ tint, stars, sticker, again, done, steps }: Resul
       sfx.star(i);
     }
     await say(stars === 3 ? 'Great job!' : stars === 2 ? 'Well done!' : 'Good try! Let’s play again!');
-    if (stickerImg && alive(id)) {
-      prize.replaceChildren(h('img', { class: 'sticker pop-in', src: stickerImg, alt: 'New sticker' }));
+    if (!alive(id)) return;
+    if (stars === 3) confettiRain();
+    if (!stickerImg) return;
+    // The new sticker comes in a gift box. The child taps to open it; it opens by itself after a
+    // moment so a child who does not tap still gets the sticker.
+    const name = stickers.find((s) => s.id === sticker)!.name;
+    let opened = false;
+    const open = () => {
+      if (opened || !alive(id)) return;
+      opened = true;
+      prize.replaceChildren(
+        h('img', { class: 'sticker pop-in', src: stickerImg, alt: 'New sticker' }),
+        h('span', { class: 'sticker-name pop-in' }, name),
+      );
       sfx.sticker();
-      confetti(prize, 20);
-      void say(['A new sticker for you!', stickers.find((s) => s.id === sticker)!.name]);
-    }
+      confetti(prize, 24);
+      void say(name);
+    };
+    const gift = h('button', { class: 'gift pop-in', 'aria-label': 'Open the gift', onclick: open }, h('img', { src: imgUrl('gift'), alt: '', draggable: false }));
+    prize.replaceChildren(gift);
+    sfx.star(2);
+    await say('A new sticker for you!');
+    await wait(2200);
+    open();
   })();
 }

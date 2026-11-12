@@ -145,11 +145,21 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 **Chấm điểm và chọn từ**
 - Sao được tính theo tỉ lệ câu đúng ngay lần đầu: ≥85% được 3 sao, ≥50% được 2 sao, còn lại 1 sao. Bé luôn được ít nhất 1 sao.
 - Từ 2 sao trở lên thì được sticker. Look and listen chỉ cho sticker ở lần học xong đầu tiên của chủ đề.
+- **Đúng thì chỉ phát tiếng "ting" (`sfx.right()`), không đọc lời khen** ("Yes!", "Great!"…). Chủ repo góp ý lời khen sau mỗi câu là thừa và làm chậm nhịp chơi. Sau câu đúng app chỉ đọc lại từ vừa chọn (để bé nghe từ gắn với hình); bài Sentences thì không đọc lại gì. Lời nói ở màn kết quả cuối ván ("Great job!") vẫn giữ. Đừng thêm lại lời khen vào trò mới.
 - Sai không trừ điểm và không dùng màu đỏ. Bài Say it chỉ cho tối đa 2 lần thử, sau đó khen "Good try!" rồi chuyển câu.
 - Leitner có 5 hộp (0–4): đúng thì lên một hộp, sai thì về 0.
 - `pickTargets` dùng trọng số: từ đã xem và hay sai được hỏi nhiều nhất, từ chưa xem có trọng số 0.4. Nhờ vậy trò chơi chủ yếu hỏi những gì Look and listen đã dạy. Không lặp một từ hai câu liền.
 - `pickLearnSet` xếp từ hay nhầm lên trước, rồi đến từ chưa xem, rồi từ ít thuộc nhất; các từ cùng mức được xáo. Sing along cũng dùng hàm này.
 - `pickScene` (Find it) chọn các từ cần tìm theo cùng trọng số với `pickTargets` nhưng không lặp, rồi thêm hình gây nhiễu ngẫu nhiên.
+
+**Chuyển động**
+- Nguyên tắc: chuyển động là phản hồi cho việc bé làm (chạm, trả lời đúng, xong ván). Lúc app đang hỏi thì màn hình đứng yên để bé nhìn hình và nghe từ; không làm nền chuyển động liên tục.
+- Trả lời đúng: Chip nhảy lên từ mép dưới bên phải rồi tụt xuống (`chipCheer()` trong `ui.ts`, khoảng 1 giây, không nhận chạm).
+- Màn kết quả: 3 sao thì có mưa confetti (`confettiRain`). Sticker mới nằm trong hộp quà (`public/img/gift.svg`, Fluent Emoji "Wrapped gift"); bé chạm để mở, không chạm thì tự mở sau khoảng 2 giây để bé nhỏ không bị kẹt.
+- Thẻ từ: hình tự cử động một lần sau khi hiện và mỗi lần bé chạm, mỗi chủ đề một kiểu (`REACTIONS` trong `learn.ts`: con vật nhảy, xe chạy đi rồi về, quả lăn, hình khối xoay…).
+- Màn hình chính: các ô chủ đề hiện lần lượt; tổng số sao đếm lên từng nấc khi bé vừa được thêm sao.
+- Chuyển màn: màn mới mờ dần và trượt lên, nhưng chỉ khi loại màn đổi (so `className`), nên giữa hai câu của cùng một trò không bị nháy.
+- Mọi hiệu ứng tắt khi máy bật `prefers-reduced-motion`.
 
 **Phần bố mẹ**
 - Cách mở: giữ nút bánh răng 1,5 giây, rồi chạm đúng con số được viết bằng chữ tiếng Việt.
@@ -199,7 +209,7 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 - Bài Say it bị ẩn trên trình duyệt không có SpeechRecognition (ví dụ Firefox).
 - Giọng tiếng Anh là mp3 nên giống nhau trên mọi máy. Giọng Việt (nếu bật) và câu chưa có mp3 vẫn phụ thuộc máy.
 - File mp3 phát qua blob URL (không dùng Range request) vì Safari phát từ service worker dễ lỗi với Range.
-- Cache offline thêm khoảng 9 MB cho giọng (1.137 file).
+- Cache offline thêm khoảng 9 MB cho giọng (1.133 file).
 - Bản cài như app chạy offline, nên sau khi deploy có thể phải mở lại app một lần mới thấy bản mới.
 
 ## Ý tưởng tiếp theo (chưa làm)

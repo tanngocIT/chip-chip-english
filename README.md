@@ -46,7 +46,8 @@ Mỗi chủ đề có 7 trò:
 **Cách chấm điểm**
 
 - Sao tính theo số câu bé làm đúng **ngay lần đầu**: từ 85% trở lên được 3 sao, từ 50% được 2 sao, còn lại 1 sao. Bé luôn được ít nhất 1 sao.
-- Đạt từ 2 sao trở lên được thưởng **một sticker mới** cho album (31 sticker). Trong album, mỗi sticker bé đã có hiện tên tiếng Anh bên dưới và đọc tên khi bé chạm vào.
+- Đạt từ 2 sao trở lên được thưởng **một sticker mới** cho album (31 sticker). Sticker nằm trong hộp quà để bé chạm mở (không chạm thì hộp tự mở sau vài giây). Được 3 sao thì có mưa confetti. Trong album, mỗi sticker bé đã có hiện tên tiếng Anh bên dưới và đọc tên khi bé chạm vào.
+- Chọn đúng thì app chỉ phát một tiếng "ting" ngắn và bạn gà Chip nhảy lên mừng, không đọc lời khen sau mỗi câu, để bé chơi liền mạch.
 - Chọn sai không bị trừ điểm. App chỉ phát tiếng "boop" nhẹ, làm mờ hình sai và đọc lại câu hỏi.
 - Bài **Say it** chấm dễ: chấp nhận từ đồng âm ("for" → four, "I" → eye) và phát âm gần đúng. Nói hai lần chưa được thì app vẫn khen "Good try!", đọc mẫu rồi chuyển câu, để bé không bị kẹt.
 - App ghi nhớ từ nào bé hay nhầm (theo kiểu hộp Leitner) và cho từ đó xuất hiện nhiều hơn ở các lần chơi sau. Các trò chơi chủ yếu hỏi những từ bé đã xem ở Look and listen, thỉnh thoảng mới có từ mới.
