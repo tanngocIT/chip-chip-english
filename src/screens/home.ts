@@ -1,12 +1,12 @@
 // Splash, home, sticker book and the rest screen.
 
 import { h, pulse } from '../lib/dom';
-import { topics, words, wordsIn, wordById, stickers } from '../lib/content';
-import { levelConfig, topicStars, pickReviewSet, pickTodayTopic, REVIEW_MIN, overLimit } from '../lib/progress';
+import { topics, words, wordsIn, wordById, stickers, imgUrl } from '../lib/content';
+import { levelConfig, topicStars, pickReviewSet, pickTodayTopic, REVIEW_MIN, overLimit, currentStreak, unlockedLooks, LOOKS } from '../lib/progress';
 import { say, canSpeak } from '../lib/voice';
 import { sfx, unlockAudio } from '../lib/sfx';
-import { icon, picture, mascot, roundBtn } from '../ui';
-import { P, show, startToday, announce, endSession } from './core';
+import { icon, picture, mascot, roundBtn, chip, setChipLook } from '../ui';
+import { P, show, persist, startToday, announce, endSession } from './core';
 import { topicScreen } from './topic';
 import { sentences } from './sentences';
 import { review } from './quiz';
@@ -141,6 +141,13 @@ export function home() {
     );
   });
 
+  // days in a row with a finished game
+  const days = currentStreak(P);
+  const streakEl =
+    days > 0 && h('div', { class: 'streak', 'aria-label': `${days} days in a row` }, h('img', { src: imgUrl('fire'), alt: '' }), h('b', {}, days));
+  // a dot on the sticker book when a new thing for Chip to wear is waiting there
+  const newLook = unlockedLooks(P.stickers.length).length > P.looksSeen;
+
   const parentBtn = holdButton(() => parentGate());
 
   show(
@@ -162,7 +169,7 @@ export function home() {
           },
           mascot(),
         ),
-        totalEl,
+        h('div', { class: 'counters' }, streakEl, totalEl),
       ),
       h('section', { class: 'quicks' }, today, reviewBtn, sentenceBtn),
       h('section', { class: 'topics' }, tiles),
@@ -172,7 +179,7 @@ export function home() {
         h(
           'button',
           {
-            class: 'book-btn',
+            class: `book-btn ${newLook ? 'new' : ''}`,
             'aria-label': 'Stickers',
             onclick: () => {
               sfx.tap();
@@ -218,6 +225,39 @@ export function holdButton(onDone: () => void) {
 // ---------- stickers ----------
 
 export function stickerBook() {
+  // Things Chip can wear. Each one unlocks at a number of stickers; tapping one puts it on or takes it off.
+  const have = P.stickers.length;
+  const open = unlockedLooks(have).length;
+  if (P.looksSeen !== open) {
+    P.looksSeen = open;
+    persist();
+  }
+  const lookBtns = LOOKS.map((l) => {
+    const ok = have >= l.need;
+    return h(
+      'button',
+      {
+        class: `look ${ok ? '' : 'locked'} ${P.look === l.id ? 'sel' : ''}`,
+        'aria-label': ok ? l.name : `${l.need} stickers`,
+        onclick: (e: Event) => {
+          if (!ok) {
+            sfx.oops();
+            pulse(e.currentTarget as Element, 'shake');
+            return;
+          }
+          sfx.tap();
+          const on = P.look !== l.id;
+          P.look = on ? l.id : null;
+          persist();
+          setChipLook(P.look);
+          stickerBook();
+          if (on) void say(l.name);
+        },
+      },
+      h('img', { src: imgUrl(`look-${l.id}`), alt: '', draggable: false }),
+      !ok && h('span', { class: 'need' }, h('img', { src: stickers[0].img, alt: '' }), l.need),
+    );
+  });
   const items = stickers.map((s) => {
     const have = P.stickers.includes(s.id);
     if (!have) return h('div', { class: 'slot' }, h('img', { src: s.img, alt: '', draggable: false }));
@@ -250,6 +290,7 @@ export function stickerBook() {
         h('h2', {}, `${P.stickers.length} / ${stickers.length}`),
         h('span', { class: 'spacer' }),
       ),
+      h('section', { class: 'wardrobe' }, chip('model bob'), h('div', { class: 'looks' }, lookBtns)),
       h('section', { class: 'slots' }, items),
     ),
   );

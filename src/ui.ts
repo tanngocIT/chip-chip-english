@@ -76,7 +76,24 @@ export function starsRow(n: number, max = 3, cls = '') {
   );
 }
 
-export const mascot = (cls = '') => h('img', { class: `mascot ${cls}`, src: imgUrl('mascot'), alt: 'Chip', draggable: false });
+let chipLook: string | null = null;
+
+/** What Chip wears from now on (an id from LOOKS in progress.ts), or null for nothing. */
+export const setChipLook = (id: string | null) => {
+  chipLook = id;
+};
+
+/** Chip, wearing the chosen thing. Everything that shows Chip goes through here. */
+export function chip(cls = '') {
+  return h(
+    'span',
+    { class: `chip ${cls}`, role: 'img', 'aria-label': 'Chip' },
+    h('img', { class: 'chip-body', src: imgUrl('mascot'), alt: '', draggable: false }),
+    chipLook && h('img', { class: `chip-look look-${chipLook}`, src: imgUrl(`look-${chipLook}`), alt: '', draggable: false }),
+  );
+}
+
+export const mascot = (cls = '') => chip(`mascot ${cls}`);
 
 export function roundBtn(ic: SVGElement, label: string, onclick: () => void, cls = '') {
   return h('button', { class: `round ${cls}`, 'aria-label': label, onclick }, ic);
@@ -94,7 +111,7 @@ export function progressDots(total: number, done: number) {
 export function chipCheer() {
   if (globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
   document.querySelector('.chip-peek')?.remove();
-  const el = h('img', { class: 'chip-peek', src: imgUrl('mascot'), alt: '', draggable: false });
+  const el = chip('chip-peek');
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 1150);
 }

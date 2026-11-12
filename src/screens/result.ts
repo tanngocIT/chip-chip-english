@@ -2,11 +2,11 @@
 
 import { h, wait, confetti, confettiRain } from '../lib/dom';
 import { imgUrl, stickers, type Topic } from '../lib/content';
-import { overLimit, type Activity } from '../lib/progress';
+import { markDay, overLimit, type Activity } from '../lib/progress';
 import { say } from '../lib/voice';
 import { sfx } from '../lib/sfx';
 import { icon, starsRow, mascot, roundBtn, progressDots } from '../ui';
-import { P, screenId, alive, show, SESSION_STEPS, session, nextStep, startActivity } from './core';
+import { P, screenId, alive, show, SESSION_STEPS, session, nextStep, startActivity, persist } from './core';
 import { rest } from './home';
 import { topicScreen } from './topic';
 
@@ -31,6 +31,7 @@ export interface ResultSpec {
 }
 
 export function resultScreen({ tint, stars, sticker, again, done, steps }: ResultSpec) {
+  if (markDay(P)) persist();
   const row = starsRow(0, 3, 'big');
   const stickerImg = sticker ? stickers.find((s) => s.id === sticker)!.img : null;
   const prize = h('div', { class: 'prize' });

@@ -2,11 +2,11 @@
 
 import { h } from '../lib/dom';
 import { topics, wordsIn, wordById, stickers, type Word } from '../lib/content';
-import { topicStars, learnedCount, emptyProgress, type AgeLevel } from '../lib/progress';
+import { exportCode, importCode, topicStars, learnedCount, emptyProgress, type AgeLevel } from '../lib/progress';
 import { say, setRate, canListen, hasVietnameseVoice, canSpeak, canRecord } from '../lib/voice';
 import { viNumber } from '../lib/vi';
 import { installState, promptInstall, onInstallChange } from '../lib/install';
-import { icon, roundBtn } from '../ui';
+import { icon, roundBtn, setChipLook } from '../ui';
 import { app, P, inParentArea, show, persist, setInParentArea } from './core';
 import { home } from './home';
 
@@ -144,10 +144,45 @@ export function parentArea() {
         const keep = P.settings;
         Object.assign(P, emptyProgress(), { settings: keep });
         persist();
+        setChipLook(P.look);
         parentArea();
       }
     },
   }, 'Xóa tiến độ');
+
+  // Sao lưu: chép mã ở máy này, dán vào máy khác. Không qua máy chủ nào.
+  const backupNote = h('small', { class: 'backup-note', 'aria-live': 'polite' }, '');
+  const codeOut = h('textarea', { class: 'code', rows: '3', readonly: true, 'aria-label': 'Mã sao lưu' }) as HTMLTextAreaElement;
+  codeOut.value = exportCode(P);
+  const copyBtn = h('button', {
+    class: 'ghost',
+    onclick: async () => {
+      codeOut.select();
+      try {
+        await navigator.clipboard.writeText(codeOut.value);
+        backupNote.textContent = 'Đã sao chép. Dán mã này vào tin nhắn hoặc ghi chú để giữ lại.';
+      } catch {
+        backupNote.textContent = 'Chưa sao chép tự động được. Mã đã được chọn sẵn, hãy bấm giữ rồi chọn Sao chép.';
+      }
+    },
+  }, 'Sao chép mã');
+  const codeIn = h('textarea', { class: 'code', rows: '3', placeholder: 'Dán mã sao lưu vào đây', 'aria-label': 'Dán mã sao lưu' }) as HTMLTextAreaElement;
+  const restoreBtn = h('button', {
+    class: 'ghost',
+    onclick: () => {
+      const loaded = importCode(codeIn.value);
+      if (!loaded) {
+        backupNote.textContent = 'Mã không đúng. Hãy dán lại toàn bộ mã, bắt đầu bằng CHIP1:';
+        return;
+      }
+      if (!confirm('Thay toàn bộ tiến độ trên máy này bằng bản sao lưu?')) return;
+      Object.assign(P, loaded);
+      persist();
+      setRate(P.settings.rate);
+      setChipLook(P.look);
+      parentArea();
+    },
+  }, 'Khôi phục từ mã');
 
   // Cài app ra màn hình chính
   const refresh = () => {
@@ -222,6 +257,17 @@ export function parentArea() {
         h('p', {}, `Sticker: ${P.stickers.length} / ${stickers.length}`),
         weak.length > 0 &&
           h('p', {}, 'Từ bé hay nhầm: ', h('b', {}, weak.map((w) => `${w.word} (${w.vi})`).join(', '))),
+      ),
+      h(
+        'section',
+        { class: 'panel backup' },
+        h('h3', {}, 'Sao lưu tiến độ'),
+        h('p', {}, 'Tiến độ chỉ nằm trên máy này. Sao chép mã dưới đây và giữ ở nơi khác; khi đổi máy hoặc lỡ xóa dữ liệu trình duyệt thì dán mã vào để lấy lại sao, sticker và các từ bé đã học.'),
+        codeOut,
+        copyBtn,
+        codeIn,
+        restoreBtn,
+        backupNote,
       ),
       h('section', { class: 'panel install' }, h('h3', {}, 'Cài app'), installBody),
       h(

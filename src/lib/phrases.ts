@@ -20,6 +20,10 @@ export const FIXED_PHRASES = [
   'Where is the cat?',
   "Let's play!",
   "Let's play again!",
+  // things Chip can wear (hat and crown already have a clip)
+  'ribbon',
+  'cap',
+  'glasses',
 ];
 
 /** Mọi câu tiếng Anh cần có file âm thanh. Dùng cho script sinh giọng. */

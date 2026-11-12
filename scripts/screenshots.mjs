@@ -229,6 +229,7 @@ await click('.bar .round');
 
 await click('.book-btn');
 await shot('12-stickers');
+if ((await page.$$eval('.wardrobe .look', (l) => l.length)) !== 5) errors.push('wardrobe does not show five things for Chip');
 // An owned sticker shows its name and says it when tapped.
 const owned = await page.$$eval('.slot.have .name', (n) => n.map((x) => x.textContent));
 if (!owned.length || owned.some((n) => !n)) errors.push(`owned stickers have no name: ${JSON.stringify(owned)}`);
@@ -267,6 +268,26 @@ await page.evaluate(() => {
 });
 await shot('14-parents');
 if (!(await page.$('.panel.install'))) errors.push('install panel missing');
+// Backup: the code on screen restores the same progress.
+page.on('dialog', (d) => void d.accept());
+const backup = await page.evaluate(() => {
+  const [out, input] = document.querySelectorAll('.panel.backup .code');
+  const before = JSON.stringify([window.__app.P.words, window.__app.P.best, window.__app.P.stickers]);
+  input.value = out.value;
+  // damage the progress, then restore it from the code
+  window.__app.P.stickers.length = 0;
+  window.__app.P.best = {};
+  document.querySelectorAll('.panel.backup .ghost')[1].click();
+  const after = JSON.stringify([window.__app.P.words, window.__app.P.best, window.__app.P.stickers]);
+  return { code: out.value.slice(0, 6), same: before === after, saved: localStorage.getItem('be-hoc-tieng-anh:v1').includes('"stickers":["') };
+});
+if (backup.code !== 'CHIP1:' || !backup.same || !backup.saved) errors.push(`backup did not restore the progress: ${JSON.stringify(backup)}`);
+await page.evaluate(() => {
+  document.querySelectorAll('.panel.backup .code')[1].value = 'not a code';
+  document.querySelectorAll('.panel.backup .ghost')[1].click();
+});
+const refused = await page.$eval('.backup-note', (n) => n.textContent);
+if (!refused) errors.push('a wrong backup code gave no message');
 // The browser offers install: the button must appear and open the prompt.
 await page.evaluate(() => {
   const e = new Event('beforeinstallprompt', { cancelable: true });
@@ -321,6 +342,8 @@ async function autoplay(until, maxMs = 240000) {
 await click('.bar .round'); // parents -> home
 await shot('20-home-quick');
 if (!(await page.$('.quick.today'))) errors.push('today button missing on home');
+const streak = await page.$eval('.streak b', (b) => b.textContent).catch(() => null);
+if (streak !== '1') errors.push(`streak after the first day of play is ${streak}, expected 1`);
 if (!(await page.$('.quick.review'))) errors.push('review button missing although words were played');
 
 // Today: learn -> listen -> find -> sing, each result leads on, the last one back home.

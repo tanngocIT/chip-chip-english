@@ -43,6 +43,11 @@ Mỗi chủ đề có 7 trò:
 
 - **Sentences** (câu ngắn, chỉ hiện từ 4–5 tuổi): bé nghe và đọc một câu như "I see three cats.", "I see a cat and a dog." hoặc "The dog is big.", rồi chạm vào hình đúng. Các hình sai luôn có một hình cùng con vật nhưng khác số lượng hay kích thước, nên bé phải hiểu cả câu. Có 96 câu, ghép từ 12 từ quen thuộc. Chấm 1–3 sao và thưởng sticker.
 
+**Có gì để bé mong chờ**
+
+- **Chuỗi ngày học:** màn hình chính hiện số ngày liên tiếp bé chơi xong ít nhất một trò (hình ngọn lửa). Nghỉ một ngày thì chuỗi bắt đầu lại từ 1.
+- **Đồ cho Chip:** gom sticker sẽ mở khóa đồ cho bạn gà Chip: nơ (3 sticker), mũ lưỡi trai (7), kính (12), mũ cao (18), vương miện (25). Bé chọn trong album sticker; Chip sẽ mặc món đó ở mọi màn hình. Khi có món mới, nút album ở màn hình chính có một chấm vàng.
+
 **Cách chấm điểm**
 
 - Sao tính theo số câu bé làm đúng **ngay lần đầu**: từ 85% trở lên được 3 sao, từ 50% được 2 sao, còn lại 1 sao. Bé luôn được ít nhất 1 sao.
@@ -73,6 +78,7 @@ Trong đó có:
 - Giới hạn thời gian chơi mỗi ngày (mặc định 20 phút). Hết giờ, bạn gà Chip sẽ nói "Time to rest" và đưa bé ra màn hình nghỉ. Nếu hết giờ khi bé đang giữa một trò, bé được chơi nốt trò đó và xem sao, sticker rồi mới nghỉ.
 - Xem tiến độ: số từ đã thuộc và số sao của từng chủ đề, các từ bé hay nhầm, số sticker đã có.
 - Xóa tiến độ.
+- **Sao lưu tiến độ:** sao chép một đoạn mã (bắt đầu bằng `CHIP1:`) và giữ ở nơi khác, ví dụ tin nhắn cho chính mình. Khi đổi máy hoặc lỡ xóa dữ liệu trình duyệt, dán mã vào để lấy lại sao, sticker, từ đã học và cài đặt. Mã không đi qua máy chủ nào.
 - **Cài app ra màn hình chính.** Trên Android và máy tính (Chrome, Edge) có nút bấm để cài ngay. Trên iPhone/iPad, Apple không cho web tự mở hộp thoại cài nên app hiện hướng dẫn: mở bằng Safari, bấm Chia sẻ rồi chọn Thêm vào Màn hình chính.
 
 Toàn bộ tiến độ chỉ lưu trên máy (localStorage). App không có tài khoản và không gửi dữ liệu đi đâu. Ở bài Say it, tiếng của bé chỉ giữ tạm trong bộ nhớ để phát lại ngay trong câu đó, không lưu vào máy và không gửi đi đâu (có thể tắt trong phần bố mẹ).

@@ -161,15 +161,20 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 - Chuyển màn: màn mới mờ dần và trượt lên, nhưng chỉ khi loại màn đổi (so `className`), nên giữa hai câu của cùng một trò không bị nháy.
 - Mọi hiệu ứng tắt khi máy bật `prefers-reduced-motion`.
 
+**Có gì để bé mong chờ**
+- **Chuỗi ngày học** (`P.streak`, `markDay`, `currentStreak` trong `progress.ts`): tăng 1 khi bé chơi xong trò đầu tiên trong ngày (gọi ở `resultScreen`). Hôm nay chưa chơi thì chuỗi vẫn hiện số của hôm qua; bỏ trọn một ngày thì về 0. Chỉ hiện ở màn hình chính, không có thông báo nhắc và không phạt khi đứt chuỗi.
+- **Đồ cho Chip** (`LOOKS` trong `progress.ts`): nơ 3 sticker, mũ lưỡi trai 7, kính 12, mũ cao 18, vương miện 25 (album có 31). Bé chọn ở đầu album sticker; chạm món đang mặc thì cởi ra. `P.look` lưu món đang mặc, `P.looksSeen` để biết khi nào hiện chấm "có món mới" trên nút album. Mọi chỗ vẽ Chip đều đi qua `chip()` trong `ui.ts` (màn chào, màn hình chính, kết quả, Chip nhảy lên, lưng thẻ Memory), nên món đồ hiện ở khắp nơi; đổi `P.look` thì phải gọi `setChipLook`. Vị trí từng món là phần trăm theo bề rộng Chip, nằm trong `style.css` (`.look-*`). Hình lấy từ Fluent Emoji (`public/img/look-*.svg`).
+
 **Phần bố mẹ**
 - Cách mở: giữ nút bánh răng 1,5 giây, rồi chạm đúng con số được viết bằng chữ tiếng Việt.
 - Cài đặt gồm: độ tuổi, tốc độ đọc, nghĩa tiếng Việt, phát lại giọng bé (mặc định bật), giới hạn phút mỗi ngày (mặc định 20).
 - Hết giờ không bao giờ cắt ngang một trò hay màn kết quả: bé chơi nốt, xem sao và sticker, bấm nút nào ở màn kết quả cũng chuyển sang màn nghỉ. Màn hình chính và màn chủ đề thì chuyển sang màn nghỉ ngay.
 - Phần này còn có bảng tiến độ và nút xóa tiến độ.
+- **Sao lưu tiến độ** (`exportCode` / `importCode`): một đoạn mã `CHIP1:` + base64 của JSON gọn (từ, sao, sticker, cài đặt, chuỗi ngày, đồ của Chip; không gồm số phút hôm nay). Chọn dạng mã để chép và dán vì chạy được trên mọi trình duyệt, kể cả bản đã cài trên iOS, và không cần máy chủ. `importCode` không tin dữ liệu bên trong: giá trị lạ bị bỏ hoặc kẹp về khoảng hợp lệ, mã sai trả về null. Thêm trường mới vào `Progress` thì thêm vào cả hai hàm này và test.
 - Mục "Cài app": có `beforeinstallprompt` thì hiện nút cài; trên iOS hiện các bước Chia sẻ → Thêm vào Màn hình chính; đã cài thì chỉ báo đã cài. Đặt trong phần bố mẹ để bé không bấm nhầm.
 
 **Quyền riêng tư**
-- Không có tài khoản và không có backend. Tiến độ lưu ở `localStorage` với key `be-hoc-tieng-anh:v1`.
+- Không có tài khoản và không có backend. Tiến độ lưu ở `localStorage` với key `be-hoc-tieng-anh:v1`. Mã sao lưu chỉ được chép và dán bằng tay, app không gửi nó đi đâu.
 - Tiếng ghi âm của bé chỉ nằm trong bộ nhớ trong lúc làm một câu, không lưu và không gửi đi.
 - Không quảng cáo và không có link ra ngoài trong phần của bé.
 
@@ -209,7 +214,7 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 - Bài Say it bị ẩn trên trình duyệt không có SpeechRecognition (ví dụ Firefox).
 - Giọng tiếng Anh là mp3 nên giống nhau trên mọi máy. Giọng Việt (nếu bật) và câu chưa có mp3 vẫn phụ thuộc máy.
 - File mp3 phát qua blob URL (không dùng Range request) vì Safari phát từ service worker dễ lỗi với Range.
-- Cache offline thêm khoảng 9 MB cho giọng (1.133 file).
+- Cache offline thêm khoảng 9 MB cho giọng (1.135 file).
 - Bản cài như app chạy offline, nên sau khi deploy có thể phải mở lại app một lần mới thấy bản mới.
 
 ## Ý tưởng tiếp theo (chưa làm)

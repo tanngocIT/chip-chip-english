@@ -6,7 +6,7 @@ import { load, save, overLimit, type Activity } from '../lib/progress';
 import { initVoice, say, stopSpeaking, setRate, closeMic, stopClip } from '../lib/voice';
 import { sfx } from '../lib/sfx';
 import { initInstall } from '../lib/install';
-import { icon, roundBtn, progressDots } from '../ui';
+import { icon, roundBtn, progressDots, setChipLook } from '../ui';
 import { home, rest } from './home';
 import { topicScreen } from './topic';
 import { learn } from './learn';
@@ -21,6 +21,7 @@ export const P = load();
 setRate(P.settings.rate);
 initVoice();
 initInstall();
+setChipLook(P.look);
 
 let cleanup: (() => void) | null = null;
 let lastKind = '';

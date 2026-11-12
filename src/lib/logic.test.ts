@@ -22,6 +22,12 @@ import {
   pickTodayTopic,
   REVIEW_MIN,
   memoryStars,
+  markDay,
+  currentStreak,
+  LOOKS,
+  unlockedLooks,
+  exportCode,
+  importCode,
   topicStars,
 } from './progress';
 import { passes, scoreHeard, levenshtein } from './match';
@@ -489,5 +495,118 @@ group('sentence options test the whole sentence', () => {
         }
       }
     }
+  });
+});
+
+group('days in a row', () => {
+  it('counts one per day, grows on the next day and starts again after a gap', () => {
+    const p = emptyProgress();
+    expect(currentStreak(p, '2026-03-01')).toBe(0);
+    expect(markDay(p, '2026-03-01')).toBe(true);
+    expect(markDay(p, '2026-03-01')).toBe(false);
+    expect(currentStreak(p, '2026-03-01')).toBe(1);
+    markDay(p, '2026-03-02');
+    markDay(p, '2026-03-03');
+    expect(currentStreak(p, '2026-03-03')).toBe(3);
+    // the next morning, before playing, the run is still alive
+    expect(currentStreak(p, '2026-03-04')).toBe(3);
+    // a whole day missed ends it
+    expect(currentStreak(p, '2026-03-05')).toBe(0);
+    markDay(p, '2026-03-05');
+    expect(currentStreak(p, '2026-03-05')).toBe(1);
+  });
+
+  it('crosses month and year ends', () => {
+    const p = emptyProgress();
+    markDay(p, '2026-02-28');
+    markDay(p, '2026-03-01');
+    expect(currentStreak(p, '2026-03-01')).toBe(2);
+    markDay(p, '2026-12-31');
+    markDay(p, '2027-01-01');
+    expect(currentStreak(p, '2027-01-01')).toBe(2);
+  });
+
+  it('survives old saved data that has no streak', () => {
+    const p = load({ getItem: () => JSON.stringify({ stickers: ['fox'], streak: 'oops' }) });
+    expect(p.streak).toEqual({ count: 0, last: '' });
+    expect(p.look).toBe(null);
+    expect(markDay(p, '2026-03-01')).toBe(true);
+  });
+});
+
+group('things Chip can wear', () => {
+  it('unlock one by one as stickers are collected, the last before the album is full', () => {
+    expect(unlockedLooks(0)).toEqual([]);
+    expect(unlockedLooks(2)).toEqual([]);
+    expect(unlockedLooks(3).map((l) => l.id)).toEqual(['ribbon']);
+    expect(unlockedLooks(12).map((l) => l.id)).toEqual(['ribbon', 'cap', 'glasses']);
+    expect(unlockedLooks(stickers.length).length).toBe(LOOKS.length);
+    const needs = LOOKS.map((l) => l.need);
+    expect([...needs].sort((a, b) => a - b)).toEqual(needs);
+    expect(Math.max(...needs)).toBeLessThanOrEqual(stickers.length);
+    for (const l of LOOKS) {
+      expect(fs.existsSync(path.join(process.cwd(), 'public/img', `look-${l.id}.svg`)), l.id).toBe(true);
+    }
+  });
+});
+
+group('backup code', () => {
+  const sample = () => {
+    const p = emptyProgress();
+    for (const w of words) recordSeen(p, w.id);
+    recordAnswer(p, 'cat', true);
+    recordAnswer(p, 'dog', false);
+    recordStars(p, 'animals', 'listen', 3);
+    p.stickers.push('fox', 'unicorn');
+    p.settings.age = 'big';
+    p.settings.rate = 0.7;
+    p.settings.limitMinutes = 30;
+    markDay(p, '2026-03-01');
+    p.look = 'ribbon';
+    p.looksSeen = 1;
+    return p;
+  };
+
+  it('brings back everything except the minutes played today', () => {
+    const p = sample();
+    p.minutesToday = { date: '2026-03-01', minutes: 12 };
+    const code = exportCode(p);
+    expect(code.startsWith('CHIP1:')).toBe(true);
+    expect(code).toMatch(/^[A-Za-z0-9+/=.:]+$/);
+    const back = importCode(`  ${code}
+`)!;
+    expect(back.words).toEqual(p.words);
+    expect(back.best).toEqual(p.best);
+    expect(back.stickers).toEqual(p.stickers);
+    expect(back.settings).toEqual(p.settings);
+    expect(back.streak).toEqual(p.streak);
+    expect(back.look).toBe('ribbon');
+    expect(back.minutesToday).toEqual({ date: '', minutes: 0 });
+  });
+
+  it('refuses anything that is not a backup code', () => {
+    for (const bad of ['', 'hello', 'CHIP1:', 'CHIP1:!!!', 'CHIP1:' + btoa('{"w":"no"}'), 'CHIP2:' + btoa('{"w":[]}')]) {
+      expect(importCode(bad), bad).toBe(null);
+    }
+  });
+
+  it('drops odd values instead of trusting them', () => {
+    const code = 'CHIP1:' + btoa(JSON.stringify({
+      w: [['cat', 99, -5, 'x', 2], [42, 1, 1, 1, 1], 'junk'],
+      b: { 'animals:listen': 7, 'animals:find': 2 },
+      s: ['fox', 'fox', 3],
+      set: { age: 'giant', rate: 50, limitMinutes: -1, playback: 'yes' },
+      st: { count: 4, last: 'yesterday' },
+      look: 'cape',
+      ls: 99,
+    }));
+    const p = importCode(code)!;
+    expect(p.words).toEqual({ cat: { box: 4, right: 0, wrong: 0, seen: 2 } });
+    expect(p.best).toEqual({ 'animals:find': 2 });
+    expect(p.stickers).toEqual(['fox']);
+    expect(p.settings).toEqual(emptyProgress().settings);
+    expect(p.streak).toEqual({ count: 0, last: '' });
+    expect(p.look).toBe(null);
+    expect(p.looksSeen).toBe(LOOKS.length);
   });
 });

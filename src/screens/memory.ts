@@ -1,11 +1,11 @@
 // Memory: turn over two cards at a time to find the pairs. Each card says its word.
 
 import { h, wait, confetti } from '../lib/dom';
-import { wordsIn, stickers, imgUrl, type Topic, type Word } from '../lib/content';
+import { wordsIn, stickers, type Topic, type Word } from '../lib/content';
 import { levelConfig, memoryStars, pickScene, shuffle, recordSeen, recordStars, awardSticker } from '../lib/progress';
 import { say } from '../lib/voice';
 import { sfx } from '../lib/sfx';
-import { icon, picture, roundBtn, progressDots, chipCheer } from '../ui';
+import { icon, picture, roundBtn, progressDots, chipCheer, chip } from '../ui';
 import { P, screenId, alive, show, persist, leave } from './core';
 import { result } from './result';
 
@@ -24,7 +24,7 @@ export function memory(t: Topic) {
     const btn = h(
       'button',
       { class: 'flip', 'aria-label': 'Card' },
-      h('span', { class: 'flip-in' }, h('span', { class: 'back' }, h('img', { src: imgUrl('mascot'), alt: '', draggable: false })), h('span', { class: 'front' }, picture(w))),
+      h('span', { class: 'flip-in' }, h('span', { class: 'back' }, chip()), h('span', { class: 'front' }, picture(w))),
     );
     btn.addEventListener('click', () => void turn(btn, w));
     return btn;

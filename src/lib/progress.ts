@@ -25,6 +25,12 @@ export interface Progress {
   stickers: string[];
   settings: Settings;
   minutesToday: { date: string; minutes: number };
+  /** days in a row with at least one finished game; `last` is the latest such day */
+  streak: { count: number; last: string };
+  /** what Chip is wearing (an id from LOOKS), or null */
+  look: string | null;
+  /** how many unlocked looks the child has already been shown in the sticker book */
+  looksSeen: number;
 }
 
 export const MAX_BOX = 4;
@@ -43,6 +49,9 @@ export const emptyProgress = (): Progress => ({
   stickers: [],
   settings: defaultSettings(),
   minutesToday: { date: '', minutes: 0 },
+  streak: { count: 0, last: '' },
+  look: null,
+  looksSeen: 0,
 });
 
 /**
@@ -322,6 +331,7 @@ export function load(storage: Pick<Storage, 'getItem'> | undefined = safeStorage
       ...parsed,
       settings: { ...e.settings, ...(parsed.settings ?? {}) },
       minutesToday: parsed.minutesToday ?? e.minutesToday,
+      streak: parsed.streak && typeof parsed.streak.last === 'string' ? parsed.streak : e.streak,
     };
   } catch {
     return emptyProgress();
@@ -357,4 +367,96 @@ export function overLimit(p: Progress, date = today()): boolean {
   const lim = p.settings.limitMinutes;
   if (!lim) return false;
   return p.minutesToday.date === date && p.minutesToday.minutes >= lim;
+}
+
+// ---------- days in a row ----------
+
+const dayBefore = (date: string) => {
+  const d = new Date(`${date}T12:00:00`);
+  d.setDate(d.getDate() - 1);
+  return today(d);
+};
+
+/** Call when a game is finished. Returns true if this is the first game of the day. */
+export function markDay(p: Progress, date = today()): boolean {
+  if (p.streak.last === date) return false;
+  p.streak = { count: p.streak.last === dayBefore(date) ? p.streak.count + 1 : 1, last: date };
+  return true;
+}
+
+/** Days in a row up to today. A day without play ends the run, but today still has time. */
+export function currentStreak(p: Progress, date = today()): number {
+  return p.streak.last === date || p.streak.last === dayBefore(date) ? p.streak.count : 0;
+}
+
+// ---------- things Chip can wear, unlocked by collecting stickers ----------
+
+export const LOOKS = [
+  { id: 'ribbon', name: 'ribbon', need: 3 },
+  { id: 'cap', name: 'cap', need: 7 },
+  { id: 'glasses', name: 'glasses', need: 12 },
+  { id: 'hat', name: 'hat', need: 18 },
+  { id: 'crown', name: 'crown', need: 25 },
+];
+
+export const unlockedLooks = (stickerCount: number) => LOOKS.filter((l) => stickerCount >= l.need);
+
+// ---------- backup code (copy on one device, paste on another; no server) ----------
+
+const CODE_PREFIX = 'CHIP1:';
+
+const toBase64 = (text: string) => btoa(String.fromCharCode(...new TextEncoder().encode(text)));
+const fromBase64 = (b64: string) => new TextDecoder().decode(Uint8Array.from(atob(b64), (c) => c.charCodeAt(0)));
+
+export function exportCode(p: Progress): string {
+  const data = {
+    w: Object.entries(p.words).map(([id, s]) => [id, s.box, s.right, s.wrong, s.seen]),
+    b: p.best,
+    s: p.stickers,
+    set: p.settings,
+    st: p.streak,
+    look: p.look,
+    ls: p.looksSeen,
+  };
+  const json = JSON.stringify(data);
+  // chunked so a long word list does not overflow the argument list of fromCharCode
+  let out = '';
+  for (let i = 0; i < json.length; i += 3000) out += toBase64(json.slice(i, i + 3000)) + '.';
+  return CODE_PREFIX + out.slice(0, -1);
+}
+
+const count = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) && v >= 0 ? Math.floor(v) : 0);
+
+/** Read a backup code. Returns null if it is not one; odd values inside are dropped, not trusted. */
+export function importCode(code: string): Progress | null {
+  try {
+    const text = code.trim();
+    if (!text.startsWith(CODE_PREFIX)) return null;
+    const data = JSON.parse(text.slice(CODE_PREFIX.length).split('.').map(fromBase64).join(''));
+    if (!data || typeof data !== 'object' || !Array.isArray(data.w)) return null;
+    const p = emptyProgress();
+    for (const row of data.w) {
+      if (!Array.isArray(row) || typeof row[0] !== 'string') continue;
+      p.words[row[0]] = { box: Math.min(MAX_BOX, count(row[1])), right: count(row[2]), wrong: count(row[3]), seen: count(row[4]) };
+    }
+    if (data.b && typeof data.b === 'object') {
+      for (const [k, v] of Object.entries(data.b)) {
+        const stars = count(v);
+        if (stars >= 1 && stars <= 3) p.best[k] = stars;
+      }
+    }
+    if (Array.isArray(data.s)) p.stickers = [...new Set(data.s.filter((x: unknown) => typeof x === 'string'))] as string[];
+    const set = data.set ?? {};
+    if (['small', 'middle', 'big'].includes(set.age)) p.settings.age = set.age;
+    if (typeof set.rate === 'number' && set.rate >= 0.5 && set.rate <= 1.2) p.settings.rate = set.rate;
+    if (typeof set.vietnamese === 'boolean') p.settings.vietnamese = set.vietnamese;
+    if (typeof set.playback === 'boolean') p.settings.playback = set.playback;
+    if (typeof set.limitMinutes === 'number' && set.limitMinutes >= 0 && set.limitMinutes <= 600) p.settings.limitMinutes = set.limitMinutes;
+    if (data.st && typeof data.st.last === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(data.st.last)) p.streak = { count: count(data.st.count), last: data.st.last };
+    if (LOOKS.some((l) => l.id === data.look)) p.look = data.look;
+    p.looksSeen = Math.min(LOOKS.length, count(data.ls));
+    return p;
+  } catch {
+    return null;
+  }
 }
