@@ -1760,3 +1760,129 @@ td:not(:first-child) {
 .look.locked {
   padding-bottom: 32%;
 }
+
+/* ---------- short windows (a wide but low browser window, a phone on its side) ----------
+   Sizes that used to follow the width alone now also follow the height, so a game never
+   pushes its own buttons off the screen. */
+.pic.lg {
+  --s: clamp(110px, min(46vw, 40dvh), 300px);
+}
+
+.flash {
+  padding-block: clamp(10px, 3dvh, 36px) clamp(6px, 2dvh, 16px);
+}
+
+.flash .word {
+  font-size: clamp(30px, min(10vw, 9dvh), 72px);
+}
+
+.sayit .pic.lg {
+  --s: clamp(96px, min(46vw, 30dvh), 300px);
+}
+
+.drop .pic.lg {
+  --s: clamp(110px, min(34vw, 28dvh), 240px);
+}
+
+.drop .word {
+  font-size: clamp(22px, min(6vw, 6dvh), 46px);
+}
+
+.match .option {
+  width: min(100%, 26dvh);
+}
+
+.mascot.hero {
+  width: clamp(104px, min(36vw, 26dvh), 230px);
+}
+
+.stars.big svg {
+  width: clamp(44px, min(17vw, 11dvh), 96px);
+  height: clamp(44px, min(17vw, 11dvh), 96px);
+}
+
+.prize {
+  min-height: clamp(96px, 18dvh, 130px);
+}
+
+.prize .sticker,
+.gift {
+  width: clamp(84px, 16dvh, 124px);
+  height: clamp(84px, 16dvh, 124px);
+}
+
+.activity .pic {
+  --s: clamp(76px, min(19vw, 19dvh), 170px);
+}
+
+.activity {
+  padding-top: clamp(12px, min(4vw, 3dvh), 34px);
+}
+
+.target-word {
+  font-size: clamp(34px, min(9vw, 9dvh), 76px);
+}
+
+.sentences .target-word {
+  font-size: clamp(22px, min(5.2vw, 6dvh), 46px);
+}
+
+@media (max-height: 520px) {
+  .round.big {
+    width: 66px;
+    height: 66px;
+  }
+  .mic {
+    width: 84px;
+    height: 84px;
+  }
+  .mic svg {
+    width: 40px;
+    height: 40px;
+  }
+  .screen {
+    gap: 10px;
+  }
+}
+
+.listen .options.n3 .option,
+.listen .options.n4 .option {
+  width: min(100%, max(96px, calc(100dvh - 270px)));
+  justify-self: center;
+}
+
+/* Chip's cheer floats over the page. This must come after `.chip { position: relative }`,
+   or the cheer joins the page flow and pushes everything down. */
+.chip.chip-peek {
+  position: fixed;
+}
+
+@media (max-height: 520px) {
+  .pic.lg {
+    --s: clamp(96px, min(46vw, 34dvh), 300px);
+  }
+  .sayit .pic.lg {
+    --s: clamp(84px, min(46vw, 24dvh), 300px);
+  }
+  .pager {
+    padding-bottom: 0;
+  }
+  .heard {
+    font-size: 16px;
+    min-height: 1.3em;
+  }
+  .listen .options.n2 .option {
+    max-height: 34dvh;
+  }
+  .prompt {
+    padding-top: 0;
+  }
+}
+
+/* two answer cards side by side: keep each card square so its picture never spills out of it */
+@media (orientation: landscape) {
+  .listen .options.n2 .option {
+    max-height: none;
+    width: min(100%, max(96px, calc(100dvh - 250px)));
+  }
+}

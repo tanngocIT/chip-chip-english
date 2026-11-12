@@ -94,7 +94,17 @@ while ((await page.$('.quiz')) && guard++ < 60) {
     if (after !== before || !(await page.$('.quiz'))) break;
   }
   // a right answer makes Chip pop up
-  sawChip ||= !!(await page.$('.chip-peek'));
+  if (await page.$('.chip-peek')) {
+    sawChip = true;
+    // the cheer floats over the page: it must not join the layout and make the page longer
+    const peek = await page.evaluate(() => ({
+      position: getComputedStyle(document.querySelector('.chip-peek') ?? document.body).position,
+      overflow: document.documentElement.scrollHeight - window.innerHeight,
+    }));
+    if (peek.position !== 'fixed' && peek.position !== 'static') errors.push(`Chip's cheer is position ${peek.position}, not fixed`);
+    // a few pixels come and go while a new card pops in; the bug to catch is the page growing by Chip's height
+    if (peek.overflow > 40) errors.push(`page grew by ${peek.overflow}px while Chip cheered`);
+  }
   if (guard === 1) await shot('07-listen-answered');
 }
 if (!sawChip) errors.push('Chip did not pop up after a right answer');

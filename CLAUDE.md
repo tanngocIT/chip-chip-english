@@ -160,10 +160,16 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 - Màn hình chính: các ô chủ đề hiện lần lượt; tổng số sao đếm lên từng nấc khi bé vừa được thêm sao.
 - Chuyển màn: màn mới mờ dần và trượt lên, nhưng chỉ khi loại màn đổi (so `className`), nên giữa hai câu của cùng một trò không bị nháy.
 - Mọi hiệu ứng tắt khi máy bật `prefers-reduced-motion`.
+- `.chip-peek` phải là `position: fixed`. Quy tắc `.chip.chip-peek` nằm sau `.chip { position: relative }` trong `style.css`; nếu bị đè, Chip nhảy lên sẽ chen vào bố cục và làm trang dài ra (đã từng xảy ra).
 
 **Có gì để bé mong chờ**
 - **Chuỗi ngày học** (`P.streak`, `markDay`, `currentStreak` trong `progress.ts`): tăng 1 khi bé chơi xong trò đầu tiên trong ngày (gọi ở `resultScreen`). Hôm nay chưa chơi thì chuỗi vẫn hiện số của hôm qua; bỏ trọn một ngày thì về 0. Chỉ hiện ở màn hình chính, không có thông báo nhắc và không phạt khi đứt chuỗi.
 - **Đồ cho Chip** (`LOOKS` trong `progress.ts`): nơ 3 sticker, mũ lưỡi trai 7, kính 12, mũ cao 18, vương miện 25 (album có 31). Bé chọn ở đầu album sticker; chạm món đang mặc thì cởi ra. `P.look` lưu món đang mặc, `P.looksSeen` để biết khi nào hiện chấm "có món mới" trên nút album. Mọi chỗ vẽ Chip đều đi qua `chip()` trong `ui.ts` (màn chào, màn hình chính, kết quả, Chip nhảy lên, lưng thẻ Memory), nên món đồ hiện ở khắp nơi; đổi `P.look` thì phải gọi `setChipLook`. Vị trí từng món là phần trăm theo bề rộng Chip, nằm trong `style.css` (`.look-*`). Hình lấy từ Fluent Emoji (`public/img/look-*.svg`).
+
+**Kích thước màn hình**
+- Mọi trò phải vừa một màn hình, không cuộn, kể cả cửa sổ rộng mà thấp (trình duyệt máy tính thu nhỏ, điện thoại xoay ngang). Kích thước hình, chữ và nút trong trò chơi tính theo cả bề rộng lẫn chiều cao: `min(…vw, …dvh)`. Đừng thêm kích thước chỉ theo `vw`.
+- Chỉ các màn danh sách (màn hình chính, danh sách trò của chủ đề, album, phần bố mẹ) được cuộn.
+- Đã đo ở 1411×628, 1024×520, 1280×720, 844×390, 390×844, 1024×768 với nhóm 2–3 và 6 tuổi: mọi trò và màn kết quả đều vừa.
 
 **Phần bố mẹ**
 - Cách mở: giữ nút bánh răng 1,5 giây, rồi chạm đúng con số được viết bằng chữ tiếng Việt.
