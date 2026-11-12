@@ -120,7 +120,9 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
   4. Mốc so sánh khi nghe lại: Whisper nghe lệch khoảng 29% số từ đơn của lô cũ (24/83, ví dụ pig → "PEGI", owl → "I'll"), nên một từ đơn lệch chưa chắc là file hỏng. Khi lệch, sinh lại vài bản (Piper mỗi lần ra hơi khác) với câu mồi "Say, X!" và chọn bản Whisper nghe đúng; walk, row, ride đã được thay theo cách này.
   5. Whisper hay nghe "the" trước nguyên âm thành "this/that" ("The apple is small." lệch qua 8 lần sinh lại) và "and a" thành "in a"; các lệch kiểu này không phải file hỏng. Tên ghép như "ladybug" sinh tốt hơn khi viết tách "Lady bug.".
   6. Lô giọng đầu tiên (trước khi có bước nghe lại) có file hỏng thật: chủ repo báo "rock" và "fog" đọc sai, Whisper nghe "rock" (dài 1,46 giây) thành một câu vô nghĩa. Vì vậy đã rà toàn bộ từ đơn bằng `scripts/fix-voice.py` (chạy với `words` hoặc `sentences`): Whisper nghe từng file, file lệch thì sinh lại tối đa 15 bản ("Say, X!", "Say, X.", "X.", "X!", "Say: X.") và giữ bản nghe đúng. File dài bất thường (trên khoảng 1,3 giây cho một từ) gần như chắc chắn hỏng.
-  7. Sau khi sinh, **dùng Whisper nghe lại từng file mới** và so với câu gốc. Câu 1–2 từ đi qua bước cắt chữ "Say" và có thể bị cắt lố: "Let's practice!" từng chỉ còn "practice". Gặp vậy thì đổi sang câu từ 3 từ trở lên (được đọc nguyên câu) hoặc đổi câu khác.
+  7. Kết quả lần rà toàn bộ (11/2026): từ đơn 361 file, 48 hỏng đã sinh lại, 12 còn lệch do đồng âm (ant/and, bee/b, eye/I, whale/wail, peas/peace, van/than, deer/tear, corn/con, croissant, trolleybus). Câu 770 file, 38 hỏng đã sinh lại (ví dụ "It's salt." chỉ còn "salt"), 16 còn lệch do đồng âm (pear/pair, pig/peg, panda/pander, "They're"/"their", "Find two"/"fine too").
+  8. Lần rà này cũng lộ ra lỗi ngữ pháp: từ chỉ nghề dùng chung kiểu câu với "mom" nên thành "Where is scientist?". Đã tách `kind: "job"`. Khi Whisper nghe một câu thành thứ khác hẳn, hãy đọc lại chính câu đó trước khi cho là file hỏng.
+  9. Sau khi sinh, **dùng Whisper nghe lại từng file mới** và so với câu gốc. Câu 1–2 từ đi qua bước cắt chữ "Say" và có thể bị cắt lố: "Let's practice!" từng chỉ còn "practice". Gặp vậy thì đổi sang câu từ 3 từ trở lên (được đọc nguyên câu) hoặc đổi câu khác.
 
 **Trò chơi** (mỗi chủ đề có 7 trò)
 1. Look and listen (thẻ từ)
@@ -208,7 +210,8 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
    | `skin` | Dùng hình tông da Medium-Light |
    | `kind`: `"color"` | Câu kiểu màu sắc |
    | `kind`: `"number"` + `count` | Câu kiểu con số |
-   | `kind`: `"person"` | Không có mạo từ ("This is mom.") |
+   | `kind`: `"person"` | Tên gọi người thân, không có mạo từ ("This is mom." / "Where is mom?") |
+   | `kind`: `"job"` | Nghề và vai (doctor, baby, prince…): có mạo từ ("This is a doctor." / "Where is the doctor?") |
    | `kind`: `"feeling"` | Tính từ cảm xúc ("I am happy." / "Who is happy?") |
    | `kind`: `"action"` | Động từ ("I can run." / "Who can run?") |
    | `custom` | Hình tự vẽ, đã nằm sẵn trong `public/img`; `copy-assets.mjs` bỏ qua |

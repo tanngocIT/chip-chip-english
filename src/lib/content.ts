@@ -11,7 +11,7 @@ export interface Topic {
   noShadow?: boolean;
 }
 
-export type WordKind = 'thing' | 'color' | 'number' | 'person' | 'feeling' | 'action';
+export type WordKind = 'thing' | 'color' | 'number' | 'person' | 'job' | 'feeling' | 'action';
 
 export interface Word {
   id: string;
@@ -91,7 +91,8 @@ const startsWithVowelSound = (s: string) => /^[aeiou]/i.test(s);
 
 /** "a cat", "an apple", "the sun", "grapes", "milk", "mom" */
 export function nounPhrase(w: Word): string {
-  if (w.kind !== 'thing' || w.plural || w.mass) {
+  // a job takes an article like any thing ("a doctor"); a family name does not ("mom")
+  if ((w.kind !== 'thing' && w.kind !== 'job') || w.plural || w.mass) {
     return w.word;
   }
   if (w.the) return `the ${w.word}`;
@@ -107,6 +108,8 @@ export function describe(w: Word): string {
       return `${capitalize(w.word)}!`;
     case 'person':
       return `This is ${w.word}.`;
+    case 'job':
+      return `This is ${nounPhrase(w)}.`;
     case 'feeling':
       return `I am ${w.word}.`;
     case 'action':

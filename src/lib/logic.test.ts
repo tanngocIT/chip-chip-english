@@ -69,6 +69,12 @@ group('content', () => {
     expect(describe(w('grapes'))).toBe("They're grapes.");
     expect(describe(w('milk'))).toBe("It's milk.");
     expect(describe(w('mom'))).toBe('This is mom.');
+    // family names stand alone, jobs take an article
+    expect(question(w('mom'))).toBe('Where is mom?');
+    expect(describe(w('doctor'))).toBe('This is a doctor.');
+    expect(describe(w('artist'))).toBe('This is an artist.');
+    expect(question(w('scientist'))).toBe('Where is the scientist?');
+    expect(describe(w('baby'))).toBe('This is a baby.');
     expect(describe(w('red'))).toBe("It's red.");
     expect(describe(w('three'))).toBe('Three!');
     expect(question(w('grapes'))).toBe('Where are the grapes?');

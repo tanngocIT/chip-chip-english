@@ -171,7 +171,7 @@ scripts/
    Bỏ qua bước này thì từ mới vẫn đọc được bằng giọng của máy, nhưng `npm test` sẽ báo thiếu file mp3.
 5. Chạy `npm test`.
 
-Các cờ có thể dùng: `"plural": true` (grapes → "They're grapes"), `"mass": true` (milk → "It's milk"), `"the": true` (the sun), `"skin": true` (hình người dùng màu da trung tính), `"kind": "color" | "number" | "person" | "feeling" | "action"`.
+Các cờ có thể dùng: `"plural": true` (grapes → "They're grapes"), `"mass": true` (milk → "It's milk"), `"the": true` (the sun), `"skin": true` (hình người dùng màu da trung tính), `"kind": "color" | "number" | "person" | "job" | "feeling" | "action"`.
 
 ## Hướng phát triển tiếp
 

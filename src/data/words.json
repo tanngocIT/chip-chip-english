@@ -564,7 +564,7 @@
    "vi": "em bé",
    "asset": "Baby",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "mom",
@@ -1385,7 +1385,7 @@
    "vi": "cô giáo",
    "asset": "Woman teacher",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "doctor",
@@ -1393,7 +1393,7 @@
    "vi": "bác sĩ",
    "asset": "Health worker",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "police officer",
@@ -1401,7 +1401,7 @@
    "vi": "cảnh sát",
    "asset": "Police officer",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "firefighter",
@@ -1409,7 +1409,7 @@
    "vi": "lính cứu hỏa",
    "asset": "Firefighter",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "farmer",
@@ -1417,7 +1417,7 @@
    "vi": "nông dân",
    "asset": "Farmer",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "cook",
@@ -1425,7 +1425,7 @@
    "vi": "đầu bếp",
    "asset": "Cook",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "pilot",
@@ -1433,7 +1433,7 @@
    "vi": "phi công",
    "asset": "Pilot",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "astronaut",
@@ -1441,7 +1441,7 @@
    "vi": "phi hành gia",
    "asset": "Astronaut",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "artist",
@@ -1449,7 +1449,7 @@
    "vi": "họa sĩ",
    "asset": "Artist",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "singer",
@@ -1457,7 +1457,7 @@
    "vi": "ca sĩ",
    "asset": "Singer",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "student",
@@ -1465,7 +1465,7 @@
    "vi": "học sinh",
    "asset": "Student",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "scientist",
@@ -1473,7 +1473,7 @@
    "vi": "nhà khoa học",
    "asset": "Scientist",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "builder",
@@ -1481,7 +1481,7 @@
    "vi": "thợ xây",
    "asset": "Construction worker",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "mechanic",
@@ -1489,7 +1489,7 @@
    "vi": "thợ sửa xe",
    "asset": "Mechanic",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "prince",
@@ -1497,7 +1497,7 @@
    "vi": "hoàng tử",
    "asset": "Prince",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "princess",
@@ -1505,7 +1505,7 @@
    "vi": "công chúa",
    "asset": "Princess",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "superhero",
@@ -1513,7 +1513,7 @@
    "vi": "siêu anh hùng",
    "asset": "Woman superhero",
    "skin": true,
-   "kind": "person"
+   "kind": "job"
   },
   {
    "id": "cheese",
