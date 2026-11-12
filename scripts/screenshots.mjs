@@ -343,8 +343,9 @@ await click('.bar .round'); // parents -> home
   if (!(await page.$('.quiz.listen'))) errors.push('key 2 did not open Listen and tap');
   await shot('28-keys-quiz');
   // answer every round with the number keys alone
-  for (let i = 0; i < 80 && (await page.$('.quiz')); i++) {
-    await page.keyboard.press(String(1 + (i % 2)));
+  for (let i = 0; i < 160 && (await page.$('.quiz')); i++) {
+    const options = await page.$$eval('.option', (o) => o.length);
+    await page.keyboard.press(String(1 + (i % options)));
     await wait(250);
   }
   if (!(await page.$('.result'))) errors.push('number keys could not finish a quiz');
