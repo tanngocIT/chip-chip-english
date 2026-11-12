@@ -578,7 +578,7 @@
    "id": "dad",
    "topic": "family",
    "vi": "bố",
-   "asset": "Man",
+   "asset": "Man beard",
    "skin": true,
    "kind": "person"
   },
@@ -1315,12 +1315,6 @@
    "asset": "Pickup truck"
   },
   {
-   "id": "lorry",
-   "topic": "vehicles",
-   "vi": "xe container",
-   "asset": "Articulated lorry"
-  },
-  {
    "id": "trolleybus",
    "topic": "vehicles",
    "vi": "xe buýt điện",
@@ -1794,7 +1788,7 @@
    "id": "hat",
    "topic": "toys",
    "vi": "cái mũ",
-   "asset": "Billed cap"
+   "asset": "Womans hat"
   },
   {
    "id": "t-shirt",
@@ -1991,10 +1985,10 @@
    "mass": true
   },
   {
-   "id": "seed",
+   "id": "plant",
    "topic": "nature",
-   "vi": "mầm cây",
-   "asset": "Seedling"
+   "vi": "cây trồng trong chậu",
+   "asset": "Potted plant"
   },
   {
    "id": "clover",
@@ -2007,13 +2001,6 @@
    "topic": "nature",
    "vi": "lốc xoáy",
    "asset": "Tornado"
-  },
-  {
-   "id": "fog",
-   "topic": "nature",
-   "vi": "sương mù",
-   "asset": "Fog",
-   "mass": true
   },
   {
    "id": "ice",

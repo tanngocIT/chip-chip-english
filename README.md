@@ -6,7 +6,7 @@ Chạy được trên iPad, tablet Android, điện thoại và máy tính. Có 
 
 ## Bé học được gì
 
-**13 chủ đề, 334 từ:**
+**13 chủ đề, 332 từ:**
 
 | Chủ đề | Số từ |
 |---|---|
@@ -14,8 +14,8 @@ Chạy được trên iPad, tablet Android, điện thoại và máy tính. Có 
 | Đồ chơi & đồ trong nhà | 40 |
 | Đồ ăn | 37 |
 | Rau củ quả | 36 |
-| Thiên nhiên | 36 |
-| Xe cộ | 34 |
+| Thiên nhiên | 35 |
+| Xe cộ | 33 |
 | Gia đình & nghề | 24 |
 | Con số 1–20 (có chữ số và số ngôi sao để đếm) | 20 |
 | Cơ thể | 16 |

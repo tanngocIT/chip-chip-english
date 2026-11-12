@@ -37,7 +37,7 @@ Micro (bài Say it) chỉ chạy trên https hoặc localhost. Muốn thử trê
 Vanilla TypeScript + Vite, không dùng framework. Dựng DOM bằng hàm `h()` tự viết.
 
 ```
-src/data/words.json     chủ đề + 334 từ (id, topic, vi, asset, cờ)
+src/data/words.json     chủ đề + 332 từ (id, topic, vi, asset, cờ)
 src/data/stickers.json  31 sticker thưởng (tên thư mục Fluent Emoji)
 src/lib/content.ts      Word/Topic, dựng câu: nounPhrase (a/an/the), describe, question
 src/lib/progress.ts     levelConfig theo tuổi, starsFor, Leitner (recordAnswer), pickTargets,
@@ -70,6 +70,7 @@ src/style.css           toàn bộ giao diện
 scripts/copy-assets.mjs chép SVG từ checkout Fluent Emoji vào public/img (theo words.json + stickers.json)
 scripts/make-icons.mjs  tạo icon-192/512 từ mascot
 scripts/gen-voice.mjs   sinh public/voice/*.mp3 + manifest.json bằng Piper (gọi gen-voice.py)
+scripts/fix-voice.py    Whisper nghe lại các file giọng, file lệch thì sinh lại cho tới khi nghe đúng
 scripts/screenshots.mjs chơi thử tự động bằng puppeteer-core (giả lập TTS, nhận giọng và micro)
 .github/workflows/deploy.yml  test → build → deploy Pages
 ```
@@ -93,8 +94,8 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
   | Đồ chơi & nhà | 40 |
   | Đồ ăn | 37 |
   | Rau củ quả | 36 |
-  | Thiên nhiên | 36 |
-  | Xe cộ | 34 |
+  | Thiên nhiên | 35 |
+  | Xe cộ | 33 |
   | Gia đình & nghề | 24 |
   | Số 1–20 | 20 |
   | Cơ thể | 16 |
@@ -108,6 +109,7 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
   - **Hình khối:** 12 hình do AI tự vẽ bằng SVG phẳng, mỗi hình một màu (`public/img/shape-*.svg`, cờ `custom`), vì Fluent Emoji không có đủ (chữ nhật, bầu dục, xoắn ốc). `star-shape` và `heart-shape` đọc là "star", "heart" (cờ `word`) vì id `star`, `heart` đã dùng ở chủ đề khác.
   - **Cảm xúc** (`kind: "feeling"`): "I am happy." / "Who is happy?". Chủ đề có cờ `noShadow` nên ẩn Find the shadow (mặt nào cũng tròn, bóng giống nhau).
   - **Hành động** (`kind: "action"`): "I can run." / "Who can run?". Dùng "I can" để không phải chia động từ và không phụ thuộc giới tính nhân vật trong hình. Đã bỏ "write" (nghe gần giống "ride") và đổi "wave" (trùng id với sóng biển ở Thiên nhiên) thành "juggle".
+- **Hình phải tự nói lên nghĩa của từ.** Chủ repo đã báo "fog" có hình khó hiểu (vài vòng tròn xám), và AI đã xem lại toàn bộ hình bằng bảng hình theo chủ đề. Đã sửa: bỏ "fog" (không có hình sương mù nào rõ) và "lorry" (trùng nghĩa với "truck" trong cùng chủ đề); "seed" có hình cây con nên đổi thành "plant" với hình chậu cây; "hat" đổi từ hình mũ lưỡi trai sang hình mũ rộng vành (hình mũ lưỡi trai là món "cap" của Chip); "dad" đổi sang hình có râu vì trước đó giống hệt "brother". Khi thêm từ, hãy dựng bảng hình và xem: nếu không đoán được từ khi che chữ thì đổi hình hoặc bỏ từ.
 - Hình lấy từ **Fluent Emoji Flat** (Microsoft, MIT). Người và tay chân dùng tông da **Medium-Light** (cờ `skin`).
 - Viền trắng kiểu sticker cắt rời là dấu ấn thị giác chính. Nó được làm bằng nhiều lớp `drop-shadow` trắng trong CSS.
 - Giọng đọc tiếng Anh dùng file mp3 sinh sẵn bằng Piper (giọng `en_US-kristin-medium`, public domain) trong `public/voice/`. Câu nào chưa có file thì rơi về TTS của trình duyệt. Tiếng Việt vẫn dùng TTS trình duyệt. Thêm từ mới thì chạy lại `node scripts/gen-voice.mjs <python> <model.onnx>` (chỉ sinh câu còn thiếu; cần piper-tts, soundfile, scipy, faster-whisper). Từ 1-2 chữ được sinh qua câu "Say, X." rồi cắt bỏ chữ "Say", vì đọc riêng từ đơn thì mô hình nuốt âm (cat nghe như tack); `npm test` sẽ báo nếu thiếu file.
@@ -117,7 +119,8 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
   3. Nếu Python không tải được từ Hugging Face (lỗi chứng chỉ SSL do proxy), tải bằng Node (`fetch`) và tải luôn mô hình Whisper: 4 file `config.json`, `tokenizer.json`, `vocabulary.txt`, `model.bin` từ `https://huggingface.co/Systran/faster-whisper-small.en/resolve/main/` vào `voice-model/whisper-small.en/`, rồi đặt biến `WHISPER_MODEL` trỏ tới thư mục đó khi chạy `gen-voice.mjs`. Không tắt kiểm tra chứng chỉ.
   4. Mốc so sánh khi nghe lại: Whisper nghe lệch khoảng 29% số từ đơn của lô cũ (24/83, ví dụ pig → "PEGI", owl → "I'll"), nên một từ đơn lệch chưa chắc là file hỏng. Khi lệch, sinh lại vài bản (Piper mỗi lần ra hơi khác) với câu mồi "Say, X!" và chọn bản Whisper nghe đúng; walk, row, ride đã được thay theo cách này.
   5. Whisper hay nghe "the" trước nguyên âm thành "this/that" ("The apple is small." lệch qua 8 lần sinh lại) và "and a" thành "in a"; các lệch kiểu này không phải file hỏng. Tên ghép như "ladybug" sinh tốt hơn khi viết tách "Lady bug.".
-  6. Sau khi sinh, **dùng Whisper nghe lại từng file mới** và so với câu gốc. Câu 1–2 từ đi qua bước cắt chữ "Say" và có thể bị cắt lố: "Let's practice!" từng chỉ còn "practice". Gặp vậy thì đổi sang câu từ 3 từ trở lên (được đọc nguyên câu) hoặc đổi câu khác.
+  6. Lô giọng đầu tiên (trước khi có bước nghe lại) có file hỏng thật: chủ repo báo "rock" và "fog" đọc sai, Whisper nghe "rock" (dài 1,46 giây) thành một câu vô nghĩa. Vì vậy đã rà toàn bộ từ đơn bằng `scripts/fix-voice.py` (chạy với `words` hoặc `sentences`): Whisper nghe từng file, file lệch thì sinh lại tối đa 15 bản ("Say, X!", "Say, X.", "X.", "X!", "Say: X.") và giữ bản nghe đúng. File dài bất thường (trên khoảng 1,3 giây cho một từ) gần như chắc chắn hỏng.
+  7. Sau khi sinh, **dùng Whisper nghe lại từng file mới** và so với câu gốc. Câu 1–2 từ đi qua bước cắt chữ "Say" và có thể bị cắt lố: "Let's practice!" từng chỉ còn "practice". Gặp vậy thì đổi sang câu từ 3 từ trở lên (được đọc nguyên câu) hoặc đổi câu khác.
 
 **Trò chơi** (mỗi chủ đề có 7 trò)
 1. Look and listen (thẻ từ)
@@ -228,7 +231,7 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 - Bài Say it bị ẩn trên trình duyệt không có SpeechRecognition (ví dụ Firefox).
 - Giọng tiếng Anh là mp3 nên giống nhau trên mọi máy. Giọng Việt (nếu bật) và câu chưa có mp3 vẫn phụ thuộc máy.
 - File mp3 phát qua blob URL (không dùng Range request) vì Safari phát từ service worker dễ lỗi với Range.
-- Cache offline thêm khoảng 9 MB cho giọng (1.135 file).
+- Cache offline thêm khoảng 9 MB cho giọng (1.129 file).
 - Bản cài như app chạy offline, nên sau khi deploy có thể phải mở lại app một lần mới thấy bản mới.
 
 ## Ý tưởng tiếp theo (chưa làm)

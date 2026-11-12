@@ -8,7 +8,7 @@ Các việc để làm sau, chưa triển khai.
 
 ## 0. Giọng đọc tự nhiên và đồng đều hơn (miễn phí) — ĐÃ LÀM hướng B
 
-Đã làm: 1.135 file mp3 trong `public/voice/` sinh bằng Piper, giọng `en_US-kristin-medium` (public domain). Đã thử `ljspeech` và `cori` nhưng đọc từ đơn kém hơn. Còn có thể làm: thử giọng khác nếu thấy giọng này chưa hợp, và thêm mục chọn giọng cho câu tiếng Việt. Phần dưới là phân tích ban đầu.
+Đã làm: 1.129 file mp3 trong `public/voice/` sinh bằng Piper, giọng `en_US-kristin-medium` (public domain). Đã thử `ljspeech` và `cori` nhưng đọc từ đơn kém hơn. Còn có thể làm: thử giọng khác nếu thấy giọng này chưa hợp, và thêm mục chọn giọng cho câu tiếng Việt. Phần dưới là phân tích ban đầu.
 
 Hiện app dùng TTS của trình duyệt, chất lượng tuỳ máy. Các hướng, theo thứ tự nên thử:
 
