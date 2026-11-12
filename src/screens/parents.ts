@@ -275,6 +275,11 @@ export function parentArea() {
         { class: 'panel' },
         h('h3', {}, 'Thiết bị'),
         h('p', {}, canSpeak() ? 'Giọng đọc tiếng Anh: có.' : 'Không có giọng đọc. Hãy dùng Chrome hoặc Safari.'),
+        h(
+          'p',
+          {},
+          'Dùng bằng bàn phím trên máy tính: phím số 1–9 chọn đáp án, trò chơi hoặc chủ đề; Enter là nút chính (bắt đầu, tiếp theo, mở quà, micro); phím cách để nghe lại; Esc để quay lại; ← → để lật thẻ từ; các phím mũi tên di chuyển giữa các nút.',
+        ),
         h('p', {}, canListen() ? 'Nhận giọng nói (bài “Say it”): có.' : 'Trình duyệt này không nhận giọng nói nên bài “Say it” bị ẩn. Dùng Chrome để bật.'),
         reset,
         h('p', { class: 'credit' }, 'Hình minh họa: Fluent Emoji của Microsoft (giấy phép MIT).'),

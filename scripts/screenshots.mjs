@@ -316,6 +316,59 @@ else {
 }
 await page.screenshot({ path: `shots/${tag}-15-parents-full.png`, fullPage: true });
 
+// ---- keyboard: the whole app can be driven without a pointer ----
+await click('.bar .round'); // parents -> home
+{
+  const key = async (k) => {
+    await page.keyboard.press(k);
+    await wait(400);
+  };
+  const cls = () => page.$eval('main', (m) => m.className);
+  await key('1'); // first topic
+  if (!(await cls()).includes('topic-screen')) errors.push('key 1 on home did not open the first topic');
+  if (!(await page.evaluate(() => document.body.classList.contains('keys')))) errors.push('number hints did not turn on');
+  const hint = await page.evaluate(() => getComputedStyle(document.querySelector('.activity'), '::after').content);
+  if (!/1|counter/.test(hint)) errors.push(`no number hint on the first game: ${hint}`);
+  await shot('27-keys-topic');
+  await key('1'); // Look and listen
+  if (!(await page.$('button.flash'))) errors.push('key 1 on the topic did not open the flashcards');
+  await key('ArrowRight');
+  const second = await page.$$eval('.dots .done', (d) => d.length);
+  await key('ArrowLeft');
+  const firstAgain = await page.$$eval('.dots .done', (d) => d.length);
+  if (second !== 1 || firstAgain !== 0) errors.push(`arrow keys did not turn the flashcards (${second}, ${firstAgain})`);
+  await key('Escape');
+  if (!(await cls()).includes('topic-screen')) errors.push('Esc did not go back to the topic');
+  await key('2'); // Listen and tap
+  if (!(await page.$('.quiz.listen'))) errors.push('key 2 did not open Listen and tap');
+  await shot('28-keys-quiz');
+  // answer every round with the number keys alone
+  for (let i = 0; i < 80 && (await page.$('.quiz')); i++) {
+    await page.keyboard.press(String(1 + (i % 2)));
+    await wait(250);
+  }
+  if (!(await page.$('.result'))) errors.push('number keys could not finish a quiz');
+  await wait(600);
+  await key('Enter'); // opens the gift if there is one, else goes on
+  if (await page.$('.result')) await key('Enter');
+  if (!(await cls()).includes('topic-screen')) errors.push('Enter did not leave the result screen');
+  // arrow keys move the focus, Enter presses the focused button
+  await key('ArrowDown');
+  const focused = await page.evaluate(() => document.activeElement?.className ?? '');
+  if (!focused.includes('activity')) errors.push(`arrow key did not focus a game: "${focused}"`);
+  await key('ArrowRight');
+  const moved = await page.evaluate(() => document.activeElement?.className ?? '');
+  if (moved === focused || !moved.includes('activity')) errors.push(`arrow key did not move the focus: "${moved}"`);
+  await key('Enter');
+  if ((await cls()).includes('topic-screen')) errors.push('Enter did not press the focused game');
+  await key('Escape');
+  await key('Escape');
+  if (!(await page.$('.home'))) errors.push('Esc did not return home');
+  // a tap hides the hints again
+  await page.mouse.click(5, 5);
+  if (await page.evaluate(() => document.body.classList.contains('keys'))) errors.push('number hints stayed on after a click');
+}
+
 // ---- today session, review and the daily limit ----
 
 /** Plays whatever game is on screen until `until` shows up. */
@@ -349,7 +402,6 @@ async function autoplay(until, maxMs = 240000) {
   return false;
 }
 
-await click('.bar .round'); // parents -> home
 await shot('20-home-quick');
 if (!(await page.$('.quick.today'))) errors.push('today button missing on home');
 const streak = await page.$eval('.streak b', (b) => b.textContent).catch(() => null);

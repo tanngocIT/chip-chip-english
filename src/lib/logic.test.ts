@@ -34,6 +34,7 @@ import { passes, scoreHeard, levenshtein } from './match';
 import { words, topics, wordsIn, nounPhrase, describe, question, stickers } from './content';
 import { viNumber } from './vi';
 import { isIos, isStandalone } from './install';
+import { nextInDirection } from './focus';
 import { allSentences, sentenceOptions, pickSentences, SENTENCE_NOUNS, type Sentence } from './sentences';
 
 const seeded = (seed = 1) => () => {
@@ -608,5 +609,49 @@ group('backup code', () => {
     expect(p.streak).toEqual({ count: 0, last: '' });
     expect(p.look).toBe(null);
     expect(p.looksSeen).toBe(LOOKS.length);
+  });
+});
+
+group('arrow keys', () => {
+  // a 3 x 2 grid of tiles, then one wide button underneath
+  const box = (left: number, top: number, width = 100, height = 100) => ({ left, top, width, height });
+  const grid = [box(0, 0), box(120, 0), box(240, 0), box(0, 120), box(120, 120), box(240, 120), box(0, 240, 340, 60)];
+
+  it('moves along a row and down a column', () => {
+    expect(nextInDirection(grid, 0, 'right')).toBe(1);
+    expect(nextInDirection(grid, 1, 'right')).toBe(2);
+    expect(nextInDirection(grid, 2, 'left')).toBe(1);
+    expect(nextInDirection(grid, 1, 'down')).toBe(4);
+    expect(nextInDirection(grid, 4, 'up')).toBe(1);
+  });
+
+  it('stays put at an edge instead of jumping somewhere odd', () => {
+    expect(nextInDirection(grid, 2, 'right')).toBe(-1);
+    expect(nextInDirection(grid, 0, 'left')).toBe(-1);
+    expect(nextInDirection(grid, 1, 'up')).toBe(-1);
+    expect(nextInDirection(grid, 6, 'down')).toBe(-1);
+    expect(nextInDirection([], 0, 'down')).toBe(-1);
+  });
+
+  it('reaches a wide button below a grid and comes back up', () => {
+    expect(nextInDirection(grid, 4, 'down')).toBe(6);
+    expect(nextInDirection(grid, 3, 'down')).toBe(6);
+    expect([3, 4, 5]).toContain(nextInDirection(grid, 6, 'up'));
+  });
+
+  it('every tile of a grid can be reached from the first one', () => {
+    const seen = new Set([0]);
+    const queue = [0];
+    while (queue.length) {
+      const at = queue.shift()!;
+      for (const dir of ['up', 'down', 'left', 'right'] as const) {
+        const next = nextInDirection(grid, at, dir);
+        if (next >= 0 && !seen.has(next)) {
+          seen.add(next);
+          queue.push(next);
+        }
+      }
+    }
+    expect(seen.size).toBe(grid.length);
   });
 });

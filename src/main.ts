@@ -7,6 +7,7 @@ import { topicById } from './lib/content';
 import { addMinutes, overLimit } from './lib/progress';
 import { app, P, inParentArea, persist } from './screens/core';
 import { splash, rest } from './screens/home';
+import { initKeys } from './screens/keys';
 
 // ---------- play-time counter ----------
 
@@ -21,4 +22,5 @@ setInterval(() => {
 
 (window as any).__app = { P, topicById };
 
+initKeys(app);
 splash();

@@ -48,6 +48,7 @@ src/lib/phrases.ts      danh sách mọi câu cần giọng + phraseKey (tên fi
 src/lib/sfx.ts          hiệu ứng âm thanh và giai điệu Sing along bằng Web Audio (không có file âm thanh)
 src/lib/install.ts      cài app: beforeinstallprompt (Android/desktop), nhận biết iOS và chế độ đã cài
 src/lib/vi.ts           viết số bằng chữ tiếng Việt (cho cổng phụ huynh)
+src/lib/focus.ts        nextInDirection: nút gần nhất theo hướng phím mũi tên
 src/lib/sentences.ts    bộ 96 câu ngắn (allSentences), chọn câu cho một ván (pickSentences), chọn hình đáp án (sentenceOptions)
 src/ui.ts               icon SVG, picture() (hình sticker; số = chữ số + N ngôi sao), stars, dots
 src/screens/core.ts     trạng thái chung (app, P, screenId, session, inParentArea), show(), persist(), startActivity,
@@ -63,6 +64,7 @@ src/screens/memory.ts   Memory (lật thẻ ghép đôi)
 src/screens/sentences.ts  Sentences (câu ngắn, mở từ màn hình chính)
 src/screens/result.ts   result (theo chủ đề hoặc buổi học) và resultScreen
 src/screens/parents.ts  parentGate, parentArea
+src/screens/keys.ts     điều khiển bằng bàn phím (initKeys), một trình nghe keydown chung cho mọi màn
 src/main.ts             nạp CSS, bộ đếm phút chơi, gọi splash()
 src/style.css           toàn bộ giao diện
 scripts/copy-assets.mjs chép SVG từ checkout Fluent Emoji vào public/img (theo words.json + stickers.json)
@@ -165,6 +167,12 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 **Có gì để bé mong chờ**
 - **Chuỗi ngày học** (`P.streak`, `markDay`, `currentStreak` trong `progress.ts`): tăng 1 khi bé chơi xong trò đầu tiên trong ngày (gọi ở `resultScreen`). Hôm nay chưa chơi thì chuỗi vẫn hiện số của hôm qua; bỏ trọn một ngày thì về 0. Chỉ hiện ở màn hình chính, không có thông báo nhắc và không phạt khi đứt chuỗi.
 - **Đồ cho Chip** (`LOOKS` trong `progress.ts`): nơ 3 sticker, mũ lưỡi trai 7, kính 12, mũ cao 18, vương miện 25 (album có 31). Bé chọn ở đầu album sticker; chạm món đang mặc thì cởi ra. `P.look` lưu món đang mặc, `P.looksSeen` để biết khi nào hiện chấm "có món mới" trên nút album. Mọi chỗ vẽ Chip đều đi qua `chip()` trong `ui.ts` (màn chào, màn hình chính, kết quả, Chip nhảy lên, lưng thẻ Memory), nên món đồ hiện ở khắp nơi; đổi `P.look` thì phải gọi `setChipLook`. Vị trí từng món là phần trăm theo bề rộng Chip, nằm trong `style.css` (`.look-*`). Hình lấy từ Fluent Emoji (`public/img/look-*.svg`).
+
+**Bàn phím** (`screens/keys.ts`)
+- Phím số 1–9 bấm phần tử thứ N của nhóm đầu tiên có mặt trên màn, theo thứ tự trong `NUMBERED`: `.option`, `.spot`, `.flip`, `.activity`, `.numpad button`, `.topic`. Trò mới có lưới đáp án thì dùng lại một trong các class này, hoặc thêm class của nó vào `NUMBERED` và vào phần CSS `.keys …` để có số gợi ý.
+- Enter (khi chưa có nút nào đang được chọn) bấm nút chính theo thứ tự `.play-big`, `.gift`, `.pager .go`, `.mic`, `.quick.today`. Phím cách bấm nút nghe lại. Esc bấm nút đầu tiên của `.bar`. ← → lật thẻ từ và chọn ở màn kết quả; ở màn khác bốn phím mũi tên di chuyển focus (`nextInDirection`).
+- Số gợi ý vẽ bằng CSS counter, chỉ hiện khi `body` có class `keys`. Class này bật khi có phím được bấm và tắt khi có `pointerdown`, nên người dùng cảm ứng không bao giờ thấy.
+- Khi đang gõ trong ô nhập (phần bố mẹ) thì chỉ Esc còn tác dụng.
 
 **Kích thước màn hình**
 - Mọi trò phải vừa một màn hình, không cuộn, kể cả cửa sổ rộng mà thấp (trình duyệt máy tính thu nhỏ, điện thoại xoay ngang). Kích thước hình, chữ và nút trong trò chơi tính theo cả bề rộng lẫn chiều cao: `min(…vw, …dvh)`. Đừng thêm kích thước chỉ theo `vw`.

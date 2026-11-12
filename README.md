@@ -65,6 +65,21 @@ Mỗi chủ đề có 7 trò:
 | 4–5 | 12 thẻ | 3 | 10 câu | 8 câu | tranh 9 hình, tìm 6 | 4 cặp | 8 từ | 6 câu, 2 hình |
 | 6 | 15 thẻ | 4 | 12 câu | 10 câu | tranh 12 hình, tìm 8 | 6 cặp | 8 từ | 8 câu, 3 hình |
 
+## Dùng bằng bàn phím
+
+Trên máy tính, mọi thao tác đều làm được bằng bàn phím:
+
+| Phím | Tác dụng |
+|---|---|
+| 1–9 | Chọn đáp án, thẻ, trò chơi hoặc chủ đề thứ N trên màn hình |
+| Enter | Nút chính: bắt đầu, tiếp theo, mở hộp quà, bấm micro |
+| Phím cách | Nghe lại |
+| Esc | Quay lại |
+| ← → | Thẻ từ trước / sau; chơi lại / tiếp theo ở màn kết quả |
+| Phím mũi tên | Ở các màn khác: di chuyển khung chọn giữa các nút, Enter để bấm |
+
+Khi dùng bàn phím, mỗi ô hiện một số nhỏ ở góc để biết bấm phím nào. Chạm hoặc bấm chuột thì các số ẩn đi.
+
 ## Phần dành cho bố mẹ
 
 Giữ nút bánh răng ở góc dưới bên phải khoảng 1,5 giây, rồi chạm vào con số được viết bằng chữ (ví dụ "ba mươi bảy"). Bé nhỏ chưa đọc được nên sẽ không tự vào được.
@@ -125,6 +140,7 @@ src/
   lib/sfx.ts           # hiệu ứng âm thanh và giai điệu bằng Web Audio
   lib/install.ts       # nút cài app ra màn hình chính
   lib/sentences.ts     # bộ câu ngắn và cách chọn hình đáp án
+  lib/focus.ts         # tìm nút gần nhất theo hướng phím mũi tên
   screens/             # mỗi màn hình một file: core (trạng thái chung, điều hướng), home, topic,
                        # learn, quiz (Listen and tap, Find the shadow, Review), find, memory, sing, say,
                        # sentences, result, parents

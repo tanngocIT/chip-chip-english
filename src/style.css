@@ -1886,3 +1886,60 @@ td:not(:first-child) {
     width: min(100%, max(96px, calc(100dvh - 250px)));
   }
 }
+
+/* ---------- keyboard: number hints, shown only while a keyboard is in use ---------- */
+.keys .options,
+.keys .scene,
+.keys .activities,
+.keys .numpad,
+.keys .topics {
+  counter-reset: key;
+}
+
+.keys .option,
+.keys .spot,
+.keys .flip,
+.keys .activity,
+.keys .numpad button,
+.keys .topic {
+  position: relative;
+  counter-increment: key;
+}
+
+.keys .option::after,
+.keys .spot::after,
+.keys .flip::after,
+.keys .activity::after,
+.keys .numpad button::after,
+.keys .topic:nth-child(-n + 9)::after {
+  content: counter(key);
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 2;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 6px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  font: 800 16px/1 var(--font);
+  color: var(--paper);
+  background: var(--ink-soft);
+  transform: none;
+  pointer-events: none;
+}
+
+/* only the first nine can be picked with a key */
+.keys .option:nth-child(n + 10)::after,
+.keys .spot:nth-child(n + 10)::after,
+.keys .flip:nth-child(n + 10)::after,
+.keys .spot.found::after,
+.keys .option.gone::after {
+  display: none;
+}
+
+.keys button:focus-visible {
+  outline: 5px solid var(--sky);
+  outline-offset: 4px;
+}
