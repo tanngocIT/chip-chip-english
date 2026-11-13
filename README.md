@@ -112,7 +112,7 @@ Toàn bộ tiến độ chỉ lưu trên máy (localStorage). App không có tà
 ## Âm thanh và hình ảnh đến từ đâu
 
 - **Hình khối:** 12 hình của chủ đề Hình khối được vẽ riêng cho app (file `public/img/shape-*.svg`).
-- **Hình vẽ riêng:** 88 hình của bốn chủ đề Gia đình & nghề, Xe cộ, Hành động và Cơ thể được vẽ bằng Gemini (Google) theo mô tả của app, để các từ gần nghĩa trông khác nhau rõ (mẹ, chị, anh, bố không còn chung một khuôn mặt; train, tram, subway mỗi cái một kiểu). File nằm trong `public/img/art/*.webp`.
+- **Hình vẽ riêng:** 165 hình của sáu chủ đề Gia đình & nghề, Xe cộ, Hành động, Cơ thể, Đồ ăn và Con vật được vẽ bằng Gemini (Google) theo mô tả của app, để các từ gần nghĩa trông khác nhau rõ (mẹ, chị, anh, bố không còn chung một khuôn mặt; train, tram, subway mỗi cái một kiểu). File nằm trong `public/img/art/*.webp`.
 - **Hình:** [Fluent Emoji](https://github.com/microsoft/fluentui-emoji) của Microsoft, phong cách *Flat*, giấy phép **MIT**, dùng miễn phí cả cho mục đích thương mại. File SVG nằm trong `public/img`, nên app nhẹ (khoảng 2 MB) và nét ở mọi kích thước. Kiểu viền trắng như sticker cắt rời được làm bằng CSS.
 - **Giọng đọc:** giọng tiếng Anh là file mp3 sinh sẵn bằng Piper (giọng `en_US-kristin-medium`, public domain), nên giống nhau trên mọi máy và chạy offline. Câu nào chưa có file thì dùng giọng có sẵn trên máy (Web Speech API). Tiếng Việt vẫn dùng giọng của máy. Cách này không tốn tiền.
 - **Nhận giọng nói:** SpeechRecognition của trình duyệt. Có trên Chrome (Android, máy tính) và Safari mới. Trình duyệt nào không hỗ trợ thì bài Say it tự ẩn đi.

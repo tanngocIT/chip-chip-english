@@ -105,110 +105,128 @@
    "id": "cat",
    "topic": "animals",
    "vi": "con mèo",
-   "asset": "Cat face"
+   "asset": "Cat face",
+   "art": true
   },
   {
    "id": "dog",
    "topic": "animals",
    "vi": "con chó",
-   "asset": "Dog face"
+   "asset": "Dog face",
+   "art": true
   },
   {
    "id": "cow",
    "topic": "animals",
    "vi": "con bò",
-   "asset": "Cow face"
+   "asset": "Cow face",
+   "art": true
   },
   {
    "id": "pig",
    "topic": "animals",
    "vi": "con heo",
-   "asset": "Pig face"
+   "asset": "Pig face",
+   "art": true
   },
   {
    "id": "duck",
    "topic": "animals",
    "vi": "con vịt",
-   "asset": "Duck"
+   "asset": "Duck",
+   "art": true
   },
   {
    "id": "chicken",
    "topic": "animals",
    "vi": "con gà",
-   "asset": "Chicken"
+   "asset": "Chicken",
+   "art": true
   },
   {
    "id": "fish",
    "topic": "animals",
    "vi": "con cá",
    "asset": "Tropical fish",
-   "fallback": "Fish"
+   "fallback": "Fish",
+   "art": true
   },
   {
    "id": "bird",
    "topic": "animals",
    "vi": "con chim",
-   "asset": "Bird"
+   "asset": "Bird",
+   "art": true
   },
   {
    "id": "rabbit",
    "topic": "animals",
    "vi": "con thỏ",
-   "asset": "Rabbit face"
+   "asset": "Rabbit face",
+   "art": true
   },
   {
    "id": "monkey",
    "topic": "animals",
    "vi": "con khỉ",
-   "asset": "Monkey face"
+   "asset": "Monkey face",
+   "art": true
   },
   {
    "id": "elephant",
    "topic": "animals",
    "vi": "con voi",
-   "asset": "Elephant"
+   "asset": "Elephant",
+   "art": true
   },
   {
    "id": "lion",
    "topic": "animals",
    "vi": "con sư tử",
-   "asset": "Lion"
+   "asset": "Lion",
+   "art": true
   },
   {
    "id": "tiger",
    "topic": "animals",
    "vi": "con hổ",
-   "asset": "Tiger face"
+   "asset": "Tiger face",
+   "art": true
   },
   {
    "id": "bear",
    "topic": "animals",
    "vi": "con gấu",
-   "asset": "Bear"
+   "asset": "Bear",
+   "art": true
   },
   {
    "id": "frog",
    "topic": "animals",
    "vi": "con ếch",
-   "asset": "Frog"
+   "asset": "Frog",
+   "art": true
   },
   {
    "id": "horse",
    "topic": "animals",
    "vi": "con ngựa",
-   "asset": "Horse face"
+   "asset": "Horse face",
+   "art": true
   },
   {
    "id": "panda",
    "topic": "animals",
    "vi": "gấu trúc",
-   "asset": "Panda"
+   "asset": "Panda",
+   "art": true
   },
   {
    "id": "turtle",
    "topic": "animals",
    "vi": "con rùa",
-   "asset": "Turtle"
+   "asset": "Turtle",
+   "art": true
   },
   {
    "id": "apple",
@@ -654,45 +672,52 @@
    "topic": "food",
    "vi": "bánh mì",
    "asset": "Bread",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "egg",
    "topic": "food",
    "vi": "quả trứng",
-   "asset": "Egg"
+   "asset": "Egg",
+   "art": true
   },
   {
    "id": "milk",
    "topic": "food",
    "vi": "sữa",
    "asset": "Glass of milk",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "cake",
    "topic": "food",
    "vi": "bánh kem",
-   "asset": "Birthday cake"
+   "asset": "Birthday cake",
+   "art": true
   },
   {
    "id": "ice cream",
    "topic": "food",
    "vi": "kem",
-   "asset": "Soft ice cream"
+   "asset": "Soft ice cream",
+   "art": true
   },
   {
    "id": "cookie",
    "topic": "food",
    "vi": "bánh quy",
-   "asset": "Cookie"
+   "asset": "Cookie",
+   "art": true
   },
   {
    "id": "pizza",
    "topic": "food",
    "vi": "bánh pizza",
    "asset": "Pizza",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "carrot",
@@ -712,21 +737,24 @@
    "topic": "food",
    "vi": "cơm",
    "asset": "Cooked rice",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "noodles",
    "topic": "food",
    "vi": "mì / phở",
    "asset": "Steaming bowl",
-   "plural": true
+   "plural": true,
+   "art": true
   },
   {
    "id": "candy",
    "topic": "food",
    "vi": "kẹo",
    "asset": "Lollipop",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "ball",
@@ -880,133 +908,155 @@
    "id": "sheep",
    "topic": "animals",
    "vi": "con cừu",
-   "asset": "Ewe"
+   "asset": "Ewe",
+   "art": true
   },
   {
    "id": "goat",
    "topic": "animals",
    "vi": "con dê",
-   "asset": "Goat"
+   "asset": "Goat",
+   "art": true
   },
   {
    "id": "mouse",
    "topic": "animals",
    "vi": "con chuột",
-   "asset": "Mouse face"
+   "asset": "Mouse face",
+   "art": true
   },
   {
    "id": "snake",
    "topic": "animals",
    "vi": "con rắn",
-   "asset": "Snake"
+   "asset": "Snake",
+   "art": true
   },
   {
    "id": "giraffe",
    "topic": "animals",
    "vi": "hươu cao cổ",
-   "asset": "Giraffe"
+   "asset": "Giraffe",
+   "art": true
   },
   {
    "id": "zebra",
    "topic": "animals",
    "vi": "ngựa vằn",
-   "asset": "Zebra"
+   "asset": "Zebra",
+   "art": true
   },
   {
    "id": "penguin",
    "topic": "animals",
    "vi": "chim cánh cụt",
-   "asset": "Penguin"
+   "asset": "Penguin",
+   "art": true
   },
   {
    "id": "owl",
    "topic": "animals",
    "vi": "con cú",
-   "asset": "Owl"
+   "asset": "Owl",
+   "art": true
   },
   {
    "id": "crab",
    "topic": "animals",
    "vi": "con cua",
-   "asset": "Crab"
+   "asset": "Crab",
+   "art": true
   },
   {
    "id": "octopus",
    "topic": "animals",
    "vi": "bạch tuộc",
-   "asset": "Octopus"
+   "asset": "Octopus",
+   "art": true
   },
   {
    "id": "dolphin",
    "topic": "animals",
    "vi": "cá heo",
-   "asset": "Dolphin"
+   "asset": "Dolphin",
+   "art": true
   },
   {
    "id": "whale",
    "topic": "animals",
    "vi": "cá voi",
-   "asset": "Spouting whale"
+   "asset": "Spouting whale",
+   "art": true
   },
   {
    "id": "shark",
    "topic": "animals",
    "vi": "cá mập",
-   "asset": "Shark"
+   "asset": "Shark",
+   "art": true
   },
   {
    "id": "camel",
    "topic": "animals",
    "vi": "lạc đà",
-   "asset": "Camel"
+   "asset": "Camel",
+   "art": true
   },
   {
    "id": "kangaroo",
    "topic": "animals",
    "vi": "chuột túi",
-   "asset": "Kangaroo"
+   "asset": "Kangaroo",
+   "art": true
   },
   {
    "id": "fox",
    "topic": "animals",
    "vi": "con cáo",
-   "asset": "Fox"
+   "asset": "Fox",
+   "art": true
   },
   {
    "id": "hippo",
    "topic": "animals",
    "vi": "hà mã",
-   "asset": "Hippopotamus"
+   "asset": "Hippopotamus",
+   "art": true
   },
   {
    "id": "crocodile",
    "topic": "animals",
    "vi": "cá sấu",
-   "asset": "Crocodile"
+   "asset": "Crocodile",
+   "art": true
   },
   {
    "id": "deer",
    "topic": "animals",
    "vi": "con nai",
-   "asset": "Deer"
+   "asset": "Deer",
+   "art": true
   },
   {
    "id": "ant",
    "topic": "animals",
    "vi": "con kiến",
-   "asset": "Ant"
+   "asset": "Ant",
+   "art": true
   },
   {
    "id": "parrot",
    "topic": "animals",
    "vi": "con vẹt",
-   "asset": "Parrot"
+   "asset": "Parrot",
+   "art": true
   },
   {
    "id": "dinosaur",
    "topic": "animals",
    "vi": "khủng long",
-   "asset": "T-rex"
+   "asset": "T-rex",
+   "art": true
   },
   {
    "id": "kiwi",
@@ -1600,178 +1650,205 @@
    "topic": "food",
    "vi": "phô mai",
    "asset": "Cheese wedge",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "hamburger",
    "topic": "food",
    "vi": "bánh hamburger",
-   "asset": "Hamburger"
+   "asset": "Hamburger",
+   "art": true
   },
   {
    "id": "hot dog",
    "topic": "food",
    "vi": "xúc xích kẹp",
-   "asset": "Hot dog"
+   "asset": "Hot dog",
+   "art": true
   },
   {
    "id": "french fries",
    "topic": "food",
    "vi": "khoai tây chiên",
    "asset": "French fries",
-   "plural": true
+   "plural": true,
+   "art": true
   },
   {
    "id": "sandwich",
    "topic": "food",
    "vi": "bánh sandwich",
-   "asset": "Sandwich"
+   "asset": "Sandwich",
+   "art": true
   },
   {
    "id": "chicken leg",
    "topic": "food",
    "vi": "đùi gà",
-   "asset": "Poultry leg"
+   "asset": "Poultry leg",
+   "art": true
   },
   {
    "id": "meat",
    "topic": "food",
    "vi": "thịt",
    "asset": "Meat on bone",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "soup",
    "topic": "food",
    "vi": "canh / súp",
    "asset": "Pot of food",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "juice",
    "topic": "food",
    "vi": "nước ép",
    "asset": "Beverage box",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "tea",
    "topic": "food",
    "vi": "trà",
    "asset": "Teacup without handle",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "honey",
    "topic": "food",
    "vi": "mật ong",
    "asset": "Honey pot",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "butter",
    "topic": "food",
    "vi": "bơ",
    "asset": "Butter",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "salt",
    "topic": "food",
    "vi": "muối",
    "asset": "Salt",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "chocolate",
    "topic": "food",
    "vi": "sô cô la",
    "asset": "Chocolate bar",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "popcorn",
    "topic": "food",
    "vi": "bỏng ngô",
    "asset": "Popcorn",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "donut",
    "topic": "food",
    "vi": "bánh vòng",
-   "asset": "Doughnut"
+   "asset": "Doughnut",
+   "art": true
   },
   {
    "id": "pancakes",
    "topic": "food",
    "vi": "bánh kếp",
    "asset": "Pancakes",
-   "plural": true
+   "plural": true,
+   "art": true
   },
   {
    "id": "waffle",
    "topic": "food",
    "vi": "bánh quế",
-   "asset": "Waffle"
+   "asset": "Waffle",
+   "art": true
   },
   {
    "id": "sushi",
    "topic": "food",
    "vi": "sushi",
    "asset": "Sushi",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "dumpling",
    "topic": "food",
    "vi": "bánh bao / há cảo",
-   "asset": "Dumpling"
+   "asset": "Dumpling",
+   "art": true
   },
   {
    "id": "salad",
    "topic": "food",
    "vi": "món rau trộn",
    "asset": "Green salad",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "spaghetti",
    "topic": "food",
    "vi": "mì Ý",
    "asset": "Spaghetti",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "cupcake",
    "topic": "food",
    "vi": "bánh cupcake",
-   "asset": "Cupcake"
+   "asset": "Cupcake",
+   "art": true
   },
   {
    "id": "pie",
    "topic": "food",
    "vi": "bánh nướng",
-   "asset": "Pie"
+   "asset": "Pie",
+   "art": true
   },
   {
    "id": "croissant",
    "topic": "food",
    "vi": "bánh sừng bò",
-   "asset": "Croissant"
+   "asset": "Croissant",
+   "art": true
   },
   {
    "id": "bubble tea",
    "topic": "food",
    "vi": "trà sữa",
    "asset": "Bubble tea",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "pretzel",
    "topic": "food",
    "vi": "bánh quy xoắn",
-   "asset": "Pretzel"
+   "asset": "Pretzel",
+   "art": true
   },
   {
    "id": "yo-yo",

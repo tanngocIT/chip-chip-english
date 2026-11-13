@@ -44,7 +44,11 @@ areas = ndimage.sum(fg, objs, range(1, n + 1))
 boxes = ndimage.find_objects(objs)
 # a real sticker is big; specks and the model's corner mark are not
 big = max(areas)
-keep = [i for i in range(n) if areas[i] > big * 0.12]
+# A real sticker also has its white border. A faint ghost of the reference picture, which the
+# model sometimes leaves on the sheet, is big enough to pass for a picture but has no white in it.
+white = a.min(axis=2) > 232
+whites = ndimage.sum(white, objs, range(1, n + 1))
+keep = [i for i in range(n) if areas[i] > big * 0.12 and whites[i] > areas[i] * 0.03]
 # The model fills cells it was told to leave empty with pictures from the reference, so a sheet
 # may hold more than was asked for: the extra ones come last in reading order and are ignored.
 if len(keep) < len(names):

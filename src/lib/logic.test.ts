@@ -1001,7 +1001,7 @@ group('pictures drawn for the app', () => {
     expect(w('mom').img).toMatch(/img\/art\/mom\.webp$/);
     expect(w('police officer').img).toMatch(/img\/art\/police-officer\.webp$/);
     // a whole topic is drawn in one style, never half of it
-    for (const t of ['family', 'vehicles', 'actions', 'body']) {
+    for (const t of ['family', 'vehicles', 'actions', 'body', 'food', 'animals']) {
       for (const x of wordsIn(t)) expect(x.img, x.id).toMatch(/\.webp$/);
     }
   });
@@ -1011,5 +1011,7 @@ group('pictures drawn for the app', () => {
     expect(w('letter-n').img).toBe(w('nose').img);
     expect(w('letter-v').img).toBe(w('van').img);
     expect(w('letter-a').img).toBe(w('apple').img);
+    expect(w('letter-c').img).toBe(w('cat').img);
+    expect(w('letter-c').img).toMatch(/\.webp$/);
   });
 });
