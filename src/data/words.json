@@ -439,131 +439,152 @@
    "id": "car",
    "topic": "vehicles",
    "vi": "xe hơi",
-   "asset": "Automobile"
+   "asset": "Automobile",
+   "art": true
   },
   {
    "id": "bus",
    "topic": "vehicles",
    "vi": "xe buýt",
-   "asset": "Bus"
+   "asset": "Bus",
+   "art": true
   },
   {
    "id": "bicycle",
    "topic": "vehicles",
    "vi": "xe đạp",
-   "asset": "Bicycle"
+   "asset": "Bicycle",
+   "art": true
   },
   {
    "id": "airplane",
    "topic": "vehicles",
    "vi": "máy bay",
-   "asset": "Airplane"
+   "asset": "Airplane",
+   "art": true
   },
   {
    "id": "train",
    "topic": "vehicles",
    "vi": "tàu hỏa",
-   "asset": "Locomotive"
+   "asset": "Locomotive",
+   "art": true
   },
   {
    "id": "ship",
    "topic": "vehicles",
    "vi": "tàu thủy",
-   "asset": "Ship"
+   "asset": "Ship",
+   "art": true
   },
   {
    "id": "rocket",
    "topic": "vehicles",
    "vi": "tên lửa",
-   "asset": "Rocket"
+   "asset": "Rocket",
+   "art": true
   },
   {
    "id": "taxi",
    "topic": "vehicles",
    "vi": "xe taxi",
-   "asset": "Taxi"
+   "asset": "Taxi",
+   "art": true
   },
   {
    "id": "ambulance",
    "topic": "vehicles",
    "vi": "xe cứu thương",
-   "asset": "Ambulance"
+   "asset": "Ambulance",
+   "art": true
   },
   {
    "id": "fire truck",
    "topic": "vehicles",
    "vi": "xe cứu hỏa",
-   "asset": "Fire engine"
+   "asset": "Fire engine",
+   "art": true
   },
   {
    "id": "tractor",
    "topic": "vehicles",
    "vi": "máy cày",
-   "asset": "Tractor"
+   "asset": "Tractor",
+   "art": true
   },
   {
    "id": "helicopter",
    "topic": "vehicles",
    "vi": "trực thăng",
-   "asset": "Helicopter"
+   "asset": "Helicopter",
+   "art": true
   },
   {
    "id": "motorbike",
    "topic": "vehicles",
    "vi": "xe máy",
-   "asset": "Motor scooter"
+   "asset": "Motor scooter",
+   "art": true
   },
   {
    "id": "boat",
    "topic": "vehicles",
    "vi": "cái thuyền",
-   "asset": "Sailboat"
+   "asset": "Sailboat",
+   "art": true
   },
   {
    "id": "eye",
    "topic": "body",
    "vi": "con mắt",
-   "asset": "Eye"
+   "asset": "Eye",
+   "art": true
   },
   {
    "id": "ear",
    "topic": "body",
    "vi": "cái tai",
    "asset": "Ear",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "nose",
    "topic": "body",
    "vi": "cái mũi",
    "asset": "Nose",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "mouth",
    "topic": "body",
    "vi": "cái miệng",
-   "asset": "Mouth"
+   "asset": "Mouth",
+   "art": true
   },
   {
    "id": "hand",
    "topic": "body",
    "vi": "bàn tay",
    "asset": "Raised hand",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "foot",
    "topic": "body",
    "vi": "bàn chân",
    "asset": "Foot",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "tooth",
    "topic": "body",
    "vi": "cái răng",
-   "asset": "Tooth"
+   "asset": "Tooth",
+   "art": true
   },
   {
    "id": "baby",
@@ -571,7 +592,8 @@
    "vi": "em bé",
    "asset": "Baby",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "mom",
@@ -579,7 +601,8 @@
    "vi": "mẹ",
    "asset": "Woman",
    "skin": true,
-   "kind": "person"
+   "kind": "person",
+   "art": true
   },
   {
    "id": "dad",
@@ -587,7 +610,8 @@
    "vi": "bố",
    "asset": "Man beard",
    "skin": true,
-   "kind": "person"
+   "kind": "person",
+   "art": true
   },
   {
    "id": "sister",
@@ -595,7 +619,8 @@
    "vi": "chị / em gái",
    "asset": "Girl",
    "skin": true,
-   "kind": "person"
+   "kind": "person",
+   "art": true
   },
   {
    "id": "brother",
@@ -603,7 +628,8 @@
    "vi": "anh / em trai",
    "asset": "Boy",
    "skin": true,
-   "kind": "person"
+   "kind": "person",
+   "art": true
   },
   {
    "id": "grandma",
@@ -611,7 +637,8 @@
    "vi": "bà",
    "asset": "Old woman",
    "skin": true,
-   "kind": "person"
+   "kind": "person",
+   "art": true
   },
   {
    "id": "grandpa",
@@ -619,7 +646,8 @@
    "vi": "ông",
    "asset": "Old man",
    "skin": true,
-   "kind": "person"
+   "kind": "person",
+   "art": true
   },
   {
    "id": "bread",
@@ -1217,174 +1245,202 @@
    "id": "police car",
    "topic": "vehicles",
    "vi": "xe cảnh sát",
-   "asset": "Police car"
+   "asset": "Police car",
+   "art": true
   },
   {
    "id": "truck",
    "topic": "vehicles",
    "vi": "xe tải",
-   "asset": "Delivery truck"
+   "asset": "Delivery truck",
+   "art": true
   },
   {
    "id": "van",
    "topic": "vehicles",
    "vi": "xe thùng",
-   "asset": "Minibus"
+   "asset": "Minibus",
+   "art": true
   },
   {
    "id": "race car",
    "topic": "vehicles",
    "vi": "xe đua",
-   "asset": "Racing car"
+   "asset": "Racing car",
+   "art": true
   },
   {
    "id": "scooter",
    "topic": "vehicles",
    "vi": "xe trượt",
-   "asset": "Kick scooter"
+   "asset": "Kick scooter",
+   "art": true
   },
   {
    "id": "skateboard",
    "topic": "vehicles",
    "vi": "ván trượt",
-   "asset": "Skateboard"
+   "asset": "Skateboard",
+   "art": true
   },
   {
    "id": "canoe",
    "topic": "vehicles",
    "vi": "xuồng",
-   "asset": "Canoe"
+   "asset": "Canoe",
+   "art": true
   },
   {
    "id": "speedboat",
    "topic": "vehicles",
    "vi": "ca nô",
-   "asset": "Motor boat"
+   "asset": "Motor boat",
+   "art": true
   },
   {
    "id": "tram",
    "topic": "vehicles",
    "vi": "tàu điện",
-   "asset": "Tram"
+   "asset": "Tram",
+   "art": true
   },
   {
    "id": "subway",
    "topic": "vehicles",
    "vi": "tàu điện ngầm",
-   "asset": "Metro"
+   "asset": "Metro",
+   "art": true
   },
   {
    "id": "fast train",
    "topic": "vehicles",
    "vi": "tàu cao tốc",
-   "asset": "High-speed train"
+   "asset": "High-speed train",
+   "art": true
   },
   {
    "id": "cable car",
    "topic": "vehicles",
    "vi": "cáp treo",
-   "asset": "Aerial tramway"
+   "asset": "Aerial tramway",
+   "art": true
   },
   {
    "id": "parachute",
    "topic": "vehicles",
    "vi": "dù",
-   "asset": "Parachute"
+   "asset": "Parachute",
+   "art": true
   },
   {
    "id": "satellite",
    "topic": "vehicles",
    "vi": "vệ tinh",
-   "asset": "Satellite"
+   "asset": "Satellite",
+   "art": true
   },
   {
    "id": "ufo",
    "topic": "vehicles",
    "vi": "đĩa bay",
-   "asset": "Flying saucer"
+   "asset": "Flying saucer",
+   "art": true
   },
   {
    "id": "sled",
    "topic": "vehicles",
    "vi": "xe trượt tuyết",
-   "asset": "Sled"
+   "asset": "Sled",
+   "art": true
   },
   {
    "id": "roller skate",
    "topic": "vehicles",
    "vi": "giày patin",
-   "asset": "Roller skate"
+   "asset": "Roller skate",
+   "art": true
   },
   {
    "id": "pickup truck",
    "topic": "vehicles",
    "vi": "xe bán tải",
-   "asset": "Pickup truck"
+   "asset": "Pickup truck",
+   "art": true
   },
   {
    "id": "trolleybus",
    "topic": "vehicles",
    "vi": "xe buýt điện",
-   "asset": "Trolleybus"
+   "asset": "Trolleybus",
+   "art": true
   },
   {
    "id": "leg",
    "topic": "body",
    "vi": "cái chân",
    "asset": "Leg",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "arm",
    "topic": "body",
    "vi": "cánh tay",
    "asset": "Flexed biceps",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "tongue",
    "topic": "body",
    "vi": "cái lưỡi",
-   "asset": "Tongue"
+   "asset": "Tongue",
+   "art": true
   },
   {
    "id": "brain",
    "topic": "body",
    "vi": "bộ não",
-   "asset": "Brain"
+   "asset": "Brain",
+   "art": true
   },
   {
    "id": "bone",
    "topic": "body",
    "vi": "khúc xương",
-   "asset": "Bone"
+   "asset": "Bone",
+   "art": true
   },
   {
    "id": "heart",
    "topic": "body",
    "vi": "trái tim",
-   "asset": "Anatomical heart"
+   "asset": "Anatomical heart",
+   "art": true
   },
   {
    "id": "lungs",
    "topic": "body",
    "vi": "lá phổi",
    "asset": "Lungs",
-   "plural": true
+   "plural": true,
+   "art": true
   },
   {
    "id": "finger",
    "topic": "body",
    "vi": "ngón tay",
    "asset": "Index pointing up",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "thumb",
    "topic": "body",
    "vi": "ngón cái",
    "asset": "Thumbs up",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "teacher",
@@ -1392,7 +1448,8 @@
    "vi": "cô giáo",
    "asset": "Woman teacher",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "doctor",
@@ -1400,7 +1457,8 @@
    "vi": "bác sĩ",
    "asset": "Health worker",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "police officer",
@@ -1408,7 +1466,8 @@
    "vi": "cảnh sát",
    "asset": "Police officer",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "firefighter",
@@ -1416,7 +1475,8 @@
    "vi": "lính cứu hỏa",
    "asset": "Firefighter",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "farmer",
@@ -1424,7 +1484,8 @@
    "vi": "nông dân",
    "asset": "Farmer",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "cook",
@@ -1432,7 +1493,8 @@
    "vi": "đầu bếp",
    "asset": "Cook",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "pilot",
@@ -1440,7 +1502,8 @@
    "vi": "phi công",
    "asset": "Pilot",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "astronaut",
@@ -1448,7 +1511,8 @@
    "vi": "phi hành gia",
    "asset": "Astronaut",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "artist",
@@ -1456,7 +1520,8 @@
    "vi": "họa sĩ",
    "asset": "Artist",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "singer",
@@ -1464,7 +1529,8 @@
    "vi": "ca sĩ",
    "asset": "Singer",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "student",
@@ -1472,7 +1538,8 @@
    "vi": "học sinh",
    "asset": "Student",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "scientist",
@@ -1480,7 +1547,8 @@
    "vi": "nhà khoa học",
    "asset": "Scientist",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "builder",
@@ -1488,7 +1556,8 @@
    "vi": "thợ xây",
    "asset": "Construction worker",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "mechanic",
@@ -1496,7 +1565,8 @@
    "vi": "thợ sửa xe",
    "asset": "Mechanic",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "prince",
@@ -1504,7 +1574,8 @@
    "vi": "hoàng tử",
    "asset": "Prince",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "princess",
@@ -1512,7 +1583,8 @@
    "vi": "công chúa",
    "asset": "Princess",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "superhero",
@@ -1520,7 +1592,8 @@
    "vi": "siêu anh hùng",
    "asset": "Woman superhero",
    "skin": true,
-   "kind": "job"
+   "kind": "job",
+   "art": true
   },
   {
    "id": "cheese",
@@ -2192,7 +2265,8 @@
    "vi": "chạy",
    "asset": "Person running",
    "kind": "action",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "walk",
@@ -2200,7 +2274,8 @@
    "vi": "đi bộ",
    "asset": "Person walking",
    "kind": "action",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "swim",
@@ -2208,7 +2283,8 @@
    "vi": "bơi",
    "asset": "Person swimming",
    "kind": "action",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "dance",
@@ -2216,7 +2292,8 @@
    "vi": "nhảy múa",
    "asset": "Woman dancing",
    "kind": "action",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "sleep",
@@ -2224,7 +2301,8 @@
    "vi": "ngủ",
    "asset": "Person in bed",
    "kind": "action",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "climb",
@@ -2232,7 +2310,8 @@
    "vi": "leo trèo",
    "asset": "Person climbing",
    "kind": "action",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "ride",
@@ -2240,7 +2319,8 @@
    "vi": "đạp xe",
    "asset": "Person biking",
    "kind": "action",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "surf",
@@ -2248,7 +2328,8 @@
    "vi": "lướt sóng",
    "asset": "Person surfing",
    "kind": "action",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "ski",
@@ -2256,7 +2337,8 @@
    "vi": "trượt tuyết",
    "asset": "Skier",
    "kind": "action",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "row",
@@ -2264,7 +2346,8 @@
    "vi": "chèo thuyền",
    "asset": "Person rowing boat",
    "kind": "action",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "sit",
@@ -2272,7 +2355,8 @@
    "vi": "ngồi",
    "asset": "Person in lotus position",
    "kind": "action",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "stand",
@@ -2280,7 +2364,8 @@
    "vi": "đứng",
    "asset": "Person standing",
    "kind": "action",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "juggle",
@@ -2288,7 +2373,8 @@
    "vi": "tung hứng",
    "asset": "Person juggling",
    "kind": "action",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "clap",
@@ -2296,7 +2382,8 @@
    "vi": "vỗ tay",
    "asset": "Clapping hands",
    "kind": "action",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "hug",
@@ -2304,7 +2391,8 @@
    "vi": "ôm",
    "asset": "People hugging",
    "kind": "action",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "letter-a",

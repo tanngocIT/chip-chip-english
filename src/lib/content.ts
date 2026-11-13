@@ -41,6 +41,8 @@ interface RawWord {
   mass?: boolean;
   the?: boolean;
   example?: string;
+  /** drawn for this app: the picture is public/img/art/<id>.webp instead of the emoji in `asset` */
+  art?: boolean;
 }
 
 export const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -51,12 +53,21 @@ export const imgUrl = (name: string) => `${base}img/${name}.svg`;
 
 export const topics: Topic[] = data.topics;
 
+const artUrl = (id: string) => `${base}img/art/${slug(id)}.webp`;
+
+/** A letter shows the picture of its example word, in whichever set that word is drawn. */
+function pictureOf(w: RawWord): string {
+  if (w.art) return artUrl(w.id);
+  const example = w.example && (data.words as RawWord[]).find((x) => x.id === w.example);
+  return example && example.art ? artUrl(example.id) : imgUrl(slug(w.asset));
+}
+
 export const words: Word[] = (data.words as RawWord[]).map((w) => ({
   id: w.id,
   word: w.word ?? w.id,
   topic: w.topic,
   vi: w.vi,
-  img: imgUrl(slug(w.asset)),
+  img: pictureOf(w),
   kind: (w.kind as WordKind) ?? 'thing',
   count: w.count,
   plural: w.plural,

@@ -994,3 +994,22 @@ group('stories and the sticker picture in the saved progress', () => {
     expect(p.settings.challenges).toBe(true);
   });
 });
+
+group('pictures drawn for the app', () => {
+  it('a word marked as art uses its own picture, named after its id', () => {
+    const w = (id: string) => words.find((x) => x.id === id)!;
+    expect(w('mom').img).toMatch(/img\/art\/mom\.webp$/);
+    expect(w('police officer').img).toMatch(/img\/art\/police-officer\.webp$/);
+    // a whole topic is drawn in one style, never half of it
+    for (const t of ['family', 'vehicles', 'actions', 'body']) {
+      for (const x of wordsIn(t)) expect(x.img, x.id).toMatch(/\.webp$/);
+    }
+  });
+
+  it('a letter shows the same picture as its example word', () => {
+    const w = (id: string) => words.find((x) => x.id === id)!;
+    expect(w('letter-n').img).toBe(w('nose').img);
+    expect(w('letter-v').img).toBe(w('van').img);
+    expect(w('letter-a').img).toBe(w('apple').img);
+  });
+});

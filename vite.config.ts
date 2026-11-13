@@ -9,7 +9,7 @@ export default defineConfig({
     VitePWA({
       // the app decides when to switch to a new version (src/lib/update.ts), never mid-game
       registerType: 'prompt',
-      includeAssets: ['img/**/*.svg', 'icon-192.png', 'icon-512.png'],
+      includeAssets: ['img/**/*.svg', 'img/**/*.webp', 'icon-192.png', 'icon-512.png'],
       manifest: {
         name: 'Chip Chip English',
         short_name: 'Chip Chip',
@@ -25,7 +25,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,woff2,mp3}', 'voice/manifest.json'],
+        globPatterns: ['**/*.{js,css,html,svg,png,webp,woff2,mp3}', 'voice/manifest.json'],
       },
     }),
   ],

@@ -78,6 +78,8 @@ src/screens/keys.ts     điều khiển bằng bàn phím (initKeys), một trì
 src/main.ts             nạp CSS, bộ đếm phút chơi, gọi splash()
 src/style.css           toàn bộ giao diện
 scripts/copy-assets.mjs chép SVG từ checkout Fluent Emoji vào public/img (theo words.json + stickers.json)
+scripts/art-prompts.mjs ghi art-inbox/PROMPTS.md: prompt vẽ hình cho các chủ đề chưa có hình riêng
+scripts/cut-all-art.mjs cắt các tấm hình trong art-inbox/ (theo sheets.json) thành public/img/art/*.webp, gọi cut-art.py
 scripts/make-icons.mjs  tạo icon-192/512 từ mascot
 scripts/gen-voice.mjs   sinh public/voice/*.mp3 + manifest.json bằng Piper (gọi gen-voice.py)
 scripts/fix-voice.py    Whisper nghe lại các file giọng, file lệch thì sinh lại cho tới khi nghe đúng
@@ -128,6 +130,13 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
   - Giọng: bộ phiên âm của mô hình đọc "A is…" thành mạo từ và chữ Z thành "zed" (kiểu Anh), nên `spoken()` trong `gen-voice.py` đổi "X is for" thành "X, is for" (có nhịp ngắt sau chữ cái, cũng giúp chữ cái không dính vào "is") và "Z" thành "Zee". Trước khi thêm kiểu câu mới có chữ cái đứng riêng, hãy xem `voice.phonemize()`.
   - Whisper luôn viết "zee" thành "see" (không có từ "zee"), nên file "Z" không tự kiểm tra được; phiên âm của nó là `zˈiː`. "R is for rabbit." cũng còn bị nghe lệch.
 - **Hình phải tự nói lên nghĩa của từ.** Chủ repo đã báo "fog" có hình khó hiểu (vài vòng tròn xám), và AI đã xem lại toàn bộ hình bằng bảng hình theo chủ đề. Đã sửa: bỏ "fog" (không có hình sương mù nào rõ) và "lorry" (trùng nghĩa với "truck" trong cùng chủ đề); "seed" có hình cây con nên đổi thành "plant" với hình chậu cây; "hat" đổi từ hình mũ lưỡi trai sang hình mũ rộng vành (hình mũ lưỡi trai là món "cap" của Chip); "dad" đổi sang hình có râu vì trước đó giống hệt "brother". Khi thêm từ, hãy dựng bảng hình và xem: nếu không đoán được từ khi che chữ thì đổi hình hoặc bỏ từ.
+- **Hình vẽ riêng bằng Gemini** (cờ `art`, file `public/img/art/<id>.webp`, 320 px, khoảng 13 KB mỗi hình): chủ repo thấy nhiều hình Fluent Emoji khó phân biệt (mom, sister, brother, dad gần như một khuôn mặt; train / tram / subway / fast train; run / walk). Chủ repo có tài khoản Gemini và tự nguyện dán prompt, tải hình về; đây là ngoại lệ do chủ repo đề nghị đối với ràng buộc "AI làm 100%", không phải tiền lệ để giao việc tay khác.
+  - Đã thay trọn 4 chủ đề: Gia đình & nghề, Xe cộ, Hành động, Cơ thể (88 hình). Còn lại 5 chủ đề có prompt sẵn: Đồ ăn, Con vật, Rau củ quả, Thiên nhiên, Đồ chơi & nhà. Màu sắc, Số, Hình khối, Cảm xúc, Chữ cái giữ hình cũ.
+  - **Chỉ thay khi đủ cả chủ đề**: các hình đứng cạnh nhau trong một câu hỏi phải cùng phong cách (có test). Chữ cái dùng hình của từ minh họa, theo bộ mà từ đó đang dùng (`pictureOf` trong `content.ts`).
+  - Quy trình: `node scripts/art-prompts.mjs` ghi `art-inbox/PROMPTS.md` (mỗi prompt một tấm lưới 3×3, mô tả riêng cho các từ dễ nhầm trong bảng `HINT`); chủ repo lưu hình vào `art-inbox/` (không vào git); ghi tên file và danh sách từ theo thứ tự đọc vào `art-inbox/sheets.json`; `node scripts/cut-all-art.mjs <python>` cắt bằng `scripts/cut-art.py` (cần pillow, numpy, scipy; đã cài trong `.venv-voice`) rồi thêm `"art": true` vào từ trong `words.json`. Sau đó AI phải **xem bảng hình đã cắt** trước khi đưa vào app.
+  - `cut-art.py`: nền là vùng cùng màu nối với mép tấm hình, nên vật màu xanh vẫn an toàn bên trong viền trắng của nó. Những điều đã gặp: Gemini luôn đóng dấu ngôi sao mờ ở góc dưới phải và đôi khi để lại bóng mờ của hình mẫu (đều là xanh trên xanh, được coi là nền); ô được bảo để trống thì nó chép hình từ ảnh mẫu vào (cắt theo thứ tự đọc và bỏ phần thừa); nền bị kẹt bên trong hình (giữa nan hoa, dưới cánh tay) không có viền trắng nên phải khoét theo màu. Chủ đề nhiều vật màu xanh (con vật, rau củ quả, thiên nhiên) dùng nền hồng cánh sen.
+  - Hình Fluent cũ của các từ này vẫn nằm trong `public/img` (một số còn dùng làm icon trò chơi: eye, ear, mouth).
+  - Chưa đọc kỹ điều khoản của Gemini về dùng hình trong app phát hành rộng; với app cho con dùng thì không sao. README có ghi nguồn.
 - Hình lấy từ **Fluent Emoji Flat** (Microsoft, MIT). Người và tay chân dùng tông da **Medium-Light** (cờ `skin`).
 - Viền trắng kiểu sticker cắt rời là dấu ấn thị giác chính. Nó được làm bằng nhiều lớp `drop-shadow` trắng trong CSS.
 - Giọng đọc tiếng Anh dùng file mp3 sinh sẵn bằng Piper (giọng `en_US-kristin-medium`, public domain) trong `public/voice/`. Câu nào chưa có file thì rơi về TTS của trình duyệt. Tiếng Việt vẫn dùng TTS trình duyệt. Thêm từ mới thì chạy lại `node scripts/gen-voice.mjs <python> <model.onnx>` (chỉ sinh câu còn thiếu; cần piper-tts, soundfile, scipy, faster-whisper). Từ 1-2 chữ được sinh qua câu "Say, X." rồi cắt bỏ chữ "Say", vì đọc riêng từ đơn thì mô hình nuốt âm (cat nghe như tack); `npm test` sẽ báo nếu thiếu file.
@@ -247,6 +256,7 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
    | `kind`: `"action"` | Động từ ("I can run." / "Who can run?") |
    | `kind`: `"letter"` + `example` | Chữ cái ("A is for apple." / "Find the letter A."); `asset` là hình của từ minh họa |
    | `custom` | Hình tự vẽ, đã nằm sẵn trong `public/img`; `copy-assets.mjs` bỏ qua |
+   | `art` | Hình vẽ riêng: dùng `public/img/art/<id>.webp` thay cho emoji trong `asset` |
 
    Chủ đề có thể đặt `"noShadow": true` để ẩn trò Find the shadow.
    | `word` | Khi từ đọc ra khác `id` (ví dụ `orange-color` đọc là "orange") |
