@@ -367,11 +367,13 @@ const STICKER_ART = [
   'rocket: rocket flying up with a trail of stars attached',
   'rainbow: rainbow with a small cloud at each end',
 ];
-if (!fs.existsSync('public/img/art/stickers')) {
+const stickerDone = JSON.parse(fs.readFileSync('src/data/sticker-art.json', 'utf8')).length;
+if (stickerDone < STICKER_ART.length) {
+  // the first sheets are in the app already: only what is left
   section(
     'Sticker thưởng trong album',
-    'stickers',
-    STICKER_ART,
+    'stickers-rest',
+    STICKER_ART.slice(stickerDone),
     'These are reward stickers a child collects: each cell shows ONE extra cute, joyful picture, large in its cell.',
     true,
   );

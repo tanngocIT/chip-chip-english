@@ -1,5 +1,6 @@
 import data from '../data/words.json';
 import stickerNames from '../data/stickers.json';
+import stickerArt from '../data/sticker-art.json';
 
 export interface Topic {
   id: string;
@@ -95,7 +96,8 @@ const STICKER_NAMES: Record<string, string> = {
 export const stickers = (stickerNames as string[]).map((s) => ({
   id: slug(s),
   name: STICKER_NAMES[s] ?? s.toLowerCase(),
-  img: `${base}img/stickers/${slug(s)}.svg`,
+  // drawn in the app's own style where that picture exists, else the emoji
+  img: (stickerArt as string[]).includes(slug(s)) ? `${base}img/art/stickers/${slug(s)}.webp` : `${base}img/stickers/${slug(s)}.svg`,
 }));
 
 export const wordsIn = (topicId: string) => words.filter((w) => w.topic === topicId);

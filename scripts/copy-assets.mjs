@@ -56,7 +56,8 @@ for (const w of data.words) {
 copy('Front-facing baby chick', path.join(out, 'mascot.svg'));
 
 const stickers = JSON.parse(fs.readFileSync(path.join(root, 'src/data/stickers.json'), 'utf8'));
-for (const s of stickers) copy(s, path.join(out, 'stickers', `${slug(s)}.svg`));
+const stickerArt = JSON.parse(fs.readFileSync(path.join(root, 'src/data/sticker-art.json'), 'utf8'));
+for (const s of stickers) if (!stickerArt.includes(slug(s))) copy(s, path.join(out, 'stickers', `${slug(s)}.svg`));
 
 fs.copyFileSync(path.join(src, 'LICENSE'), path.join(out, 'LICENSE-fluentui-emoji.txt'));
 console.log(`copied ${seen.size} word images, ${stickers.length} stickers, missing ${missing}`);
