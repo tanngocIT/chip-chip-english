@@ -37,7 +37,7 @@ Micro (bài Say it) chỉ chạy trên https hoặc localhost. Muốn thử trê
 Vanilla TypeScript + Vite, không dùng framework. Dựng DOM bằng hàm `h()` tự viết.
 
 ```
-src/data/words.json     chủ đề + 332 từ (id, topic, vi, asset, cờ)
+src/data/words.json     chủ đề + 358 từ (id, topic, vi, asset, cờ)
 src/data/stickers.json  31 sticker thưởng (tên thư mục Fluent Emoji)
 src/lib/content.ts      Word/Topic, dựng câu: nounPhrase (a/an/the), describe, question
 src/lib/progress.ts     levelConfig theo tuổi, starsFor, Leitner (recordAnswer), pickTargets,
@@ -87,7 +87,7 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 **Ràng buộc công sức: AI làm 100%.** Chủ repo chỉ đưa ý tưởng và ý kiến, không làm việc tay nào: không tự tìm nguồn (hình, âm thanh, dữ liệu), không thu âm, không tải hay chuyển file thủ công. Giải pháp nào đòi chủ repo ghi âm, tìm tài nguyên hay thao tác thủ công thì loại. AI phải tự tìm nguồn, tự tạo nội dung, tự chạy và kiểm tra. Việc thật sự không tự động hoá được (ví dụ cần đăng nhập tài khoản của họ) thì nói rõ ngay từ lúc đề xuất.
 
 **Nội dung**
-- 13 chủ đề. Mỗi chủ đề 12–40 từ:
+- 14 chủ đề. Mỗi chủ đề 12–40 từ:
 
   | Chủ đề | Số từ |
   |---|---|
@@ -97,6 +97,7 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
   | Rau củ quả | 36 |
   | Thiên nhiên | 35 |
   | Xe cộ | 33 |
+  | Chữ cái ABC | 26 |
   | Gia đình & nghề | 24 |
   | Số 1–20 | 20 |
   | Cơ thể | 16 |
@@ -110,6 +111,13 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
   - **Hình khối:** 12 hình do AI tự vẽ bằng SVG phẳng, mỗi hình một màu (`public/img/shape-*.svg`, cờ `custom`), vì Fluent Emoji không có đủ (chữ nhật, bầu dục, xoắn ốc). `star-shape` và `heart-shape` đọc là "star", "heart" (cờ `word`) vì id `star`, `heart` đã dùng ở chủ đề khác.
   - **Cảm xúc** (`kind: "feeling"`): "I am happy." / "Who is happy?". Chủ đề có cờ `noShadow` nên ẩn Find the shadow (mặt nào cũng tròn, bóng giống nhau).
   - **Hành động** (`kind: "action"`): "I can run." / "Who can run?". Dùng "I can" để không phải chia động từ và không phụ thuộc giới tính nhân vật trong hình. Đã bỏ "write" (nghe gần giống "ride") và đổi "wave" (trùng id với sóng biển ở Thiên nhiên) thành "juggle".
+- **Chữ cái ABC** (`kind: "letter"`, id `letter-a`…`letter-z`): mỗi chữ có từ đọc là tên chữ ("A"), trường `example` là từ minh họa và hình là hình của từ đó. "A is for apple." / "Find the letter A.". Hình vẽ là chữ hoa to, chữ thường nhỏ bên cạnh và hình minh họa bên dưới (`picture()` trong `ui.ts`).
+  - Từ minh họa lấy trong vốn từ đã có, trừ Q ("queen", dùng hình công chúa) và X ("fox", vì không có từ thông dụng bắt đầu bằng x).
+  - Thẻ từ ghi từ minh họa ("apple") dưới hình, không lặp lại chữ cái.
+  - Listen and tap **không viết chữ đang hỏi** phía trên như các chủ đề khác, vì nếu viết thì bé chỉ cần so hình dáng chữ mà không cần nghe.
+  - Find the shadow dùng dáng chữ (không có hình minh họa trong bóng).
+  - Giọng: bộ phiên âm của mô hình đọc "A is…" thành mạo từ và chữ Z thành "zed" (kiểu Anh), nên `spoken()` trong `gen-voice.py` đổi "X is for" thành "X, is for" (có nhịp ngắt sau chữ cái, cũng giúp chữ cái không dính vào "is") và "Z" thành "Zee". Trước khi thêm kiểu câu mới có chữ cái đứng riêng, hãy xem `voice.phonemize()`.
+  - Whisper luôn viết "zee" thành "see" (không có từ "zee"), nên file "Z" không tự kiểm tra được; phiên âm của nó là `zˈiː`. "R is for rabbit." cũng còn bị nghe lệch.
 - **Hình phải tự nói lên nghĩa của từ.** Chủ repo đã báo "fog" có hình khó hiểu (vài vòng tròn xám), và AI đã xem lại toàn bộ hình bằng bảng hình theo chủ đề. Đã sửa: bỏ "fog" (không có hình sương mù nào rõ) và "lorry" (trùng nghĩa với "truck" trong cùng chủ đề); "seed" có hình cây con nên đổi thành "plant" với hình chậu cây; "hat" đổi từ hình mũ lưỡi trai sang hình mũ rộng vành (hình mũ lưỡi trai là món "cap" của Chip); "dad" đổi sang hình có râu vì trước đó giống hệt "brother". Khi thêm từ, hãy dựng bảng hình và xem: nếu không đoán được từ khi che chữ thì đổi hình hoặc bỏ từ.
 - Hình lấy từ **Fluent Emoji Flat** (Microsoft, MIT). Người và tay chân dùng tông da **Medium-Light** (cờ `skin`).
 - Viền trắng kiểu sticker cắt rời là dấu ấn thị giác chính. Nó được làm bằng nhiều lớp `drop-shadow` trắng trong CSS.
@@ -218,6 +226,7 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
    | `kind`: `"job"` | Nghề và vai (doctor, baby, prince…): có mạo từ ("This is a doctor." / "Where is the doctor?") |
    | `kind`: `"feeling"` | Tính từ cảm xúc ("I am happy." / "Who is happy?") |
    | `kind`: `"action"` | Động từ ("I can run." / "Who can run?") |
+   | `kind`: `"letter"` + `example` | Chữ cái ("A is for apple." / "Find the letter A."); `asset` là hình của từ minh họa |
    | `custom` | Hình tự vẽ, đã nằm sẵn trong `public/img`; `copy-assets.mjs` bỏ qua |
 
    Chủ đề có thể đặt `"noShadow": true` để ẩn trò Find the shadow.
@@ -238,7 +247,7 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 - Bài Say it bị ẩn trên trình duyệt không có SpeechRecognition (ví dụ Firefox).
 - Giọng tiếng Anh là mp3 nên giống nhau trên mọi máy. Giọng Việt (nếu bật) và câu chưa có mp3 vẫn phụ thuộc máy.
 - File mp3 phát qua blob URL (không dùng Range request) vì Safari phát từ service worker dễ lỗi với Range.
-- Cache offline thêm khoảng 9 MB cho giọng (1.129 file).
+- Cache offline thêm khoảng 10 MB cho giọng (1.208 file).
 - Sau khi deploy, app tự chuyển sang bản mới ở lần bị ẩn hoặc lần mở kế tiếp. Máy còn giữ bản rất cũ (trước 13/11/2026, khi chưa có `update.ts`) thì phải đóng hẳn rồi mở lại một lần.
 
 ## Ý tưởng tiếp theo (chưa làm)

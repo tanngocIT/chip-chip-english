@@ -31,7 +31,25 @@ import soundfile as sf  # noqa: E402
 NUM = dict(zip("1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20".split(),
                "one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty".split()))
 # spellings Whisper prefers that are the same sounds
-SAME = {"wheres": "whereis", "its": "itis", "theyre": "theyare", "im": "iam", "lets": "letus"}
+SAME = {"wheres": "whereis", "its": "itis", "theyre": "theyare", "im": "iam", "lets": "letus", "zee": "z"}
+# what Whisper writes when it hears a letter name on its own
+LETTER_HEARD = {
+    "a": "a ay eh hey", "b": "b be bee", "c": "c see sea", "d": "d dee", "e": "e ee he", "f": "f ef eff", "g": "g gee jee",
+    "h": "h aitch age", "i": "i eye aye", "j": "j jay", "k": "k kay okay", "l": "l el elle ell", "m": "m em", "n": "n en",
+    "o": "o oh", "p": "p pee pea", "q": "q queue cue", "r": "r are ar", "s": "s es ess", "t": "t tee tea", "u": "u you",
+    "v": "v vee", "w": "w doubleu doubleyou", "x": "x ex", "y": "y why", "z": "z zee",
+}
+
+
+def same(heard_text, text):
+    """True when Whisper heard the text. A single letter is matched by its name."""
+    if len(text) == 1 and text.isupper():
+        return norm(heard_text) in LETTER_HEARD[text.lower()].split()
+    m = re.match(r"^([A-Z]) (is for .+)$", text)
+    if m:  # the letter name may be written as a word: "You is for umbrella."
+        words = re.sub(r"[^a-z0-9 ]", "", heard_text.lower().replace("-", " ")).split()
+        return bool(words) and words[0] in LETTER_HEARD[m.group(1).lower()].split() and norm(" ".join(words[1:])) == norm(m.group(2))
+    return norm(heard_text) == norm(text)
 
 
 def norm(s):
@@ -50,11 +68,14 @@ for n, (key, text) in enumerate(sorted(chosen.items()), 1):
     path = f"public/voice/{key}.mp3"
     d, sr = sf.read(path, dtype="float32")
     first = heard(d, sr)
-    if norm(first) == norm(text):
+    if same(first, text):
         report["ok"].append(key)
         continue
     cap = text[0].upper() + text[1:]
-    if mode == "words":
+    if mode == "words" and len(text) == 1 and text.isupper():
+        sources = [("direct", f"{text}."), ("cut", f"Say, {text}."), ("direct", f"{text}!"), ("cut", f"Say, {text}!")]
+        rounds, longest = 4, 1.4
+    elif mode == "words":
         sources = [("cut", f"Say, {text}!"), ("cut", f"Say, {text}."), ("direct", cap + "."), ("direct", cap + "!"), ("cut", f"Say: {text}.")]
         rounds, longest = 3, 2.0
     else:
@@ -71,7 +92,7 @@ for n, (key, text) in enumerate(sorted(chosen.items()), 1):
             x = tidy(x, xsr)
             if not 0.2 < len(x) / xsr < longest:
                 continue
-            if norm(heard(x, xsr)) == norm(text):
+            if same(heard(x, xsr), text):
                 done = (x, xsr, src)
                 break
         if done:

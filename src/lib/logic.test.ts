@@ -780,3 +780,37 @@ group('weekly report', () => {
     expect(importCode(junk)!.days).toEqual({ '2026-03-08': { min: 0, games: 0, right: 0, wrong: 0, learned: ['cat'] } });
   });
 });
+
+group('ABC', () => {
+  const letters = wordsIn('abc');
+
+  it('has all 26 letters in order, each with a word that starts with it', () => {
+    expect(letters.map((w) => w.word).join('')).toBe('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+    for (const w of letters) {
+      expect(w.kind).toBe('letter');
+      expect(w.example, w.word).toBeTruthy();
+      // X has no everyday word that starts with it, so it borrows the end of "fox"
+      if (w.word !== 'X') expect(w.example![0].toUpperCase(), w.word).toBe(w.word);
+      else expect(w.example).toContain('x');
+    }
+  });
+
+  it('says what each letter is for and asks for it by name', () => {
+    const w = (id: string) => words.find((x) => x.id === id)!;
+    expect(describe(w('letter-a'))).toBe('A is for apple.');
+    expect(describe(w('letter-q'))).toBe('Q is for queen.');
+    expect(describe(w('letter-x'))).toBe('X is for fox.');
+    expect(question(w('letter-b'))).toBe('Find the letter B.');
+    expect(nounPhrase(w('letter-z'))).toBe('Z');
+  });
+
+  it('accepts what speech recognition writes for a letter name', () => {
+    expect(passes('B', ['bee'])).toBe(true);
+    expect(passes('C', ['see'])).toBe(true);
+    expect(passes('W', ['double you'])).toBe(true);
+    expect(passes('Z', ['zee'])).toBe(true);
+    expect(passes('A', ['a'])).toBe(true);
+    expect(passes('K', ['banana'])).toBe(false);
+    expect(passes('B', ['dog'])).toBe(false);
+  });
+});

@@ -6,7 +6,7 @@ Chạy được trên iPad, tablet Android, điện thoại và máy tính. Có 
 
 ## Bé học được gì
 
-**13 chủ đề, 332 từ:**
+**14 chủ đề, 358 từ:**
 
 | Chủ đề | Số từ |
 |---|---|
@@ -16,6 +16,7 @@ Chạy được trên iPad, tablet Android, điện thoại và máy tính. Có 
 | Rau củ quả | 36 |
 | Thiên nhiên | 35 |
 | Xe cộ | 33 |
+| Chữ cái ABC (26 chữ hoa và thường, mỗi chữ kèm một từ: "A is for apple.") | 26 |
 | Gia đình & nghề | 24 |
 | Con số 1–20 (có chữ số và số ngôi sao để đếm) | 20 |
 | Cơ thể | 16 |
@@ -175,7 +176,7 @@ scripts/
    Bỏ qua bước này thì từ mới vẫn đọc được bằng giọng của máy, nhưng `npm test` sẽ báo thiếu file mp3.
 5. Chạy `npm test`.
 
-Các cờ có thể dùng: `"plural": true` (grapes → "They're grapes"), `"mass": true` (milk → "It's milk"), `"the": true` (the sun), `"skin": true` (hình người dùng màu da trung tính), `"kind": "color" | "number" | "person" | "job" | "feeling" | "action"`.
+Các cờ có thể dùng: `"plural": true` (grapes → "They're grapes"), `"mass": true` (milk → "It's milk"), `"the": true` (the sun), `"skin": true` (hình người dùng màu da trung tính), `"kind": "color" | "number" | "person" | "job" | "feeling" | "action" | "letter"`.
 
 ## Hướng phát triển tiếp
 

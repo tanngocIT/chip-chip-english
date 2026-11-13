@@ -81,7 +81,7 @@ export function runQuiz(q: QuizSpec) {
 
     // The word being asked, written big so the child links the sound to the letters.
     const wordTag =
-      mode === 'listen'
+      mode === 'listen' && w.kind !== 'letter'
         ? h(
             'button',
             {

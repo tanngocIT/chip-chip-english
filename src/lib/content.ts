@@ -11,7 +11,7 @@ export interface Topic {
   noShadow?: boolean;
 }
 
-export type WordKind = 'thing' | 'color' | 'number' | 'person' | 'job' | 'feeling' | 'action';
+export type WordKind = 'thing' | 'color' | 'number' | 'person' | 'job' | 'feeling' | 'action' | 'letter';
 
 export interface Word {
   id: string;
@@ -25,6 +25,8 @@ export interface Word {
   plural?: boolean;
   mass?: boolean;
   the?: boolean;
+  /** for a letter: the word it stands for ("apple" for A); the picture is that word's */
+  example?: string;
 }
 
 interface RawWord {
@@ -38,6 +40,7 @@ interface RawWord {
   plural?: boolean;
   mass?: boolean;
   the?: boolean;
+  example?: string;
 }
 
 export const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -59,6 +62,7 @@ export const words: Word[] = (data.words as RawWord[]).map((w) => ({
   plural: w.plural,
   mass: w.mass,
   the: w.the,
+  example: w.example,
 }));
 
 /** What Chip says for a sticker, where the picture's own name is not a child's word. */
@@ -110,6 +114,8 @@ export function describe(w: Word): string {
       return `This is ${w.word}.`;
     case 'job':
       return `This is ${nounPhrase(w)}.`;
+    case 'letter':
+      return `${w.word} is for ${w.example}.`;
     case 'feeling':
       return `I am ${w.word}.`;
     case 'action':
@@ -128,6 +134,8 @@ export function question(w: Word): string {
       return `Find ${w.word}.`;
     case 'person':
       return `Where is ${w.word}?`;
+    case 'letter':
+      return `Find the letter ${w.word}.`;
     case 'feeling':
       return `Who is ${w.word}?`;
     case 'action':

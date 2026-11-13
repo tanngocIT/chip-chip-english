@@ -61,6 +61,14 @@ export function picture(w: Word, cls = ''): HTMLElement {
       ),
     );
   }
+  if (w.kind === 'letter') {
+    return h(
+      'div',
+      { class: `pic letter ${cls}`, role: 'img', 'aria-label': `letter ${w.word}` },
+      h('span', { class: 'glyph' }, w.word, h('small', {}, w.word.toLowerCase())),
+      h('img', { src: w.img, alt: '', draggable: false }),
+    );
+  }
   return h(
     'div',
     { class: `pic ${cls}`, role: 'img', 'aria-label': w.word },

@@ -9,6 +9,7 @@ Cần: pip install piper-tts soundfile scipy faster-whisper
 import io
 import json
 import os
+import re
 import sys
 import wave
 
@@ -24,10 +25,22 @@ voice = PiperVoice.load(job["model"])
 asr = WhisperModel(os.environ.get("WHISPER_MODEL", "small.en"), compute_type="int8")
 
 
+def spoken(text):
+    """What to hand the voice so it says the text right.
+
+    The voice's phonemizer reads a sentence-initial "A is" as the article ("uh is for apple")
+    and the letter Z the British way ("zed"). Checked with voice.phonemize().
+    """
+    # A short pause after the letter also keeps it from running into "is": without it
+    # "C is for cat" came out as "sia's for cat" and "T is for tree" as "tears for tree".
+    text = re.sub(r"^([A-Z]) is for\b", r"\1, is for", text)
+    return re.sub(r"\bZ\b", "Zee", text)
+
+
 def synth(text):
     buf = io.BytesIO()
     with wave.open(buf, "wb") as w:
-        voice.synthesize_wav(text, w)
+        voice.synthesize_wav(spoken(text), w)
     buf.seek(0)
     d, sr = sf.read(buf, dtype="float32")
     return d, sr
@@ -91,7 +104,9 @@ for n, (key, text) in enumerate(job["items"], 1):
     words = [w for w in text.split() if any(c.isalnum() for c in w)]
     d, sr = synth(text)
     if len(words) <= 2:
-        d2, sr2 = synth("Say, " + text[0].lower() + text[1:] if not text.startswith("I") else "Say, " + text)
+        # a lone capital is a letter name ("A", "I"): keep it, never lower it to the article
+        keep = text.startswith("I") or (len(text) == 1 and text.isupper())
+        d2, sr2 = synth("Say, " + text if keep else "Say, " + text[0].lower() + text[1:])
         cut = cut_after_say(d2, sr2)
         # chỉ nhận kết quả cắt nếu độ dài hợp lý, không thì dùng bản đọc riêng
         # Whisper nghe lại: nếu còn chữ "say" ở đầu thì cắt thêm một lần nữa

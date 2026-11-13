@@ -26,6 +26,7 @@ const REACTIONS: Record<string, string> = {
   numbers: 'zoom',
   body: 'zoom',
   nature: 'sway',
+  abc: 'zoom',
 };
 
 export function learn(t: Topic) {
@@ -57,7 +58,7 @@ export function learn(t: Topic) {
         },
       },
       pic,
-      h('span', { class: 'word' }, w.word),
+      h('span', { class: 'word' }, w.example ?? w.word),
     );
     const prev = roundBtn(icon.back(), 'Previous', () => {
       if (i > 0) {

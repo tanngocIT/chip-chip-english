@@ -2019,3 +2019,44 @@ td:not(:first-child) {
   font-weight: 800;
   color: var(--ink);
 }
+
+/* ---------- ABC: a letter is drawn big and small, with the thing it stands for ---------- */
+.pic.letter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2%;
+  container-type: inline-size;
+}
+
+.pic.letter .glyph {
+  font-size: 46cqw;
+  font-weight: 800;
+  line-height: 0.95;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.pic.letter .glyph small {
+  font-size: 0.72em;
+  font-weight: 700;
+  margin-left: 0.06em;
+  color: var(--leaf-deep);
+}
+
+.pic.letter img {
+  width: 34%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+/* Find the shadow: the outline of the letter alone */
+.pic.letter.shadow .glyph,
+.pic.letter.shadow .glyph small {
+  color: rgb(43 58 85 / 0.16);
+}
+
+.pic.letter.shadow img {
+  display: none;
+}

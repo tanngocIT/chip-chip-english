@@ -91,6 +91,13 @@
    "vi": "Hành động",
    "icon": "run",
    "color": "#D5F0F7"
+  },
+  {
+   "id": "abc",
+   "en": "ABC",
+   "vi": "Chữ cái",
+   "icon": "letter-a",
+   "color": "#FFE1D6"
   }
  ],
  "words": [
@@ -2298,6 +2305,242 @@
    "asset": "People hugging",
    "kind": "action",
    "skin": true
+  },
+  {
+   "id": "letter-a",
+   "word": "A",
+   "topic": "abc",
+   "vi": "chữ A",
+   "asset": "Red apple",
+   "kind": "letter",
+   "example": "apple"
+  },
+  {
+   "id": "letter-b",
+   "word": "B",
+   "topic": "abc",
+   "vi": "chữ B",
+   "asset": "Soccer ball",
+   "kind": "letter",
+   "example": "ball"
+  },
+  {
+   "id": "letter-c",
+   "word": "C",
+   "topic": "abc",
+   "vi": "chữ C",
+   "asset": "Cat face",
+   "kind": "letter",
+   "example": "cat"
+  },
+  {
+   "id": "letter-d",
+   "word": "D",
+   "topic": "abc",
+   "vi": "chữ D",
+   "asset": "Dog face",
+   "kind": "letter",
+   "example": "dog"
+  },
+  {
+   "id": "letter-e",
+   "word": "E",
+   "topic": "abc",
+   "vi": "chữ E",
+   "asset": "Egg",
+   "kind": "letter",
+   "example": "egg"
+  },
+  {
+   "id": "letter-f",
+   "word": "F",
+   "topic": "abc",
+   "vi": "chữ F",
+   "asset": "Tropical fish",
+   "kind": "letter",
+   "example": "fish"
+  },
+  {
+   "id": "letter-g",
+   "word": "G",
+   "topic": "abc",
+   "vi": "chữ G",
+   "asset": "Goat",
+   "kind": "letter",
+   "example": "goat"
+  },
+  {
+   "id": "letter-h",
+   "word": "H",
+   "topic": "abc",
+   "vi": "chữ H",
+   "asset": "Womans hat",
+   "kind": "letter",
+   "example": "hat"
+  },
+  {
+   "id": "letter-i",
+   "word": "I",
+   "topic": "abc",
+   "vi": "chữ I",
+   "asset": "Ice",
+   "kind": "letter",
+   "example": "ice"
+  },
+  {
+   "id": "letter-j",
+   "word": "J",
+   "topic": "abc",
+   "vi": "chữ J",
+   "asset": "Beverage box",
+   "kind": "letter",
+   "example": "juice"
+  },
+  {
+   "id": "letter-k",
+   "word": "K",
+   "topic": "abc",
+   "vi": "chữ K",
+   "asset": "Kite",
+   "kind": "letter",
+   "example": "kite"
+  },
+  {
+   "id": "letter-l",
+   "word": "L",
+   "topic": "abc",
+   "vi": "chữ L",
+   "asset": "Lion",
+   "kind": "letter",
+   "example": "lion"
+  },
+  {
+   "id": "letter-m",
+   "word": "M",
+   "topic": "abc",
+   "vi": "chữ M",
+   "asset": "Crescent moon",
+   "kind": "letter",
+   "example": "moon"
+  },
+  {
+   "id": "letter-n",
+   "word": "N",
+   "topic": "abc",
+   "vi": "chữ N",
+   "asset": "Nose",
+   "kind": "letter",
+   "example": "nose",
+   "skin": true
+  },
+  {
+   "id": "letter-o",
+   "word": "O",
+   "topic": "abc",
+   "vi": "chữ O",
+   "asset": "Tangerine",
+   "kind": "letter",
+   "example": "orange"
+  },
+  {
+   "id": "letter-p",
+   "word": "P",
+   "topic": "abc",
+   "vi": "chữ P",
+   "asset": "Pig face",
+   "kind": "letter",
+   "example": "pig"
+  },
+  {
+   "id": "letter-q",
+   "word": "Q",
+   "topic": "abc",
+   "vi": "chữ Q",
+   "asset": "Princess",
+   "kind": "letter",
+   "example": "queen",
+   "skin": true
+  },
+  {
+   "id": "letter-r",
+   "word": "R",
+   "topic": "abc",
+   "vi": "chữ R",
+   "asset": "Rabbit face",
+   "kind": "letter",
+   "example": "rabbit"
+  },
+  {
+   "id": "letter-s",
+   "word": "S",
+   "topic": "abc",
+   "vi": "chữ S",
+   "asset": "Sun with face",
+   "kind": "letter",
+   "example": "sun"
+  },
+  {
+   "id": "letter-t",
+   "word": "T",
+   "topic": "abc",
+   "vi": "chữ T",
+   "asset": "Deciduous tree",
+   "kind": "letter",
+   "example": "tree"
+  },
+  {
+   "id": "letter-u",
+   "word": "U",
+   "topic": "abc",
+   "vi": "chữ U",
+   "asset": "Umbrella",
+   "kind": "letter",
+   "example": "umbrella"
+  },
+  {
+   "id": "letter-v",
+   "word": "V",
+   "topic": "abc",
+   "vi": "chữ V",
+   "asset": "Minibus",
+   "kind": "letter",
+   "example": "van"
+  },
+  {
+   "id": "letter-w",
+   "word": "W",
+   "topic": "abc",
+   "vi": "chữ W",
+   "asset": "Spouting whale",
+   "kind": "letter",
+   "example": "whale"
+  },
+  {
+   "id": "letter-x",
+   "word": "X",
+   "topic": "abc",
+   "vi": "chữ X",
+   "asset": "Fox",
+   "kind": "letter",
+   "example": "fox"
+  },
+  {
+   "id": "letter-y",
+   "word": "Y",
+   "topic": "abc",
+   "vi": "chữ Y",
+   "asset": "Yo-yo",
+   "kind": "letter",
+   "example": "yo-yo"
+  },
+  {
+   "id": "letter-z",
+   "word": "Z",
+   "topic": "abc",
+   "vi": "chữ Z",
+   "asset": "Zebra",
+   "kind": "letter",
+   "example": "zebra"
   }
  ]
 }
