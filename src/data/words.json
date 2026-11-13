@@ -232,75 +232,87 @@
    "id": "apple",
    "topic": "fruits",
    "vi": "quả táo",
-   "asset": "Red apple"
+   "asset": "Red apple",
+   "art": true
   },
   {
    "id": "banana",
    "topic": "fruits",
    "vi": "quả chuối",
-   "asset": "Banana"
+   "asset": "Banana",
+   "art": true
   },
   {
    "id": "grapes",
    "topic": "fruits",
    "vi": "quả nho",
    "asset": "Grapes",
-   "plural": true
+   "plural": true,
+   "art": true
   },
   {
    "id": "orange",
    "topic": "fruits",
    "vi": "quả cam",
-   "asset": "Tangerine"
+   "asset": "Tangerine",
+   "art": true
   },
   {
    "id": "watermelon",
    "topic": "fruits",
    "vi": "dưa hấu",
-   "asset": "Watermelon"
+   "asset": "Watermelon",
+   "art": true
   },
   {
    "id": "strawberry",
    "topic": "fruits",
    "vi": "dâu tây",
-   "asset": "Strawberry"
+   "asset": "Strawberry",
+   "art": true
   },
   {
    "id": "pear",
    "topic": "fruits",
    "vi": "quả lê",
-   "asset": "Pear"
+   "asset": "Pear",
+   "art": true
   },
   {
    "id": "mango",
    "topic": "fruits",
    "vi": "quả xoài",
-   "asset": "Mango"
+   "asset": "Mango",
+   "art": true
   },
   {
    "id": "pineapple",
    "topic": "fruits",
    "vi": "quả dứa",
-   "asset": "Pineapple"
+   "asset": "Pineapple",
+   "art": true
   },
   {
    "id": "lemon",
    "topic": "fruits",
    "vi": "quả chanh",
-   "asset": "Lemon"
+   "asset": "Lemon",
+   "art": true
   },
   {
    "id": "cherries",
    "topic": "fruits",
    "vi": "quả anh đào",
    "asset": "Cherries",
-   "plural": true
+   "plural": true,
+   "art": true
   },
   {
    "id": "peach",
    "topic": "fruits",
    "vi": "quả đào",
-   "asset": "Peach"
+   "asset": "Peach",
+   "art": true
   },
   {
    "id": "red",
@@ -723,14 +735,16 @@
    "id": "carrot",
    "topic": "fruits",
    "vi": "cà rốt",
-   "asset": "Carrot"
+   "asset": "Carrot",
+   "art": true
   },
   {
    "id": "corn",
    "topic": "fruits",
    "vi": "bắp ngô",
    "asset": "Ear of corn",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "rice",
@@ -833,76 +847,88 @@
    "topic": "nature",
    "vi": "mặt trời",
    "asset": "Sun with face",
-   "the": true
+   "the": true,
+   "art": true
   },
   {
    "id": "moon",
    "topic": "nature",
    "vi": "mặt trăng",
    "asset": "Crescent moon",
-   "the": true
+   "the": true,
+   "art": true
   },
   {
    "id": "star",
    "topic": "nature",
    "vi": "ngôi sao",
-   "asset": "Star"
+   "asset": "Star",
+   "art": true
   },
   {
    "id": "cloud",
    "topic": "nature",
    "vi": "đám mây",
-   "asset": "Cloud"
+   "asset": "Cloud",
+   "art": true
   },
   {
    "id": "rainbow",
    "topic": "nature",
    "vi": "cầu vồng",
-   "asset": "Rainbow"
+   "asset": "Rainbow",
+   "art": true
   },
   {
    "id": "tree",
    "topic": "nature",
    "vi": "cái cây",
-   "asset": "Deciduous tree"
+   "asset": "Deciduous tree",
+   "art": true
   },
   {
    "id": "flower",
    "topic": "nature",
    "vi": "bông hoa",
-   "asset": "Tulip"
+   "asset": "Tulip",
+   "art": true
   },
   {
    "id": "rain",
    "topic": "nature",
    "vi": "mưa",
    "asset": "Cloud with rain",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "snow",
    "topic": "nature",
    "vi": "tuyết",
    "asset": "Snowflake",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "sunflower",
    "topic": "nature",
    "vi": "hoa hướng dương",
-   "asset": "Sunflower"
+   "asset": "Sunflower",
+   "art": true
   },
   {
    "id": "butterfly",
    "topic": "nature",
    "vi": "con bướm",
-   "asset": "Butterfly"
+   "asset": "Butterfly",
+   "art": true
   },
   {
    "id": "bee",
    "topic": "nature",
    "vi": "con ong",
-   "asset": "Honeybee"
+   "asset": "Honeybee",
+   "art": true
   },
   {
    "id": "sheep",
@@ -1062,140 +1088,162 @@
    "id": "kiwi",
    "topic": "fruits",
    "vi": "quả kiwi",
-   "asset": "Kiwi fruit"
+   "asset": "Kiwi fruit",
+   "art": true
   },
   {
    "id": "coconut",
    "topic": "fruits",
    "vi": "quả dừa",
-   "asset": "Coconut"
+   "asset": "Coconut",
+   "art": true
   },
   {
    "id": "blueberries",
    "topic": "fruits",
    "vi": "việt quất",
    "asset": "Blueberries",
-   "plural": true
+   "plural": true,
+   "art": true
   },
   {
    "id": "melon",
    "topic": "fruits",
    "vi": "dưa lưới",
-   "asset": "Melon"
+   "asset": "Melon",
+   "art": true
   },
   {
    "id": "avocado",
    "topic": "fruits",
    "vi": "quả bơ",
-   "asset": "Avocado"
+   "asset": "Avocado",
+   "art": true
   },
   {
    "id": "tomato",
    "topic": "fruits",
    "vi": "cà chua",
-   "asset": "Tomato"
+   "asset": "Tomato",
+   "art": true
   },
   {
    "id": "broccoli",
    "topic": "fruits",
    "vi": "bông cải xanh",
    "asset": "Broccoli",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "potato",
    "topic": "fruits",
    "vi": "khoai tây",
-   "asset": "Potato"
+   "asset": "Potato",
+   "art": true
   },
   {
    "id": "eggplant",
    "topic": "fruits",
    "vi": "cà tím",
-   "asset": "Eggplant"
+   "asset": "Eggplant",
+   "art": true
   },
   {
    "id": "cucumber",
    "topic": "fruits",
    "vi": "dưa leo",
-   "asset": "Cucumber"
+   "asset": "Cucumber",
+   "art": true
   },
   {
    "id": "mushroom",
    "topic": "fruits",
    "vi": "cây nấm",
-   "asset": "Brown mushroom"
+   "asset": "Brown mushroom",
+   "art": true
   },
   {
    "id": "onion",
    "topic": "fruits",
    "vi": "củ hành",
-   "asset": "Onion"
+   "asset": "Onion",
+   "art": true
   },
   {
    "id": "garlic",
    "topic": "fruits",
    "vi": "tỏi",
    "asset": "Garlic",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "pepper",
    "topic": "fruits",
    "vi": "ớt chuông",
-   "asset": "Bell pepper"
+   "asset": "Bell pepper",
+   "art": true
   },
   {
    "id": "chili",
    "topic": "fruits",
    "vi": "ớt cay",
-   "asset": "Hot pepper"
+   "asset": "Hot pepper",
+   "art": true
   },
   {
    "id": "peas",
    "topic": "fruits",
    "vi": "đậu Hà Lan",
    "asset": "Pea pod",
-   "plural": true
+   "plural": true,
+   "art": true
   },
   {
    "id": "lettuce",
    "topic": "fruits",
    "vi": "rau xà lách",
    "asset": "Leafy green",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "sweet potato",
    "topic": "fruits",
    "vi": "khoai lang",
-   "asset": "Roasted sweet potato"
+   "asset": "Roasted sweet potato",
+   "art": true
   },
   {
    "id": "peanuts",
    "topic": "fruits",
    "vi": "đậu phộng",
    "asset": "Peanuts",
-   "plural": true
+   "plural": true,
+   "art": true
   },
   {
    "id": "green apple",
    "topic": "fruits",
    "vi": "táo xanh",
-   "asset": "Green apple"
+   "asset": "Green apple",
+   "art": true
   },
   {
    "id": "olive",
    "topic": "fruits",
    "vi": "quả ô liu",
-   "asset": "Olive"
+   "asset": "Olive",
+   "art": true
   },
   {
    "id": "ginger",
    "topic": "fruits",
    "vi": "gừng",
    "asset": "Ginger root",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "gray",
@@ -2026,145 +2074,168 @@
    "id": "leaf",
    "topic": "nature",
    "vi": "chiếc lá",
-   "asset": "Leaf fluttering in wind"
+   "asset": "Leaf fluttering in wind",
+   "art": true
   },
   {
    "id": "mountain",
    "topic": "nature",
    "vi": "ngọn núi",
-   "asset": "Mountain"
+   "asset": "Mountain",
+   "art": true
   },
   {
    "id": "volcano",
    "topic": "nature",
    "vi": "núi lửa",
-   "asset": "Volcano"
+   "asset": "Volcano",
+   "art": true
   },
   {
    "id": "wave",
    "topic": "nature",
    "vi": "con sóng",
-   "asset": "Water wave"
+   "asset": "Water wave",
+   "art": true
   },
   {
    "id": "beach",
    "topic": "nature",
    "vi": "bãi biển",
-   "asset": "Beach with umbrella"
+   "asset": "Beach with umbrella",
+   "art": true
   },
   {
    "id": "island",
    "topic": "nature",
    "vi": "hòn đảo",
-   "asset": "Desert island"
+   "asset": "Desert island",
+   "art": true
   },
   {
    "id": "desert",
    "topic": "nature",
    "vi": "sa mạc",
-   "asset": "Desert"
+   "asset": "Desert",
+   "art": true
   },
   {
    "id": "fire",
    "topic": "nature",
    "vi": "lửa",
    "asset": "Fire",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "wind",
    "topic": "nature",
    "vi": "gió",
    "asset": "Wind face",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "lightning",
    "topic": "nature",
    "vi": "tia chớp",
    "asset": "High voltage",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "snowman",
    "topic": "nature",
    "vi": "người tuyết",
-   "asset": "Snowman"
+   "asset": "Snowman",
+   "art": true
   },
   {
    "id": "rock",
    "topic": "nature",
    "vi": "hòn đá",
-   "asset": "Rock"
+   "asset": "Rock",
+   "art": true
   },
   {
    "id": "cactus",
    "topic": "nature",
    "vi": "cây xương rồng",
-   "asset": "Cactus"
+   "asset": "Cactus",
+   "art": true
   },
   {
    "id": "palm tree",
    "topic": "nature",
    "vi": "cây dừa",
-   "asset": "Palm tree"
+   "asset": "Palm tree",
+   "art": true
   },
   {
    "id": "pine tree",
    "topic": "nature",
    "vi": "cây thông",
-   "asset": "Evergreen tree"
+   "asset": "Evergreen tree",
+   "art": true
   },
   {
    "id": "rose",
    "topic": "nature",
    "vi": "hoa hồng",
-   "asset": "Rose"
+   "asset": "Rose",
+   "art": true
   },
   {
    "id": "earth",
    "topic": "nature",
    "vi": "trái đất",
    "asset": "Globe showing asia-australia",
-   "the": true
+   "the": true,
+   "art": true
   },
   {
    "id": "planet",
    "topic": "nature",
    "vi": "hành tinh",
-   "asset": "Ringed planet"
+   "asset": "Ringed planet",
+   "art": true
   },
   {
    "id": "water",
    "topic": "nature",
    "vi": "nước",
    "asset": "Droplet",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "plant",
    "topic": "nature",
    "vi": "cây trồng trong chậu",
-   "asset": "Potted plant"
+   "asset": "Potted plant",
+   "art": true
   },
   {
    "id": "clover",
    "topic": "nature",
    "vi": "cỏ bốn lá",
-   "asset": "Four leaf clover"
+   "asset": "Four leaf clover",
+   "art": true
   },
   {
    "id": "tornado",
    "topic": "nature",
    "vi": "lốc xoáy",
-   "asset": "Tornado"
+   "asset": "Tornado",
+   "art": true
   },
   {
    "id": "ice",
    "topic": "nature",
    "vi": "băng",
    "asset": "Ice",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "circle",

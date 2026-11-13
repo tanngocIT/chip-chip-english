@@ -6,6 +6,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const python = process.argv[2];
+// optional: only the sheets whose file name contains this text
+const only = process.argv[3] ?? '';
 if (!python) {
   console.error('Usage: node scripts/cut-all-art.mjs <python>');
   process.exit(1);
@@ -13,11 +15,15 @@ if (!python) {
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 const sheets = JSON.parse(fs.readFileSync('art-inbox/sheets.json', 'utf8'));
 const tmp = 'art-inbox/cut';
-fs.rmSync(tmp, { recursive: true, force: true });
+fs.mkdirSync(tmp, { recursive: true });
 fs.mkdirSync('public/img/art', { recursive: true });
 let failed = 0;
-for (const [file, ids] of Object.entries(sheets)) {
-  const r = spawnSync(python, ['scripts/cut-art.py', path.join('art-inbox', file), tmp, ids.join(',')], { encoding: 'utf8' });
+for (const [file, entry] of Object.entries(sheets)) {
+  // an entry is the list of ids, or { ids, join } when a picture on the sheet was drawn in loose pieces
+  const ids = Array.isArray(entry) ? entry : entry.ids;
+  const extra = Array.isArray(entry) ? [] : ['320', String(entry.join)];
+  if (!file.includes(only)) continue;
+  const r = spawnSync(python, ['scripts/cut-art.py', path.join('art-inbox', file), tmp, ids.join(','), ...extra], { encoding: 'utf8' });
   if (r.status !== 0) {
     console.error(`${file}: ${r.stderr.trim().split('\n').pop()}`);
     failed++;

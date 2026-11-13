@@ -4,7 +4,7 @@ A sheet is a grid of pictures, each with a white sticker border, on one flat col
 (what the image model was asked for). The background is whatever is connected to the
 edge of the sheet, so a green frog on a green sheet is still safe inside its border.
 
-Usage: python scripts/cut-art.py <sheet.png> <outdir> <name1,name2,...> [size]
+Usage: python scripts/cut-art.py <sheet.png> <outdir> <name1,name2,...> [size] [join]
 Names are in reading order (left to right, top to bottom). Needs pillow, numpy, scipy.
 """
 import os
@@ -16,6 +16,8 @@ from scipy import ndimage
 
 sheet, outdir, names = sys.argv[1], sys.argv[2], sys.argv[3].split(",")
 size = int(sys.argv[4]) if len(sys.argv) > 4 else 320
+# pieces closer than this many pixels are one picture (a sun drawn apart from its dunes); 0 = off
+join = int(sys.argv[5]) if len(sys.argv) > 5 else 0
 
 img = Image.open(sheet).convert("RGB")
 a = np.asarray(img).astype(np.int32)
@@ -39,7 +41,18 @@ lab, _ = ndimage.label(like_bg)
 edge_labels = np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))
 outside = np.isin(lab, edge_labels[edge_labels > 0])
 fg = ndimage.binary_opening(~outside, iterations=2)
-objs, n = ndimage.label(fg)
+if join:
+    # drop the pieces with no white border first (ghosts, specks), so they are not joined to a picture
+    raw, m = ndimage.label(fg)
+    raw_area = ndimage.sum(fg, raw, range(1, m + 1))
+    raw_white = ndimage.sum(a.min(axis=2) > 232, raw, range(1, m + 1))
+    good = np.concatenate([[False], raw_white > raw_area * 0.03])
+    fg &= good[raw]
+    groups, _ = ndimage.label(ndimage.binary_dilation(fg, iterations=join // 2))
+    objs = np.where(fg, groups, 0)
+    n = int(objs.max())
+else:
+    objs, n = ndimage.label(fg)
 areas = ndimage.sum(fg, objs, range(1, n + 1))
 boxes = ndimage.find_objects(objs)
 # a real sticker is big; specks and the model's corner mark are not
@@ -71,7 +84,8 @@ rgb = np.asarray(img)
 for name, i in zip(names, order):
     ys, xs = boxes[i]
     mask = objs[ys, xs] == i + 1
-    mask = ndimage.binary_fill_holes(mask)
+    if not join:
+        mask = ndimage.binary_fill_holes(mask)
     # soften the cut edge by one pixel so it is not jagged, and pull it in off the background colour
     solid = ndimage.binary_erosion(mask, iterations=2)
     # Background shut in by the picture (between the spokes of a wheel, under a bent arm) has no
