@@ -16,6 +16,7 @@ const ACTIVITIES: { id: Activity; name: string; img: string; silhouette?: boolea
   { id: 'listen', name: 'Listen and tap', img: imgUrl('ear') },
   { id: 'match', name: 'Find the shadow', img: '', silhouette: true },
   { id: 'find', name: 'Find it', img: imgUrl('find') },
+  { id: 'odd', name: 'Odd one out', img: imgUrl('odd') },
   { id: 'memory', name: 'Memory', img: imgUrl('puzzle-piece') },
   { id: 'say', name: 'Say it', img: imgUrl('mouth') },
   { id: 'sing', name: 'Sing along', img: imgUrl('drum') },

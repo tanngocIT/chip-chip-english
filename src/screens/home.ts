@@ -11,6 +11,9 @@ import { topicScreen } from './topic';
 import { sentences } from './sentences';
 import { review } from './quiz';
 import { parentGate } from './parents';
+import { storyList } from './stories';
+import { wordBook, metCount } from './wordbook';
+import { stickerScene } from './scene';
 
 // ---------- splash ----------
 
@@ -102,6 +105,23 @@ export function home() {
       h('span', { class: 'label' }, 'Sentences'),
     );
 
+  // Stories: for the same older children as Sentences.
+  const storyBtn =
+    levelConfig(P.settings.age).sentenceRounds > 0 &&
+    h(
+      'button',
+      {
+        class: 'quick small stories-btn',
+        'aria-label': 'Stories',
+        onclick: (e: Event) => {
+          sfx.tap();
+          void announce(e.currentTarget as HTMLElement, "Let's read a story!", storyList);
+        },
+      },
+      h('span', { class: 'pile' }, ['bear', 'moon'].map((id) => picture(wordById(id)!, 'sm'))),
+      h('span', { class: 'label' }, 'Stories'),
+    );
+
   const total = topics.reduce((s, t) => s + topicStars(P, t.id), 0);
   // New stars since the child last saw this screen are counted up one by one.
   const from = Math.min(shownTotal ?? total, total);
@@ -171,24 +191,43 @@ export function home() {
         ),
         h('div', { class: 'counters' }, streakEl, totalEl),
       ),
-      h('section', { class: 'quicks' }, today, reviewBtn, sentenceBtn),
+      h('section', { class: 'quicks' }, today, reviewBtn, sentenceBtn, storyBtn),
       h('section', { class: 'topics' }, tiles),
       h(
         'footer',
         { class: 'bottom' },
         h(
-          'button',
-          {
-            class: `book-btn ${newLook ? 'new' : ''}`,
-            'aria-label': 'Stickers',
-            onclick: () => {
-              sfx.tap();
-              void say('My stickers');
-              stickerBook();
+          'div',
+          { class: 'books' },
+          h(
+            'button',
+            {
+              class: `book-btn ${newLook ? 'new' : ''}`,
+              'aria-label': 'Stickers',
+              onclick: () => {
+                sfx.tap();
+                void say('My stickers');
+                stickerBook();
+              },
             },
-          },
-          h('img', { src: stickers[0].img, alt: '' }),
-          h('b', {}, `${P.stickers.length}`),
+            h('img', { src: stickers[0].img, alt: '' }),
+            h('b', {}, `${P.stickers.length}`),
+          ),
+          // every word the child has met, to look through and hear again
+          h(
+            'button',
+            {
+              class: 'book-btn words-btn',
+              'aria-label': 'My words',
+              onclick: () => {
+                sfx.tap();
+                void say('My words');
+                wordBook();
+              },
+            },
+            h('img', { src: wordById('book')!.img, alt: '' }),
+            h('b', {}, `${metCount()}`),
+          ),
         ),
         parentBtn,
       ),
@@ -288,7 +327,14 @@ export function stickerBook() {
           home();
         }),
         h('h2', {}, `${P.stickers.length} / ${stickers.length}`),
-        h('span', { class: 'spacer' }),
+        // the child's own picture, made with the stickers they have
+        have > 0
+          ? roundBtn(icon.picture(), 'My picture', () => {
+              sfx.tap();
+              void say('My picture');
+              stickerScene();
+            }, 'soft scene-btn')
+          : h('span', { class: 'spacer' }),
       ),
       h('section', { class: 'wardrobe' }, chip('model bob'), h('div', { class: 'looks' }, lookBtns)),
       h('section', { class: 'slots' }, items),

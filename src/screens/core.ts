@@ -15,6 +15,8 @@ import { findIt } from './find';
 import { singAlong } from './sing';
 import { sayIt } from './say';
 import { memory } from './memory';
+import { oddOneOut } from './odd';
+import { challenge } from './challenge';
 
 export const app = document.getElementById('app')!;
 export const P = load();
@@ -61,7 +63,9 @@ export function startToday(t: Topic) {
 
 export function nextStep() {
   const s = session;
-  if (!s || ++s.i >= SESSION_STEPS.length) return home();
+  if (!s) return home();
+  // the session ends away from the screen: Chip gives one thing to do in the room
+  if (++s.i >= SESSION_STEPS.length) return P.settings.challenges ? challenge(s.topic) : home();
   startActivity(s.topic, SESSION_STEPS[s.i]);
 }
 
@@ -96,6 +100,7 @@ export function startActivity(t: Topic, a: Activity) {
   if (a === 'find') return findIt(t);
   if (a === 'sing') return singAlong(t);
   if (a === 'memory') return memory(t);
+  if (a === 'odd') return oddOneOut(t);
   return sayIt(t);
 }
 

@@ -10,6 +10,7 @@ import { installState, promptInstall, onInstallChange } from '../lib/install';
 import { icon, roundBtn, setChipLook } from '../ui';
 import { app, P, inParentArea, show, persist, setInParentArea } from './core';
 import { home } from './home';
+import { printCards } from './print';
 
 // ---------- grown-ups ----------
 
@@ -98,6 +99,22 @@ export function parentArea() {
     s.playback = playback.checked;
     persist();
   });
+
+  const challenges = h('input', { type: 'checkbox', checked: s.challenges }) as HTMLInputElement;
+  challenges.addEventListener('change', () => {
+    s.challenges = challenges.checked;
+    persist();
+  });
+
+  // In thẻ từ: chọn chủ đề rồi in, mỗi trang 9 thẻ
+  const printTopic = h('select', { 'aria-label': 'Chủ đề để in' }, topics.map((t) => h('option', { value: t.id }, `${t.vi} (${wordsIn(t.id).length} thẻ)`))) as HTMLSelectElement;
+  const printBtn = h('button', {
+    class: 'primary',
+    onclick: () => {
+      const t = topics.find((x) => x.id === printTopic.value);
+      if (t) void printCards(t);
+    },
+  }, 'In thẻ từ');
 
   const limit = h(
     'select',
@@ -287,7 +304,7 @@ export function parentArea() {
       h(
         'section',
         { class: 'panel' },
-        field('Độ tuổi của bé', age, '2–3 tuổi: 2 hình, 8 câu, 10 thẻ từ; 4–5 tuổi: 3 hình, 10 câu, 12 thẻ từ; 6 tuổi: 4 hình, 12 câu, 15 thẻ từ. Bài Say it ít hơn 2 câu. Bài Find it có 6, 9 hoặc 12 hình trong tranh; Memory có 3, 4 hoặc 6 cặp thẻ. Từ 4–5 tuổi có thêm bài Sentences (câu ngắn) ở màn hình chính.'),
+        field('Độ tuổi của bé', age, '2–3 tuổi: 2 hình, 8 câu, 10 thẻ từ; 4–5 tuổi: 3 hình, 10 câu, 12 thẻ từ; 6 tuổi: 4 hình, 12 câu, 15 thẻ từ. Bài Say it ít hơn 2 câu. Bài Find it có 6, 9 hoặc 12 hình trong tranh; Memory có 3, 4 hoặc 6 cặp thẻ; Odd one out có 3 hoặc 4 hình. Từ 4–5 tuổi có thêm bài Sentences (câu ngắn) và Stories (truyện tranh) ở màn hình chính.'),
         field('Tốc độ đọc', rate, 'Kéo xong sẽ đọc thử.'),
         field(
           'Đọc thêm nghĩa tiếng Việt ở thẻ từ',
@@ -300,6 +317,11 @@ export function parentArea() {
           canRecord()
             ? 'Bé nghe lại mình vừa nói rồi nghe giọng mẫu để so sánh. Tiếng chỉ giữ tạm trong lúc chơi, không lưu và không gửi đi.'
             : 'Máy này không ghi âm được cùng lúc với nhận giọng nói.',
+        ),
+        field(
+          'Thử thách ngoài màn hình sau buổi Play',
+          challenges,
+          'Chơi xong buổi Play, Chip giao một việc làm ngoài đời bằng từ vừa học ("Find something red!", "Touch your nose!"). Bé làm xong thì bấm dấu tích.',
         ),
         field('Giới hạn mỗi ngày', limit, `Hôm nay đã chơi ${P.minutesToday.date === todayStr() ? P.minutesToday.minutes : 0} phút.`),
         extra,
@@ -318,6 +340,14 @@ export function parentArea() {
         h('p', {}, `Sticker: ${P.stickers.length} / ${stickers.length}`),
         weak.length > 0 &&
           h('p', {}, 'Từ bé hay nhầm: ', h('b', {}, weak.map((w) => `${w.word} (${w.vi})`).join(', '))),
+      ),
+      h(
+        'section',
+        { class: 'panel print' },
+        h('h3', {}, 'In thẻ từ'),
+        h('p', {}, 'In thẻ từ của một chủ đề ra giấy A4 (mỗi trang 9 thẻ có hình, từ tiếng Anh và nghĩa tiếng Việt), cắt theo đường nét đứt để bé chơi không cần máy. Trong hộp thoại in có thể chọn "Lưu thành PDF".'),
+        printTopic,
+        printBtn,
       ),
       h(
         'section',

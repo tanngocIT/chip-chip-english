@@ -1,7 +1,7 @@
 // Scoring, word mastery (simple Leitner boxes) and saved progress.
 
-export type Activity = 'learn' | 'listen' | 'match' | 'say' | 'find' | 'sing' | 'memory';
-export const ACTIVITY_IDS: Activity[] = ['learn', 'listen', 'match', 'say', 'find', 'sing', 'memory'];
+export type Activity = 'learn' | 'listen' | 'match' | 'say' | 'find' | 'sing' | 'memory' | 'odd';
+export const ACTIVITY_IDS: Activity[] = ['learn', 'listen', 'match', 'say', 'find', 'sing', 'memory', 'odd'];
 export type AgeLevel = 'small' | 'middle' | 'big'; // 2–3, 4–5, 6
 
 export interface WordStat {
@@ -29,7 +29,13 @@ export interface Settings {
   vietnamese: boolean; // also say the Vietnamese meaning on flashcards
   playback: boolean; // play the child's own voice back in Say it
   limitMinutes: number; // 0 = no limit
+  challenges: boolean; // an off-screen task from Chip after a Play session
 }
+
+/** One sticker on the child's own picture: [sticker id, x, y], x and y in percent of the board. */
+export type ScenePiece = [string, number, number];
+export const SCENE_MAX = 30;
+export const SCENE_BACKGROUNDS = 3;
 
 export interface Progress {
   words: Record<string, WordStat>;
@@ -45,6 +51,11 @@ export interface Progress {
   looksSeen: number;
   /** the last few weeks, one entry per day the child played */
   days: Record<string, DayStat>;
+  /** ids of the picture stories the child has finished */
+  stories: string[];
+  /** the child's own sticker picture */
+  scene: ScenePiece[];
+  sceneBg: number;
 }
 
 export const MAX_BOX = 4;
@@ -55,6 +66,7 @@ export const defaultSettings = (): Settings => ({
   vietnamese: false,
   playback: true,
   limitMinutes: 20,
+  challenges: true,
 });
 
 export const emptyProgress = (): Progress => ({
@@ -67,6 +79,9 @@ export const emptyProgress = (): Progress => ({
   look: null,
   looksSeen: 0,
   days: {},
+  stories: [],
+  scene: [],
+  sceneBg: 0,
 });
 
 /**
@@ -76,15 +91,16 @@ export const emptyProgress = (): Progress => ({
  * Find it (pictures in the scene / how many the child is asked to find),
  * `singCount` is how many words one Sing along has, `pairs` how many pairs Memory has.
  * Sentences is only for the older two groups: `sentenceRounds` is 0 for the youngest.
+ * `oddRounds` / `oddChoices` are for Odd one out (questions / pictures in each).
  */
 export function levelConfig(age: AgeLevel) {
   switch (age) {
     case 'small':
-      return { choices: 2, rounds: 8, sayRounds: 6, learnCount: 10, sceneItems: 6, finds: 4, singCount: 6, pairs: 3, sentenceRounds: 0, sentenceChoices: 2 };
+      return { choices: 2, rounds: 8, sayRounds: 6, learnCount: 10, sceneItems: 6, finds: 4, singCount: 6, pairs: 3, sentenceRounds: 0, sentenceChoices: 2, oddRounds: 6, oddChoices: 3 };
     case 'middle':
-      return { choices: 3, rounds: 10, sayRounds: 8, learnCount: 12, sceneItems: 9, finds: 6, singCount: 8, pairs: 4, sentenceRounds: 6, sentenceChoices: 2 };
+      return { choices: 3, rounds: 10, sayRounds: 8, learnCount: 12, sceneItems: 9, finds: 6, singCount: 8, pairs: 4, sentenceRounds: 6, sentenceChoices: 2, oddRounds: 8, oddChoices: 4 };
     case 'big':
-      return { choices: 4, rounds: 12, sayRounds: 10, learnCount: 15, sceneItems: 12, finds: 8, singCount: 8, pairs: 6, sentenceRounds: 8, sentenceChoices: 3 };
+      return { choices: 4, rounds: 12, sayRounds: 10, learnCount: 15, sceneItems: 12, finds: 8, singCount: 8, pairs: 6, sentenceRounds: 8, sentenceChoices: 3, oddRounds: 10, oddChoices: 4 };
   }
 }
 
@@ -374,6 +390,21 @@ export function learnedCount(p: Progress, ids: string[]): number {
   return ids.filter((id) => stat(p, id).box >= 3).length;
 }
 
+const cleanIds = (v: unknown): string[] => (Array.isArray(v) ? [...new Set(v.filter((x): x is string => typeof x === 'string' && x.length < 60))].slice(0, 200) : []);
+
+const percent = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? Math.round(Math.min(100, Math.max(0, v)) * 10) / 10 : 50);
+
+/** Keep only well-formed pieces of a saved sticker picture, at most SCENE_MAX of them. */
+export function cleanScene(v: unknown): ScenePiece[] {
+  if (!Array.isArray(v)) return [];
+  return v
+    .filter((x) => Array.isArray(x) && typeof x[0] === 'string' && x[0].length < 60)
+    .slice(-SCENE_MAX)
+    .map((x) => [x[0], percent(x[1]), percent(x[2])] as ScenePiece);
+}
+
+const cleanBg = (v: unknown) => (typeof v === 'number' && Number.isInteger(v) && v >= 0 && v < SCENE_BACKGROUNDS ? v : 0);
+
 const KEY = 'be-hoc-tieng-anh:v1';
 
 export function load(storage: Pick<Storage, 'getItem'> | undefined = safeStorage()): Progress {
@@ -389,6 +420,9 @@ export function load(storage: Pick<Storage, 'getItem'> | undefined = safeStorage
       minutesToday: parsed.minutesToday ?? e.minutesToday,
       streak: parsed.streak && typeof parsed.streak.last === 'string' ? parsed.streak : e.streak,
       days: parsed.days && typeof parsed.days === 'object' ? parsed.days : e.days,
+      stories: cleanIds(parsed.stories),
+      scene: cleanScene(parsed.scene),
+      sceneBg: cleanBg(parsed.sceneBg),
     };
   } catch {
     return emptyProgress();
@@ -477,6 +511,9 @@ export function exportCode(p: Progress): string {
     st: p.streak,
     look: p.look,
     ls: p.looksSeen,
+    str: p.stories,
+    sc: p.scene,
+    bg: p.sceneBg,
   };
   const json = JSON.stringify(data);
   // chunked so a long word list does not overflow the argument list of fromCharCode
@@ -514,10 +551,14 @@ export function importCode(code: string): Progress | null {
     if (typeof set.rate === 'number' && set.rate >= 0.5 && set.rate <= 1.2) p.settings.rate = set.rate;
     if (typeof set.vietnamese === 'boolean') p.settings.vietnamese = set.vietnamese;
     if (typeof set.playback === 'boolean') p.settings.playback = set.playback;
+    if (typeof set.challenges === 'boolean') p.settings.challenges = set.challenges;
     if (typeof set.limitMinutes === 'number' && set.limitMinutes >= 0 && set.limitMinutes <= 600) p.settings.limitMinutes = set.limitMinutes;
     if (data.st && typeof data.st.last === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(data.st.last)) p.streak = { count: count(data.st.count), last: data.st.last };
     if (LOOKS.some((l) => l.id === data.look)) p.look = data.look;
     p.looksSeen = Math.min(LOOKS.length, count(data.ls));
+    p.stories = cleanIds(data.str);
+    p.scene = cleanScene(data.sc);
+    p.sceneBg = cleanBg(data.bg);
     if (data.d && typeof data.d === 'object') {
       for (const [k, v] of Object.entries(data.d as Record<string, Partial<DayStat>>)) {
         if (!isDate(k) || !v || typeof v !== 'object') continue;

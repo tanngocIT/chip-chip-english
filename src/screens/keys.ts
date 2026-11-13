@@ -10,7 +10,7 @@
 import { nextInDirection, type Direction } from '../lib/focus';
 
 /** The things on a screen that the number keys pick, in the order they are numbered. */
-const NUMBERED = ['.option', '.spot', '.flip', '.activity', '.numpad button', '.topic'];
+const NUMBERED = ['.option', '.spot', '.flip', '.activity', '.numpad button', '.topic', '.tray-item'];
 
 const visible = (el: Element) => (el as HTMLElement).offsetParent !== null || getComputedStyle(el).position === 'fixed';
 

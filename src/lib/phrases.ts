@@ -1,5 +1,7 @@
 import { words, topics, stickers, describe, question } from './content';
 import { allSentences } from './sentences';
+import { allChallenges } from './challenges';
+import { storyPhrases } from './stories';
 
 /** Câu cố định app đọc (ngoài từ, câu mô tả và câu hỏi sinh từ words.json). */
 export const FIXED_PHRASES = [
@@ -24,6 +26,11 @@ export const FIXED_PHRASES = [
   'ribbon',
   'cap',
   'glasses',
+  'My words',
+  'My picture',
+  'Which one is different?',
+  'Now it is your turn!',
+  "Let's read a story!",
 ];
 
 /** Mọi câu tiếng Anh cần có file âm thanh. Dùng cho script sinh giọng. */
@@ -37,6 +44,8 @@ export function allPhrases(): string[] {
   }
   for (const s of stickers) set.add(s.name);
   for (const s of allSentences()) set.add(s.text);
+  for (const c of allChallenges()) set.add(c.text);
+  for (const line of storyPhrases()) set.add(line);
   return [...set];
 }
 

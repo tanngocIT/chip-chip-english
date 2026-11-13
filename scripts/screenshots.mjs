@@ -201,6 +201,27 @@ if (memStars >= 2) {
 }
 await click('.pager .go');
 
+// Odd one out: every round shows exactly one picture that is not from this topic.
+await click('.act-odd');
+await shot('29-odd');
+{
+  const data = JSON.parse(fs.readFileSync('src/data/words.json', 'utf8'));
+  const own = new Set(data.words.filter((w) => w.topic === data.topics[0].id).map((w) => w.word ?? w.id));
+  const labels = await page.$$eval('.odd .option', (o) => o.map((x) => x.getAttribute('aria-label')));
+  const strangers = labels.filter((l) => !own.has(l));
+  if (labels.length !== (age === 'small' ? 3 : 4) || strangers.length !== 1) errors.push(`odd one out shows ${JSON.stringify(labels)}`);
+  const fit = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
+  if (fit > 2) errors.push(`odd one out is taller than the screen by ${fit}px`);
+  // a wrong picture first: it only shakes, the round stays
+  await page.evaluate((own) => [...document.querySelectorAll('.odd .option')].find((o) => own.includes(o.getAttribute('aria-label'))).click(), [...own]);
+  await wait(300);
+  if ((await page.$$eval('.dots .done', (d) => d.length)) !== 0) errors.push('a wrong tap in odd one out moved on');
+  if (!(await autoplay('.result'))) errors.push('Odd one out did not reach the result screen');
+  await wait(1200);
+  await click('.pager .go');
+  if (!(await page.$('.topic-screen'))) errors.push('Odd one out Done did not go back to the topic');
+}
+
 // Sing along: plays by itself to the result screen.
 await click('.act-sing');
 await wait(1200);
@@ -253,7 +274,69 @@ else {
   const said = await page.evaluate(() => window.__said);
   if (said[0] !== owned[0]) errors.push(`sticker said ${JSON.stringify(said)} instead of ${owned[0]}`);
 }
+
+// My picture: tap a sticker in the tray to put it down, drag it around, drag it off to remove it.
+if (!(await page.$('.scene-btn'))) errors.push('no picture button in the sticker book although stickers are owned');
+else {
+  await click('.scene-btn');
+  if (!(await page.$('.scene-screen .board'))) errors.push('the sticker picture did not open');
+  const trayCount = await page.$$eval('.tray-item', (t) => t.length);
+  if (trayCount !== owned.length) errors.push(`tray has ${trayCount} stickers, the child owns ${owned.length}`);
+  await click('.tray-item');
+  const saved = () => page.evaluate(() => JSON.stringify(window.__app.P.scene));
+  if ((await page.$$eval('.placed', (p) => p.length)) !== 1 || JSON.parse(await saved()).length !== 1) errors.push('a tap in the tray did not put a sticker on the picture');
+  const center = (sel) => page.$eval(sel, (el) => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; });
+  const dragTo = async (from, to) => {
+    await page.mouse.move(from[0], from[1]);
+    await page.mouse.down();
+    await page.mouse.move((from[0] + to[0]) / 2, (from[1] + to[1]) / 2, { steps: 4 });
+    await page.mouse.move(to[0], to[1], { steps: 4 });
+    await page.mouse.up();
+    await wait(250);
+  };
+  const board = await page.$eval('.board', (b) => { const r = b.getBoundingClientRect(); return { x: r.left, y: r.top, w: r.width, h: r.height }; });
+  // move it to the upper left quarter
+  await dragTo(await center('.placed'), [board.x + board.w * 0.25, board.y + board.h * 0.25]);
+  const moved = JSON.parse(await saved())[0];
+  if (!moved || Math.abs(moved[1] - 25) > 3 || Math.abs(moved[2] - 25) > 3) errors.push(`dragging a sticker did not move it: ${JSON.stringify(moved)}`);
+  // a second one dragged straight out of the tray lands where it is dropped
+  await dragTo(await center('.tray-item'), [board.x + board.w * 0.7, board.y + board.h * 0.6]);
+  const two = JSON.parse(await saved());
+  if (two.length !== 2 || Math.abs(two[1][1] - 70) > 3 || Math.abs(two[1][2] - 60) > 3) errors.push(`dragging out of the tray did not place a sticker: ${JSON.stringify(two)}`);
+  if (await page.$('.ghost')) errors.push('the dragged copy stayed on screen');
+  const bgBefore = await page.$eval('.board', (b) => b.className);
+  await click('.bar .round.soft');
+  if ((await page.$eval('.board', (b) => b.className)) === bgBefore) errors.push('the background button did not change the picture');
+  const sceneFit = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
+  if (sceneFit > 2) errors.push(`the sticker picture is taller than the screen by ${sceneFit}px`);
+  await shot('30-picture');
+  // dropped below the picture, a sticker comes off
+  await dragTo(await center('.placed'), [board.x + board.w / 2, board.y + board.h + 30]);
+  if (JSON.parse(await saved()).length !== 1) errors.push('dragging a sticker off the picture did not remove it');
+  // it is still there after leaving and coming back
+  await click('.bar .round');
+  await click('.scene-btn');
+  if ((await page.$$eval('.placed', (p) => p.length)) !== 1) errors.push('the sticker picture was not kept');
+  await click('.bar .round');
+}
 await click('.bar .round');
+
+// My words: the words met so far, each says its name.
+{
+  const shown = await page.$eval('.words-btn b', (b) => Number(b.textContent));
+  const met = await page.evaluate(() => Object.values(window.__app.P.words).filter((s) => s.seen > 0).length);
+  if (!shown || shown !== met) errors.push(`word book button shows ${shown}, the child has met ${met}`);
+  await click('.words-btn');
+  await shot('31-words');
+  const cells = await page.$$eval('.wb-word:not(.todo)', (c) => c.map((x) => x.getAttribute('aria-label')));
+  if (cells.length !== met) errors.push(`word book lists ${cells.length} words, expected ${met}`);
+  await page.evaluate(() => (window.__said = []));
+  await click('.wb-word:not(.todo)');
+  const saidWord = await page.evaluate(() => window.__said);
+  if (saidWord[0] !== cells[0]) errors.push(`word book said ${JSON.stringify(saidWord)} instead of ${cells[0]}`);
+  await click('.bar .round');
+  if (!(await page.$('.home'))) errors.push('word book Home did not go home');
+}
 
 // Grown-ups: hold the lock button.
 await page.$eval('.grownup', (el) => el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })));
@@ -326,6 +409,35 @@ else {
 }
 await page.screenshot({ path: `shots/${tag}-15-parents-full.png`, fullPage: true });
 
+// Printed flashcards: one card per word of the chosen topic, nine to a page.
+{
+  await page.evaluate(() => {
+    window.__printed = 0;
+    window.print = () => window.__printed++;
+  });
+  const topicSize = await page.evaluate(() => {
+    const sel = document.querySelector('.panel.print select');
+    sel.value = sel.options[2].value;
+    document.querySelector('.panel.print .primary').click();
+    return Number(sel.options[2].textContent.match(/\((\d+)/)[1]);
+  });
+  await page.waitForFunction(() => window.__printed === 1, { timeout: 8000 }).catch(() => errors.push('the print dialog was not opened'));
+  const cards = await page.$$eval('.print-sheet .pcard', (c) => c.map((x) => [!!x.querySelector('.pic'), x.querySelector(':scope > b')?.textContent, x.querySelector(':scope > span')?.textContent]));
+  if (cards.length !== topicSize || cards.some((c) => !c[0] || !c[1] || !c[2])) errors.push(`print sheet has ${cards.length} cards for ${topicSize} words, or a card is incomplete`);
+  if (await page.$eval('.print-sheet', (s) => getComputedStyle(s).display !== 'none')) errors.push('the print sheet shows on screen');
+  await page.emulateMediaType('print');
+  const onPaper = await page.evaluate(() => ({ app: getComputedStyle(document.getElementById('app')).display, sheet: getComputedStyle(document.querySelector('.print-sheet')).display }));
+  if (onPaper.app !== 'none' || onPaper.sheet === 'none') errors.push(`on paper: app is ${onPaper.app}, sheet is ${onPaper.sheet}`);
+  if (device === 'tablet') {
+    const pdf = Buffer.from(await page.pdf({ format: 'A4', path: `shots/${tag}-32-print.pdf` })).toString('latin1');
+    const pages = (pdf.match(/\/Type\s*\/Page[^s]/g) ?? []).length;
+    if (pages !== Math.ceil(topicSize / 9)) errors.push(`printed flashcards take ${pages} pages, expected ${Math.ceil(topicSize / 9)}`);
+  }
+  await page.emulateMediaType('screen');
+  await page.evaluate(() => window.dispatchEvent(new Event('afterprint')));
+  if (await page.$('.print-sheet')) errors.push('the print sheet stayed after printing');
+}
+
 // ---- keyboard: the whole app can be driven without a pointer ----
 await click('.bar .round'); // parents -> home
 {
@@ -382,6 +494,8 @@ await click('.bar .round'); // parents -> home
 
 // ---- today session, review and the daily limit ----
 
+let challengeSeen = false;
+
 /** Plays whatever game is on screen until `until` shows up. */
 async function autoplay(until, maxMs = 240000) {
   const t0 = Date.now();
@@ -404,7 +518,24 @@ async function autoplay(until, maxMs = 240000) {
       await wait(500);
     } else if (await page.$('.sing')) {
       await wait(1000);
-    } else if (await page.$('.lesson .flash')) {
+    } else if (await page.$('.challenge')) {
+      // the off-screen challenge that ends a session: look at it once, then say it is done
+      if (!challengeSeen) {
+        challengeSeen = true;
+        await wait(500);
+        const m = await page.evaluate(() => ({
+          over: document.documentElement.scrollHeight - window.innerHeight,
+          text: document.querySelector('.challenge .target-word')?.textContent ?? '',
+          vi: document.querySelector('.mission-vi')?.textContent ?? '',
+          pic: !!document.querySelector('.mission .pic img'),
+          cut: [...document.querySelectorAll('.challenge .target-word, .challenge .pager .round, .mission-vi')].some((e) => { const r = e.getBoundingClientRect(); return r.right > innerWidth + 1 || r.bottom > innerHeight + 1 || r.left < -1; }),
+        }));
+        await page.screenshot({ path: `shots/${tag}-33-challenge.png` });
+        if (m.over > 2 || !m.text || !m.vi || !m.pic || m.cut) errors.push(`challenge screen: ${JSON.stringify(m)}`);
+      }
+      await click('.pager .go');
+      await wait(900);
+    } else if (await page.$('.lesson .flash, .story')) {
       await click('.pager .go');
     } else {
       await wait(300);
@@ -425,7 +556,7 @@ if (!(await page.$('.lesson .flash'))) errors.push('today session did not start 
 const seenScreens = new Set();
 const watcher = setInterval(async () => {
   const c = await page.$eval('main', (m) => m.className).catch(() => '');
-  for (const k of ['quiz', 'find', 'sing', 'result']) if (c.includes(k)) seenScreens.add(k);
+  for (const k of ['quiz', 'find', 'sing', 'result', 'challenge']) if (c.includes(k)) seenScreens.add(k);
   if (c.includes('result') && !seenScreens.has('shot')) {
     seenScreens.add('shot');
     await page.screenshot({ path: `shots/${tag}-21-today-result.png` }).catch(() => {});
@@ -435,7 +566,54 @@ const watcher = setInterval(async () => {
 }, 150);
 if (!(await autoplay('.home'))) errors.push('today session did not come back home');
 clearInterval(watcher);
-for (const k of ['quiz', 'find', 'sing', 'result']) if (!seenScreens.has(k)) errors.push(`today session skipped: ${k}`);
+for (const k of ['quiz', 'find', 'sing', 'result', 'challenge']) if (!seenScreens.has(k)) errors.push(`today session skipped: ${k}`);
+
+// With the challenge switched off by the grown-ups, the session ends on the home screen.
+await page.evaluate(() => (window.__app.P.settings.challenges = false));
+await click('.quick.today');
+{
+  let sawChallenge = false;
+  const w2 = setInterval(async () => {
+    if (await page.$('.challenge').catch(() => null)) sawChallenge = true;
+  }, 150);
+  if (!(await autoplay('.home'))) errors.push('today session without a challenge did not come back home');
+  clearInterval(w2);
+  if (sawChallenge) errors.push('a challenge was given although it is switched off');
+}
+await page.evaluate(() => (window.__app.P.settings.challenges = true));
+
+// Stories: only from the middle age group up. Read one to the end.
+const hasStories = !!(await page.$('.stories-btn'));
+if (hasStories !== (age !== 'small')) errors.push(`stories button shown=${hasStories} for age ${age}`);
+if (hasStories) {
+  await click('.stories-btn');
+  await page.waitForSelector('.stories', { timeout: 4000 }).catch(() => errors.push('the story list did not open'));
+  await shot('34-stories');
+  if ((await page.$$eval('.story-tile', (t) => t.length)) < 6) errors.push('fewer than six stories');
+  await click('.story-tile');
+  await page.waitForSelector('.story', { timeout: 4000 }).catch(() => errors.push('the story did not open'));
+  await shot('35-story-page');
+  const pageFit = await page.evaluate(() => ({
+    over: document.documentElement.scrollHeight - window.innerHeight,
+    pics: document.querySelectorAll('.panel-pics .pic img').length,
+    text: document.querySelector('.story .target-word')?.textContent ?? '',
+    cut: [...document.querySelectorAll('.story .target-word, .pager .round')].some((e) => { const r = e.getBoundingClientRect(); return r.right > innerWidth + 1 || r.bottom > innerHeight + 1 || r.left < -1; }),
+  }));
+  if (pageFit.over > 2 || !pageFit.pics || !pageFit.text || pageFit.cut) errors.push(`story page: ${JSON.stringify(pageFit)}`);
+  for (let i = 0; i < 4; i++) await click('.pager .go');
+  if (!(await page.$('.story-q'))) errors.push('no question after the four pages of a story');
+  await shot('36-story-question');
+  const qFit = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
+  if (qFit > 2) errors.push(`story question is taller than the screen by ${qFit}px`);
+  if (!(await autoplay('.result'))) errors.push('the story did not reach the result screen');
+  const read = await page.evaluate(() => window.__app.P.stories.length);
+  if (read !== 1) errors.push(`finished stories recorded: ${read}`);
+  await wait(800);
+  await click('.pager .go');
+  if (!(await page.$('.stories'))) errors.push('story Done did not go back to the list');
+  if (!(await page.$('.story-tile .mini-stars'))) errors.push('the finished story has no star in the list');
+  await click('.bar .round');
+}
 
 // Sentences: only from the middle age group up.
 const hasSentences = !!(await page.$('.sentences-btn'));

@@ -1911,6 +1911,7 @@ td:not(:first-child) {
 .keys .flip::after,
 .keys .activity::after,
 .keys .numpad button::after,
+.keys .tray-item:nth-child(-n + 9)::after,
 .keys .topic:nth-child(-n + 9)::after {
   content: counter(key);
   position: absolute;
@@ -2059,4 +2060,357 @@ td:not(:first-child) {
 
 .pic.letter.shadow img {
   display: none;
+}
+
+/* ---------- home: sticker book and word book side by side, four quick tiles ---------- */
+.books {
+  display: flex;
+  gap: 10px;
+}
+
+.quick.small {
+  flex-basis: 100px;
+}
+
+@media (max-width: 480px) {
+  .quick.small {
+    padding-inline: 4px;
+  }
+  .quick.small .label {
+    font-size: 17px;
+  }
+}
+
+/* ---------- odd one out, stories, challenge: a whole sentence is written ---------- */
+.odd .target-word,
+.story .target-word,
+.story-q .target-word,
+.challenge .target-word {
+  font-size: clamp(22px, min(5.2vw, 6dvh), 46px);
+  border-radius: 30px;
+  padding: 6px clamp(18px, 4vw, 36px) 10px;
+  line-height: 1.2;
+}
+
+/* stories: the pictures of one page, side by side on a card */
+.stories {
+  max-width: 980px;
+}
+
+.stories .topics {
+  grid-template-columns: repeat(auto-fill, minmax(min(200px, 44vw), 1fr));
+}
+
+.story-tile .label {
+  text-align: center;
+  line-height: 1.15;
+}
+
+.panel-pics {
+  flex-direction: row;
+  gap: clamp(8px, 3vw, 28px);
+  padding: clamp(10px, 3dvh, 28px) clamp(16px, 4vw, 40px);
+}
+
+.panel-pics .pic {
+  --s: clamp(84px, min(34vw, 30dvh), 240px);
+}
+
+.panel-pics.p1 .pic {
+  --s: clamp(96px, min(46vw, 34dvh), 280px);
+}
+
+.story .prompt {
+  padding-top: 0;
+}
+
+/* challenge: Chip beside the thing to find or do */
+.mission {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 4vw, 40px);
+}
+
+.mission .chip {
+  flex: none;
+  width: clamp(72px, min(24vw, 20dvh), 180px);
+}
+
+.mission .pic.lg {
+  --s: clamp(96px, min(40vw, 28dvh), 260px);
+}
+
+.challenge .prompt {
+  padding-top: 0;
+}
+
+.mission-vi {
+  margin: 0 auto;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: clamp(14px, 2.6dvh, 18px);
+  line-height: 1.3;
+}
+
+/* ---------- my words ---------- */
+.wordbook {
+  max-width: 980px;
+}
+
+.wb-topic {
+  background: var(--paper);
+  border-radius: var(--r-tile);
+  padding: 12px 14px 14px;
+  box-shadow: 0 5px 0 rgb(43 58 85 / 0.07);
+}
+
+.wb-topic.empty {
+  padding-block: 8px;
+  opacity: 0.65;
+}
+
+.wb-head {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.wb-count {
+  margin-left: auto;
+  font-size: 16px;
+  font-weight: 700;
+  background: var(--tint);
+  border-radius: 999px;
+  padding: 2px 12px;
+}
+
+.wb-grid {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(92px, 21vw), 1fr));
+  gap: 8px;
+}
+
+.wb-word {
+  position: relative;
+  aspect-ratio: 1 / 1.12;
+  border-radius: 18px;
+  background: var(--tint);
+  background: color-mix(in srgb, var(--tint) 45%, white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8% 4% 4%;
+  min-width: 0;
+}
+
+.wb-word .pic {
+  --s: 68%;
+  width: 68%;
+}
+
+.wb-word .name {
+  max-width: 100%;
+  font-size: clamp(12px, 2.4vw, 16px);
+  font-weight: 700;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wb-word.todo {
+  background: rgb(43 58 85 / 0.04);
+  color: rgb(43 58 85 / 0.2);
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.wb-star {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  color: var(--sun-deep);
+}
+
+.wb-star svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- my picture: stickers on a background ---------- */
+.scene-screen {
+  height: 100dvh;
+  min-height: 0;
+  max-width: none;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.board {
+  --st: clamp(56px, min(15vw, 15dvh), 120px);
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  border-radius: var(--r-card);
+  box-shadow: inset 0 0 0 6px #fff, 0 6px 0 rgb(43 58 85 / 0.1);
+  touch-action: none;
+}
+
+/* meadow, beach, night */
+.board.bg0 {
+  background:
+    radial-gradient(44px circle at 84% 20%, #ffd84d 98%, transparent),
+    radial-gradient(130% 70% at 50% 128%, #8fd19e 60%, transparent 61%),
+    #c6e9ff;
+}
+
+.board.bg1 {
+  background:
+    radial-gradient(44px circle at 16% 20%, #ffd84d 98%, transparent),
+    linear-gradient(#c6e9ff 0 46%, #6ec3e8 46% 68%, #f6e2a8 68%);
+}
+
+.board.bg2 {
+  background:
+    radial-gradient(36px circle at 80% 22%, #fff6c9 98%, transparent),
+    radial-gradient(130% 70% at 50% 130%, #3f5b56 60%, transparent 61%),
+    #27345f;
+}
+
+.placed {
+  position: absolute;
+  width: var(--st);
+  height: var(--st);
+  translate: -50% -50%;
+  touch-action: none;
+}
+
+.placed img,
+.tray-item img,
+.ghost {
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff)
+    drop-shadow(0 5px 0 rgb(43 58 85 / 0.14));
+}
+
+.placed img,
+.tray-item img {
+  width: 100%;
+  height: 100%;
+}
+
+.placed.dragging {
+  z-index: 5;
+  scale: 1.1;
+}
+
+.placed.leaving {
+  opacity: 0.4;
+}
+
+.tray {
+  flex: none;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 4px 8px;
+  scrollbar-width: none;
+}
+
+.tray-item {
+  flex: none;
+  width: clamp(58px, min(15vw, 13dvh), 92px);
+  aspect-ratio: 1;
+  background: var(--paper);
+  border-radius: 18px;
+  padding: 9px;
+  box-shadow: 0 4px 0 rgb(43 58 85 / 0.1);
+  touch-action: pan-x;
+}
+
+.ghost {
+  position: fixed;
+  z-index: 20;
+  width: clamp(56px, min(15vw, 15dvh), 120px);
+  height: clamp(56px, min(15vw, 15dvh), 120px);
+  translate: -50% -50%;
+}
+
+.keys .tray {
+  counter-reset: key;
+}
+
+.keys .tray-item {
+  position: relative;
+  counter-increment: key;
+}
+
+/* ---------- printed flashcards (grown-ups): only on paper ---------- */
+.print-sheet {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 10mm;
+  }
+  html,
+  body {
+    height: auto;
+    background: #fff !important;
+  }
+  #app,
+  .chip-peek,
+  .dot {
+    display: none !important;
+  }
+  .print-sheet {
+    display: block;
+  }
+  .print-page {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 84mm;
+    break-after: page;
+  }
+  .print-page:last-child {
+    break-after: auto;
+  }
+  .pcard {
+    border: 1px dashed #9aa3b5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2mm;
+    padding: 4mm;
+    break-inside: avoid;
+  }
+  .pcard .pic {
+    --s: 46mm;
+    width: 46mm;
+  }
+  .pcard .pic img {
+    filter: none;
+  }
+  .pcard > b {
+    font-size: 22pt;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .pcard > span {
+    font-size: 11pt;
+    color: #5d6b85;
+  }
 }

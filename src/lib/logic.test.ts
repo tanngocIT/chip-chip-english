@@ -41,6 +41,10 @@ import { viNumber } from './vi';
 import { isIos, isStandalone } from './install';
 import { nextInDirection } from './focus';
 import { allSentences, sentenceOptions, pickSentences, SENTENCE_NOUNS, type Sentence } from './sentences';
+import { pickOddRounds, ODD_FROM } from './odd';
+import { allChallenges, pickChallenge } from './challenges';
+import { stories, questionOptions, storyPhrases } from './stories';
+import { cleanScene, SCENE_MAX, ACTIVITY_IDS } from './progress';
 
 const seeded = (seed = 1) => () => {
   seed = (seed * 16807) % 2147483647;
@@ -812,5 +816,181 @@ group('ABC', () => {
     expect(passes('A', ['a'])).toBe(true);
     expect(passes('K', ['banana'])).toBe(false);
     expect(passes('B', ['dog'])).toBe(false);
+  });
+});
+
+group('odd one out', () => {
+  it('every topic has topics to take the odd picture from, never itself', () => {
+    for (const t of topics) {
+      expect(ODD_FROM[t.id]?.length, t.id).toBeGreaterThan(0);
+      expect(ODD_FROM[t.id]).not.toContain(t.id);
+      for (const other of ODD_FROM[t.id]) expect(topics.some((x) => x.id === other), other).toBe(true);
+    }
+    expect(ACTIVITY_IDS).toContain('odd');
+  });
+
+  it('each round has one picture from another topic and the rest from this one', () => {
+    for (const t of topics) {
+      for (const choices of [3, 4]) {
+        const rounds = pickOddRounds(t.id, 10, choices, seeded(7));
+        expect(rounds.length, t.id).toBe(10);
+        for (const r of rounds) {
+          expect(r.options.length).toBe(choices);
+          expect(new Set(r.options.map((w) => w.id)).size).toBe(choices);
+          const outsiders = r.options.filter((w) => w.topic !== t.id);
+          expect(outsiders).toEqual([r.odd]);
+          expect(ODD_FROM[t.id]).toContain(r.odd.topic);
+        }
+      }
+    }
+  });
+
+  it('does not show the same odd picture twice in a row and leaves out in-between pictures', () => {
+    const rounds = pickOddRounds('animals', 40, 4, seeded(3));
+    rounds.forEach((r, i) => {
+      if (i) expect(r.odd.id).not.toBe(rounds[i - 1].odd.id);
+      expect(r.options.map((w) => w.id)).not.toContain('teddy bear');
+    });
+    expect(pickOddRounds('no-such-topic', 5, 3)).toEqual([]);
+  });
+
+  it('has its own number of rounds and pictures for each age', () => {
+    expect(levelConfig('small').oddChoices).toBe(3);
+    expect(levelConfig('big').oddChoices).toBe(4);
+    expect(levelConfig('small').oddRounds).toBeLessThan(levelConfig('big').oddRounds);
+  });
+});
+
+group('off-screen challenges', () => {
+  it('every topic has at least two, each with a line for the grown-up', () => {
+    for (const t of topics) expect(allChallenges().filter((c) => c.topic === t.id).length, t.id).toBeGreaterThanOrEqual(2);
+    for (const c of allChallenges()) {
+      expect(c.text).toMatch(/^[A-Z].*[!?]$/);
+      expect(c.vi.length, c.text).toBeGreaterThan(5);
+      if (c.word) expect(c.word.topic).toBe(c.topic);
+    }
+    expect(new Set(allChallenges().map((c) => c.text)).size).toBe(allChallenges().length);
+  });
+
+  it('builds the sentence from the word', () => {
+    const texts = allChallenges().map((c) => c.text);
+    for (const t of [
+      'Find something red!',
+      'Find something orange!',
+      'Show me one finger!',
+      'Show me two fingers!',
+      'Clap three times!',
+      'Touch your nose!',
+      'What does the cow say?',
+      'Can you jump like a rabbit?',
+      'Can you walk like an elephant?',
+      'Can you dance?',
+      'Show me a happy face!',
+      'Show me an angry face!',
+      'Find a circle!',
+      'Find a star!',
+      'Find a book!',
+    ]) {
+      expect(texts, t).toContain(t);
+    }
+  });
+
+  it('prefers a word the child has met and does not repeat the last one', () => {
+    const p = emptyProgress();
+    recordSeen(p, 'blue');
+    for (let seed = 1; seed < 20; seed++) expect(pickChallenge('colors', p, '', seeded(seed))!.text).toBe('Find something blue!');
+    // the only met word was just given: another one comes instead of the same again
+    expect(pickChallenge('colors', p, 'Find something blue!', seeded(2))!.text).not.toBe('Find something blue!');
+    // nothing met yet: any challenge of the topic
+    expect(pickChallenge('body', emptyProgress(), '', seeded(4))!.topic).toBe('body');
+    expect(pickChallenge('no-such-topic', p)).toBe(null);
+  });
+});
+
+group('stories', () => {
+  it('each has four pages with pictures and two questions with one right picture', () => {
+    expect(stories.length).toBeGreaterThanOrEqual(6);
+    expect(new Set(stories.map((s) => s.id)).size).toBe(stories.length);
+    for (const s of stories) {
+      expect(s.pages.length, s.id).toBe(4);
+      expect(s.questions.length, s.id).toBe(2);
+      for (const pg of s.pages) {
+        expect(pg.pics.length).toBeGreaterThan(0);
+        expect(pg.pics.length).toBeLessThanOrEqual(2);
+      }
+      const shown = new Set(s.pages.flatMap((pg) => pg.pics.map((w) => w.id)));
+      for (const q of s.questions) {
+        // the answer was on a page; a wrong picture never was, unless the question is about one moment
+        expect(shown.has(q.answer.id), `${s.id}: ${q.text}`).toBe(true);
+        expect(q.wrong.length).toBe(2);
+        expect(q.wrong.map((w) => w.id)).not.toContain(q.answer.id);
+      }
+    }
+  });
+
+  it('offers the answer among the pictures, for two or three choices', () => {
+    for (const s of stories) {
+      for (const q of s.questions) {
+        for (const n of [2, 3]) {
+          const opts = questionOptions(q, n, seeded(5));
+          expect(opts.length).toBe(n);
+          expect(opts).toContain(q.answer);
+          expect(new Set(opts.map((w) => w.id)).size).toBe(n);
+        }
+      }
+    }
+  });
+
+  it('lists a title, the pages and the questions as lines to voice', () => {
+    expect(storyPhrases().length).toBe(stories.length * 7);
+    expect(storyPhrases()).toContain('The hungry cat.');
+    // a spoken title has three words or more, so its clip is not cut like a single word
+    for (const s of stories) expect(s.title.split(' ').length, s.title).toBeGreaterThanOrEqual(3);
+  });
+});
+
+group('stories and the sticker picture in the saved progress', () => {
+  it('keeps them through a backup code', () => {
+    const p = emptyProgress();
+    p.stories = ['hungry-cat', 'bear-bed'];
+    p.scene = [
+      ['unicorn', 12.5, 80],
+      ['rocket', 50, 50],
+    ];
+    p.sceneBg = 2;
+    p.settings.challenges = false;
+    const back = importCode(exportCode(p))!;
+    expect(back.stories).toEqual(['hungry-cat', 'bear-bed']);
+    expect(back.scene).toEqual([
+      ['unicorn', 12.5, 80],
+      ['rocket', 50, 50],
+    ]);
+    expect(back.sceneBg).toBe(2);
+    expect(back.settings.challenges).toBe(false);
+  });
+
+  it('drops or clamps odd values', () => {
+    expect(cleanScene('nope')).toEqual([]);
+    expect(cleanScene([['a', -5, 250], ['b'], [3, 1, 1], 'x', ['c', 'q', null]])).toEqual([
+      ['a', 0, 100],
+      ['b', 50, 50],
+      ['c', 50, 50],
+    ]);
+    expect(cleanScene(Array.from({ length: 80 }, (_, i) => [`s${i}`, 1, 1])).length).toBe(SCENE_MAX);
+    const junk = 'CHIP1:' + btoa(JSON.stringify({ w: [], str: [1, 'ok', 'ok', {}], sc: 'x', bg: 99, set: { challenges: 'yes' } }));
+    const p = importCode(junk)!;
+    expect(p.stories).toEqual(['ok']);
+    expect(p.scene).toEqual([]);
+    expect(p.sceneBg).toBe(0);
+    expect(p.settings.challenges).toBe(true);
+  });
+
+  it('loads progress saved before these existed', () => {
+    const old = { getItem: () => JSON.stringify({ stickers: ['unicorn'], settings: { age: 'big' } }) };
+    const p = load(old);
+    expect(p.stories).toEqual([]);
+    expect(p.scene).toEqual([]);
+    expect(p.sceneBg).toBe(0);
+    expect(p.settings.challenges).toBe(true);
   });
 });

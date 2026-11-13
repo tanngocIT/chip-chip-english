@@ -51,6 +51,9 @@ src/lib/vi.ts           viết số bằng chữ tiếng Việt (cho cổng ph�
 src/lib/update.ts       tự cập nhật: phát hiện bản mới, chuyển sang lúc an toàn (initUpdate, applyUpdate, BUILD_TIME)
 src/lib/focus.ts        nextInDirection: nút gần nhất theo hướng phím mũi tên
 src/lib/sentences.ts    bộ 96 câu ngắn (allSentences), chọn câu cho một ván (pickSentences), chọn hình đáp án (sentenceOptions)
+src/lib/odd.ts          Odd one out: ODD_FROM (chủ đề nào lấy hình lạc loài từ chủ đề nào), pickOddRounds
+src/lib/challenges.ts   105 thử thách ngoài màn hình (allChallenges), pickChallenge
+src/lib/stories.ts      6 truyện tranh (stories), questionOptions, storyPhrases
 src/ui.ts               icon SVG, picture() (hình sticker; số = chữ số + N ngôi sao), stars, dots
 src/screens/core.ts     trạng thái chung (app, P, screenId, session, inParentArea), show(), persist(), startActivity,
                         buổi học Play (startToday, nextStep, leave), announce, lessonBar
@@ -63,6 +66,12 @@ src/screens/sing.ts     Sing along
 src/screens/say.ts      Say it
 src/screens/memory.ts   Memory (lật thẻ ghép đôi)
 src/screens/sentences.ts  Sentences (câu ngắn, mở từ màn hình chính)
+src/screens/odd.ts      Odd one out (cái nào khác loại)
+src/screens/stories.ts  Stories: storyList, readStory (4 trang rồi 2 câu hỏi)
+src/screens/challenge.ts  thử thách ngoài màn hình ở cuối buổi Play
+src/screens/wordbook.ts Sổ từ của bé (wordBook, metCount)
+src/screens/scene.ts    Tranh của bé: dán sticker lên nền (stickerScene)
+src/screens/print.ts    in thẻ từ của một chủ đề (printCards), gọi từ phần bố mẹ
 src/screens/result.ts   result (theo chủ đề hoặc buổi học) và resultScreen
 src/screens/parents.ts  parentGate, parentArea
 src/screens/keys.ts     điều khiển bằng bàn phím (initKeys), một trình nghe keydown chung cho mọi màn
@@ -131,9 +140,10 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
   6. Lô giọng đầu tiên (trước khi có bước nghe lại) có file hỏng thật: chủ repo báo "rock" và "fog" đọc sai, Whisper nghe "rock" (dài 1,46 giây) thành một câu vô nghĩa. Vì vậy đã rà toàn bộ từ đơn bằng `scripts/fix-voice.py` (chạy với `words` hoặc `sentences`): Whisper nghe từng file, file lệch thì sinh lại tối đa 15 bản ("Say, X!", "Say, X.", "X.", "X!", "Say: X.") và giữ bản nghe đúng. File dài bất thường (trên khoảng 1,3 giây cho một từ) gần như chắc chắn hỏng.
   7. Kết quả lần rà toàn bộ (11/2026): từ đơn 361 file, 48 hỏng đã sinh lại, 12 còn lệch do đồng âm (ant/and, bee/b, eye/I, whale/wail, peas/peace, van/than, deer/tear, corn/con, croissant, trolleybus). Câu 770 file, 38 hỏng đã sinh lại (ví dụ "It's salt." chỉ còn "salt"), 16 còn lệch do đồng âm (pear/pair, pig/peg, panda/pander, "They're"/"their", "Find two"/"fine too").
   8. Lần rà này cũng lộ ra lỗi ngữ pháp: từ chỉ nghề dùng chung kiểu câu với "mom" nên thành "Where is scientist?". Đã tách `kind: "job"`. Khi Whisper nghe một câu thành thứ khác hẳn, hãy đọc lại chính câu đó trước khi cho là file hỏng.
+  10. Lô 150 câu của thử thách và truyện (13/11/2026): Whisper nghe đúng 141, 8 file lệch đã sinh lại ("Touch your leg!" thành "touch a lad", "What does the monkey eat?" thành "…need?"), còn "The frog and the rain." bị nghe thành "in the rain" (kiểu lệch "and" → "in" đã biết). Cách rà chỉ các file mới: lập `voice-model/new-texts.json` (key → câu) cho các file mp3 git chưa theo dõi rồi chạy `fix-voice.py` với cả `sentences` lẫn `words`.
   9. Sau khi sinh, **dùng Whisper nghe lại từng file mới** và so với câu gốc. Câu 1–2 từ đi qua bước cắt chữ "Say" và có thể bị cắt lố: "Let's practice!" từng chỉ còn "practice". Gặp vậy thì đổi sang câu từ 3 từ trở lên (được đọc nguyên câu) hoặc đổi câu khác.
 
-**Trò chơi** (mỗi chủ đề có 7 trò)
+**Trò chơi** (mỗi chủ đề có 8 trò)
 1. Look and listen (thẻ từ)
 2. Listen and tap: hiện **chữ to của từ đang hỏi** để bé nhận mặt chữ; chạm vào chữ thì đọc chậm.
 3. Find the shadow: chữ của từ chỉ hiện **sau khi bé ghép đúng**. Hiện trước thì bé biết đọc sẽ đọc chữ thay vì nhìn hình dáng.
@@ -141,22 +151,28 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 5. Say it: phát lại giọng bé rồi đọc giọng mẫu, có nút bong bóng để nghe lại.
 6. Sing along: đọc theo nhịp trên giai điệu "Twinkle, twinkle" (dân gian, phạm vi công cộng) phát bằng Web Audio. Đây là đọc theo nhạc, không phải bài hát có giọng hát, vì chưa có cách miễn phí nào tạo giọng hát mà AI tự kiểm tra được chất lượng. Mỗi từ 4 ô nhịp (2 giây một ô): từ, từ, câu mô tả, nghỉ. Lời đọc quyết định nhịp: câu nào đọc lâu hơn một ô thì chờ đến vạch ô kế tiếp, nên tốc độ đọc chậm không bị cắt lời. Luôn được 3 sao, không có sticker (để bé không cày sticker bằng trò không cần làm gì).
 7. Memory (lật thẻ ghép đôi): 3/4/6 cặp theo tuổi, chọn từ bằng `pickScene` (ưu tiên từ bé chưa thuộc). Mỗi thẻ lật lên đọc tên; hai thẻ khác nhau thì đọc tên rồi úp lại, không có tiếng "sai". Sao theo số lượt lật (`memoryStars`): tối đa 2 lượt mỗi cặp được 3 sao, tối đa 3 lượt được 2 sao. Trò này phần lớn là may rủi nên chỉ ghi `recordSeen`, không đổi hộp Leitner.
+8. Odd one out (cái nào khác loại): 3 hình (2–3 tuổi) hoặc 4 hình, trong đó đúng một hình lấy từ chủ đề khác; câu hỏi luôn là "Which one is different?" (chỉ đọc ở câu đầu, sau đó bé tự nhìn; nút loa để nghe lại). Mục đích là bé phải hiểu nghĩa của từ. Chọn đúng thì đọc tên hình lạc loài.
+   - `ODD_FROM` trong `lib/odd.ts` ghi rõ mỗi chủ đề được lấy hình lạc loài từ chủ đề nào. Chỉ ghép các cặp khác nhau rõ ràng: Đồ ăn không ghép với Rau củ quả (đều ăn được), Thiên nhiên không ghép với Con vật (có ong, bướm), Hành động không ghép với Xe cộ ("row" có hình thuyền). Chữ cái và Số ghép với nhau có chủ ý. Thêm chủ đề mới thì phải thêm dòng vào bảng này (test sẽ báo).
+   - Bỏ hẳn các hình nằm giữa hai nhóm (`SKIP`: teddy bear, robot, chicken leg).
+   - Không ghi vào Leitner (trò này không hỏi một từ cụ thể). Có sao theo chủ đề và sticker như các trò khác.
 
 **Album sticker:** sticker bé đã có hiện tên tiếng Anh và đọc tên khi chạm; màn kết quả cũng đọc tên sticker mới. Tên lấy từ `STICKER_NAMES` trong `content.ts` khi tên thư mục hình không phải từ của bé ("Spouting whale" → "whale", "Hibiscus" → "flower"). **Không đổi id sticker** (suy ra từ tên thư mục), vì id nằm trong tiến độ đã lưu của bé.
 
-**Màn hình chính** có thêm ba nút phía trên các chủ đề:
+**Màn hình chính** có thêm bốn nút phía trên các chủ đề:
 - **Play** (buổi học một chạm, biến `session` trong `screens/core.ts`): chạy 4 trò liền nhau trong một chủ đề theo thứ tự cố định Look and listen → Listen and tap → Find it → Sing along. Không có Say it (cần xin quyền micro) và Find the shadow (để buổi học ngắn, khoảng 5 phút). Trong buổi học, màn kết quả chỉ có nút đi tiếp và các chấm tiến độ, không có nút chơi lại; nút Back đưa về màn hình chính. `pickTodayTopic` chọn chủ đề: đang học dở (nhiều từ đã gặp nhất) → chủ đề chưa mở kế tiếp → chủ đề thuộc ít nhất.
 - **Review**: Listen and tap với từ lấy từ mọi chủ đề (`pickReviewSet`): chỉ từ đã gặp và chưa thuộc (hộp < 3), từ hay nhầm trước, mỗi từ một câu. Hình gây nhiễu lấy từ cùng chủ đề với từ đang hỏi để câu hỏi vẫn hợp lý. Nút chỉ hiện khi có ít nhất 4 từ (`REVIEW_MIN`). Có sao và sticker, nhưng sao không cộng vào chủ đề nào.
 - **Sentences** (câu ngắn, ý tưởng ban đầu là cho bé 5–6 tuổi): chỉ hiện ở nhóm 4–5 và 6 tuổi (`sentenceRounds` > 0). Bé nghe và đọc một câu rồi chạm hình đúng. Ba kiểu câu, chọn vì vẽ được bằng hình sẵn có: số lượng ("I see three cats.", vẽ 3 con mèo), hai vật ("I see a cat and a dog."), kích thước ("The dog is big.", vẽ hình to hoặc nhỏ). Bộ câu **cố định 96 câu** từ 12 danh từ (`SENTENCE_NOUNS`: số nhiều chỉ thêm "s", hình rõ khi vẽ nhỏ), vì mỗi câu cần một file mp3; thêm danh từ hay kiểu câu thì phải sinh giọng. `sentenceOptions` luôn đưa một hình sai cùng vật nhưng khác số lượng/kích thước, và (khi có 3 hình) một hình khác vật, để bé phải hiểu cả câu chứ không chỉ danh từ. Có sao và sticker, không ghi vào Leitner.
+- **Stories** (truyện tranh ngắn): hiện cùng điều kiện với Sentences (`sentenceRounds` > 0). 6 truyện cố định trong `lib/stories.ts`, mỗi truyện 4 trang (một câu + 1–2 hình sẵn có đặt cạnh nhau) rồi 2 câu hỏi về nội dung, đáp án là hình (2 hoặc 3 hình theo `sentenceChoices`). Câu chuyện được viết quanh những gì bộ hình vẽ được (con vật + khuôn mặt cảm xúc, con vật + đồ vật), vì AI không tự vẽ được nhân vật. Sao theo số câu hỏi đúng ngay lần đầu; sticker chỉ ở lần đầu đọc xong mỗi truyện (`P.stories`), để bé đọc lại vì truyện chứ không để cày sticker. Tên truyện có từ 3 từ trở lên để file giọng được đọc nguyên câu. Thêm truyện thì phải sinh giọng (7 câu mỗi truyện).
+- **Thử thách ngoài màn hình** (`lib/challenges.ts`, `screens/challenge.ts`): sau trò cuối của buổi Play, Chip nói "Now it is your turn!" rồi giao một việc làm ngoài đời bằng từ của chủ đề đó; bé bấm dấu tích khi xong (không kiểm tra, tin bé và bố mẹ), rồi về màn hình chính. Mục đích: biến từ vừa học thành việc làm thật và kết thúc buổi học bằng việc rời màn hình. `pickChallenge` ưu tiên thử thách có từ bé đã gặp và không lặp lại thử thách vừa giao. Chủ đề có từ làm được thì sinh từ từ (màu: "Find something red!", cơ thể: "Touch your nose!", số: "Show me three fingers!", con vật: "What does the cow say?"…); chủ đề không làm được (đồ ăn, xe cộ, thiên nhiên, gia đình, ABC, rau củ quả) có vài câu chung. Dòng tiếng Việt dưới câu tiếng Anh là cho bố mẹ, ngoại lệ có chủ ý của quy tắc "phần của bé chỉ có tiếng Anh". Tắt được trong phần bố mẹ (`settings.challenges`). Chỉ có ở buổi Play, không có sau từng trò lẻ.
 - Chạm Play thì Chip nói "Let's play!", chạm Review thì nói "Let's play again!", nói xong mới vào trò (`announce()` trong `screens/core.ts`, bỏ qua các lần chạm thừa trong lúc đang nói).
 
 **Theo độ tuổi** (`levelConfig`)
 
-| Tuổi | Hình/câu | Listen & Shadow | Say it | Look and listen | Find it (hình/câu tìm) | Sing along | Memory | Sentences (câu / hình) |
-|---|---|---|---|---|---|---|---|---|
-| 2–3 | 2 | 8 | 6 | 10 thẻ | 6 / 4 | 6 từ | 3 cặp | không có |
-| 4–5 | 3 | 10 | 8 | 12 thẻ | 9 / 6 | 8 từ | 4 cặp | 6 / 2 |
-| 6 | 4 | 12 | 10 | 15 thẻ | 12 / 8 | 8 từ | 6 cặp | 8 / 3 |
+| Tuổi | Hình/câu | Listen & Shadow | Say it | Look and listen | Find it (hình/câu tìm) | Sing along | Memory | Sentences (câu / hình) | Odd one out (câu / hình) | Stories |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 2–3 | 2 | 8 | 6 | 10 thẻ | 6 / 4 | 6 từ | 3 cặp | không có | 6 / 3 | không có |
+| 4–5 | 3 | 10 | 8 | 12 thẻ | 9 / 6 | 8 từ | 4 cặp | 6 / 2 | 8 / 4 | câu hỏi 2 hình |
+| 6 | 4 | 12 | 10 | 15 thẻ | 12 / 8 | 8 từ | 6 cặp | 8 / 3 | 10 / 4 | câu hỏi 3 hình |
 
 **Chấm điểm và chọn từ**
 - Sao được tính theo tỉ lệ câu đúng ngay lần đầu: ≥85% được 3 sao, ≥50% được 2 sao, còn lại 1 sao. Bé luôn được ít nhất 1 sao.
@@ -181,10 +197,12 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 
 **Có gì để bé mong chờ**
 - **Chuỗi ngày học** (`P.streak`, `markDay`, `currentStreak` trong `progress.ts`): tăng 1 khi bé chơi xong trò đầu tiên trong ngày (gọi ở `resultScreen`). Hôm nay chưa chơi thì chuỗi vẫn hiện số của hôm qua; bỏ trọn một ngày thì về 0. Chỉ hiện ở màn hình chính, không có thông báo nhắc và không phạt khi đứt chuỗi.
+- **Sổ từ của bé** (`screens/wordbook.ts`, nút quyển sách cạnh nút album, kèm số từ đã gặp): mọi từ có `seen > 0`, xếp theo chủ đề; từ đã thuộc (hộp ≥ 3) có ngôi sao, từ chưa gặp là ô "?" giữ chỗ (như ô trống trong album), chủ đề chưa học chỉ là một dòng. Chạm thì đọc từ. Không có trò chơi hay điểm ở đây.
+- **Tranh của bé** (`screens/scene.ts`, nút khung tranh trong album sticker, chỉ hiện khi có ít nhất 1 sticker): chơi tự do, không điểm, không thưởng. Chạm sticker trong khay để dán vào chỗ ngẫu nhiên, hoặc kéo ra khỏi khay để dán đúng chỗ thả; kéo để di chuyển; thả ra ngoài tranh để gỡ (không có nút xóa hết, tránh bé lỡ tay); chạm sticker trên tranh thì đọc tên. 3 nền vẽ bằng CSS gradient (không thêm file). Lưu trong `P.scene` (tối đa `SCENE_MAX` = 30 miếng, tọa độ phần trăm) và `P.sceneBg`. Hàm `drag()` giữ con trỏ (`setPointerCapture`) ngay từ `pointerdown`: nếu chờ tới khi đã kéo quá ngưỡng thì chuột vẩy nhanh sẽ rời khỏi ô sticker nhỏ trước khi kịp bắt. Vị trí dùng thuộc tính `translate` chứ không dùng `transform`, vì các hiệu ứng `pop-in`, `wiggle` ghi đè `transform`. Hết giờ chơi thì màn này chuyển sang màn nghỉ ngay (không có màn kết quả để chờ).
 - **Đồ cho Chip** (`LOOKS` trong `progress.ts`): nơ 3 sticker, mũ lưỡi trai 7, kính 12, mũ cao 18, vương miện 25 (album có 31). Bé chọn ở đầu album sticker; chạm món đang mặc thì cởi ra. `P.look` lưu món đang mặc, `P.looksSeen` để biết khi nào hiện chấm "có món mới" trên nút album. Mọi chỗ vẽ Chip đều đi qua `chip()` trong `ui.ts` (màn chào, màn hình chính, kết quả, Chip nhảy lên, lưng thẻ Memory), nên món đồ hiện ở khắp nơi; đổi `P.look` thì phải gọi `setChipLook`. Vị trí từng món là phần trăm theo bề rộng Chip, nằm trong `style.css` (`.look-*`). Hình lấy từ Fluent Emoji (`public/img/look-*.svg`).
 
 **Bàn phím** (`screens/keys.ts`)
-- Phím số 1–9 bấm phần tử thứ N của nhóm đầu tiên có mặt trên màn, theo thứ tự trong `NUMBERED`: `.option`, `.spot`, `.flip`, `.activity`, `.numpad button`, `.topic`. Trò mới có lưới đáp án thì dùng lại một trong các class này, hoặc thêm class của nó vào `NUMBERED` và vào phần CSS `.keys …` để có số gợi ý.
+- Phím số 1–9 bấm phần tử thứ N của nhóm đầu tiên có mặt trên màn, theo thứ tự trong `NUMBERED`: `.option`, `.spot`, `.flip`, `.activity`, `.numpad button`, `.topic`, `.tray-item`. Trò mới có lưới đáp án thì dùng lại một trong các class này, hoặc thêm class của nó vào `NUMBERED` và vào phần CSS `.keys …` để có số gợi ý.
 - Enter (khi chưa có nút nào đang được chọn) bấm nút chính theo thứ tự `.play-big`, `.gift`, `.pager .go`, `.mic`, `.quick.today`. Phím cách bấm nút nghe lại. Esc bấm nút đầu tiên của `.bar`. ← → lật thẻ từ và chọn ở màn kết quả; ở màn khác bốn phím mũi tên di chuyển focus (`nextInDirection`).
 - Số gợi ý vẽ bằng CSS counter, chỉ hiện khi `body` có class `keys`. Class này bật khi có phím được bấm và tắt khi có `pointerdown`, nên người dùng cảm ứng không bao giờ thấy.
 - Khi đang gõ trong ô nhập (phần bố mẹ) thì chỉ Esc còn tác dụng.
@@ -196,12 +214,13 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 
 **Phần bố mẹ**
 - Cách mở: giữ nút bánh răng 1,5 giây, rồi chạm đúng con số được viết bằng chữ tiếng Việt.
-- Cài đặt gồm: độ tuổi, tốc độ đọc, nghĩa tiếng Việt, phát lại giọng bé (mặc định bật), giới hạn phút mỗi ngày (mặc định 20).
+- Cài đặt gồm: độ tuổi, tốc độ đọc, nghĩa tiếng Việt, phát lại giọng bé (mặc định bật), thử thách ngoài màn hình (mặc định bật), giới hạn phút mỗi ngày (mặc định 20).
+- **In thẻ từ** (`screens/print.ts`): chọn chủ đề, bấm in. Tờ in là một khối `.print-sheet` nằm ngoài `#app`, ẩn trên màn hình và chỉ hiện trong `@media print` (lúc đó `#app` ẩn); mỗi trang 9 thẻ (3×3, hàng cao 84 mm để vừa cả A4 lẫn Letter), viền nét đứt để cắt, có hình, từ và nghĩa tiếng Việt. Chờ mọi hình `decode()` xong mới gọi `window.print()`, gỡ khối khi có `afterprint`. Không tạo file PDF trong app: hộp thoại in của trình duyệt đã có "Lưu thành PDF", miễn phí và không cần thư viện.
 - Hết giờ không bao giờ cắt ngang một trò hay màn kết quả: bé chơi nốt, xem sao và sticker, bấm nút nào ở màn kết quả cũng chuyển sang màn nghỉ. Màn hình chính và màn chủ đề thì chuyển sang màn nghỉ ngay.
 - Phần này còn có bảng tiến độ và nút xóa tiến độ.
 - **7 ngày qua** (`weekReport`): `P.days` ghi mỗi ngày số phút, số trò xong, số câu đúng/sai ngay lần đầu và các từ vừa thuộc (lên hộp 3); giữ khoảng 35 ngày. Biểu đồ cột chỉ có một chuỗi số liệu nên dùng một màu (`--leaf-deep`, đã kiểm tra độ tương phản với nền trắng), không có chú giải; số phút ghi ngay trên cột vì màn cảm ứng không có hover.
 - **Tự cập nhật** (`lib/update.ts`, `registerType: 'prompt'` trong `vite.config.ts`): app kiểm tra bản mới khi được mở lại và mỗi 30 phút. Có bản mới thì chỉ chuyển sang (nạp lại trang) khi app bị ẩn hoặc đang ở màn chào; không bao giờ nạp lại giữa trò chơi. Trang chưa được service worker quản lý (lần mở đầu tiên) không nhận tín hiệu nạp lại, nên `applyUpdate` tự nạp lại sau 3 giây. Đừng đổi về `autoUpdate`: nó nạp lại trang ngay khi có bản mới, kể cả lúc bé đang chơi.
-- **Sao lưu tiến độ** (`exportCode` / `importCode`): một đoạn mã `CHIP1:` + base64 của JSON gọn (từ, sao, sticker, cài đặt, chuỗi ngày, đồ của Chip; không gồm số phút hôm nay). Chọn dạng mã để chép và dán vì chạy được trên mọi trình duyệt, kể cả bản đã cài trên iOS, và không cần máy chủ. `importCode` không tin dữ liệu bên trong: giá trị lạ bị bỏ hoặc kẹp về khoảng hợp lệ, mã sai trả về null. Thêm trường mới vào `Progress` thì thêm vào cả hai hàm này và test.
+- **Sao lưu tiến độ** (`exportCode` / `importCode`): một đoạn mã `CHIP1:` + base64 của JSON gọn (từ, sao, sticker, cài đặt, chuỗi ngày, đồ của Chip, truyện đã đọc, tranh của bé; không gồm số phút hôm nay). Chọn dạng mã để chép và dán vì chạy được trên mọi trình duyệt, kể cả bản đã cài trên iOS, và không cần máy chủ. `importCode` không tin dữ liệu bên trong: giá trị lạ bị bỏ hoặc kẹp về khoảng hợp lệ, mã sai trả về null. Thêm trường mới vào `Progress` thì thêm vào cả hai hàm này và test.
 - Mục "Cài app": có `beforeinstallprompt` thì hiện nút cài; trên iOS hiện các bước Chia sẻ → Thêm vào Màn hình chính; đã cài thì chỉ báo đã cài. Đặt trong phần bố mẹ để bé không bấm nhầm.
 
 **Quyền riêng tư**
@@ -247,7 +266,9 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 - Bài Say it bị ẩn trên trình duyệt không có SpeechRecognition (ví dụ Firefox).
 - Giọng tiếng Anh là mp3 nên giống nhau trên mọi máy. Giọng Việt (nếu bật) và câu chưa có mp3 vẫn phụ thuộc máy.
 - File mp3 phát qua blob URL (không dùng Range request) vì Safari phát từ service worker dễ lỗi với Range.
-- Cache offline thêm khoảng 10 MB cho giọng (1.208 file).
+- Cache offline thêm khoảng 12 MB cho giọng (1.358 file).
+- Tranh của bé chưa dùng được bằng bàn phím ngoài việc dán (phím số) và quay lại (Esc): di chuyển và gỡ sticker cần chuột hoặc ngón tay.
+- In thẻ từ phụ thuộc hộp thoại in của trình duyệt; mới kiểm tra bằng Chrome (xuất PDF A4), chưa in thử trên iOS.
 - Sau khi deploy, app tự chuyển sang bản mới ở lần bị ẩn hoặc lần mở kế tiếp. Máy còn giữ bản rất cũ (trước 13/11/2026, khi chưa có `update.ts`) thì phải đóng hẳn rồi mở lại một lần.
 
 ## Ý tưởng tiếp theo (chưa làm)

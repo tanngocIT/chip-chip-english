@@ -25,7 +25,7 @@ Chạy được trên iPad, tablet Android, điện thoại và máy tính. Có 
 | Hình khối (circle, square, triangle…) | 12 |
 | Cảm xúc (happy, sad, angry…; câu "I am happy.") | 12 |
 
-Mỗi chủ đề có 7 trò:
+Mỗi chủ đề có 8 trò:
 
 | Trò | Bé làm gì | Chấm điểm |
 |---|---|---|
@@ -33,20 +33,25 @@ Mỗi chủ đề có 7 trò:
 | **Listen and tap** | Nghe "Where is the cat?" rồi chạm đúng hình | 1–3 sao |
 | **Find the shadow** | Kéo (hoặc chạm) hình vào đúng cái bóng. Ghép đúng thì chữ của từ hiện ra dưới hình. Chủ đề Cảm xúc không có trò này vì các khuôn mặt có bóng giống hệt nhau. | 1–3 sao |
 | **Find it** (tìm trong tranh) | Một tranh có 6–12 hình. Nghe "Where is the cat?" rồi tìm đúng hình trong tranh; hình đã tìm được thì mờ đi. | 1–3 sao |
+| **Odd one out** (cái nào khác loại) | 3–4 hình, trong đó một hình không cùng nhóm (ba con vật và một chiếc xe). Nghe "Which one is different?" rồi chạm hình lạc loài. Bé phải hiểu nghĩa của từ, không chỉ ghép âm với hình. | 1–3 sao |
 | **Say it** | Nghe mẫu, bấm micro và nói từ đó. App phát lại giọng bé vừa nói rồi đọc giọng mẫu để bé so sánh; nút bong bóng cho bé nghe lại giọng mình bao nhiêu lần cũng được. | 1–3 sao |
 | **Memory** (lật thẻ ghép đôi) | Lật hai thẻ mỗi lượt để tìm cặp hình giống nhau; mỗi thẻ lật lên đều đọc tên. Không có đáp án sai, hai thẻ khác nhau chỉ úp lại. | 1–3 sao theo số lượt lật |
 | **Sing along** (đọc theo nhạc) | Hình nhún theo nhịp trên nền giai điệu "Twinkle, twinkle", Chip đọc theo nhịp: "cat, cat, it's a cat." Bé chỉ cần nghe và đọc theo, không có câu hỏi. | 3 sao, không có sticker |
 
-Ở màn hình chính còn có ba nút:
+Ở màn hình chính còn có bốn nút:
 
-- **Play** (buổi học một chạm): bé không phải chọn gì. Chip nói "Let's play!" rồi bắt đầu. App tự chọn chủ đề (chủ đề bé đang học dở, hết thì mở chủ đề mới, học hết cả rồi thì quay lại chủ đề bé thuộc ít nhất) và dẫn bé qua 4 trò liền nhau: Look and listen → Listen and tap → Find it → Sing along. Xong mỗi trò bé bấm mũi tên để sang trò kế, xong cả bốn thì về màn hình chính.
+- **Play** (buổi học một chạm): bé không phải chọn gì. Chip nói "Let's play!" rồi bắt đầu. App tự chọn chủ đề (chủ đề bé đang học dở, hết thì mở chủ đề mới, học hết cả rồi thì quay lại chủ đề bé thuộc ít nhất) và dẫn bé qua 4 trò liền nhau: Look and listen → Listen and tap → Find it → Sing along. Xong mỗi trò bé bấm mũi tên để sang trò kế. Xong cả bốn, Chip giao một **thử thách ngoài màn hình** bằng từ của chủ đề vừa học: "Find something red!", "Touch your nose!", "What does the cow say?", "Show me three fingers!". Bé rời máy đi làm, xong thì bấm dấu tích. Dưới câu tiếng Anh có một dòng tiếng Việt cho bố mẹ. Có 105 thử thách, tắt được trong phần bố mẹ.
 - **Review** (ôn tập): một lượt Listen and tap gồm các từ bé đã gặp nhưng chưa thuộc, lấy từ **mọi chủ đề**, từ hay nhầm được ưu tiên. Nút chỉ hiện khi có ít nhất 4 từ cần ôn. Chấm 1–3 sao và thưởng sticker như các trò khác.
 
 - **Sentences** (câu ngắn, chỉ hiện từ 4–5 tuổi): bé nghe và đọc một câu như "I see three cats.", "I see a cat and a dog." hoặc "The dog is big.", rồi chạm vào hình đúng. Các hình sai luôn có một hình cùng con vật nhưng khác số lượng hay kích thước, nên bé phải hiểu cả câu. Có 96 câu, ghép từ 12 từ quen thuộc. Chấm 1–3 sao và thưởng sticker.
 
+- **Stories** (truyện tranh ngắn, chỉ hiện từ 4–5 tuổi): 6 truyện, mỗi truyện 4 trang. Mỗi trang là một câu ("The cat is hungry.") với hình minh họa; bé nghe, chạm vào câu để nghe chậm, bấm mũi tên sang trang. Hết truyện có 2 câu hỏi về nội dung ("What does the cat drink?"), bé chạm hình đúng. Đọc xong một truyện lần đầu được 1 sticker; truyện đã đọc có ngôi sao.
+
 **Có gì để bé mong chờ**
 
 - **Chuỗi ngày học:** màn hình chính hiện số ngày liên tiếp bé chơi xong ít nhất một trò (hình ngọn lửa). Nghỉ một ngày thì chuỗi bắt đầu lại từ 1.
+- **Sổ từ của bé** (nút quyển sách ở góc dưới màn hình chính, kèm số từ bé đã gặp): mọi từ bé đã gặp, xếp theo chủ đề. Từ đã thuộc có ngôi sao, từ chưa gặp là ô dấu hỏi. Chạm vào từ nào thì nghe từ đó.
+- **Tranh của bé** (nút khung tranh trong album sticker): bé dán các sticker mình có lên một bức tranh. Chạm sticker trong khay để dán, kéo để di chuyển, kéo ra ngoài tranh để gỡ, chạm sticker trên tranh để nghe tên. Có 3 nền (đồng cỏ, bãi biển, ban đêm). Tranh được lưu lại. Đây là chỗ chơi tự do, không chấm điểm.
 - **Đồ cho Chip:** gom sticker sẽ mở khóa đồ cho bạn gà Chip: nơ (3 sticker), mũ lưỡi trai (7), kính (12), mũ cao (18), vương miện (25). Bé chọn trong album sticker; Chip sẽ mặc món đó ở mọi màn hình. Khi có món mới, nút album ở màn hình chính có một chấm vàng.
 
 **Cách chấm điểm**
@@ -61,11 +66,11 @@ Mỗi chủ đề có 7 trò:
 
 **Độ khó theo tuổi** (bố mẹ chọn trong phần cài đặt):
 
-| Tuổi | Look and listen | Số hình mỗi câu | Listen and tap / Find the shadow | Say it | Find it | Memory | Sing along | Sentences |
-|---|---|---|---|---|---|---|---|---|
-| 2–3 | 10 thẻ | 2 | 8 câu | 6 câu | tranh 6 hình, tìm 4 | 3 cặp | 6 từ | không có |
-| 4–5 | 12 thẻ | 3 | 10 câu | 8 câu | tranh 9 hình, tìm 6 | 4 cặp | 8 từ | 6 câu, 2 hình |
-| 6 | 15 thẻ | 4 | 12 câu | 10 câu | tranh 12 hình, tìm 8 | 6 cặp | 8 từ | 8 câu, 3 hình |
+| Tuổi | Look and listen | Số hình mỗi câu | Listen and tap / Find the shadow | Say it | Find it | Odd one out | Memory | Sing along | Sentences | Stories |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 2–3 | 10 thẻ | 2 | 8 câu | 6 câu | tranh 6 hình, tìm 4 | 6 câu, 3 hình | 3 cặp | 6 từ | không có | không có |
+| 4–5 | 12 thẻ | 3 | 10 câu | 8 câu | tranh 9 hình, tìm 6 | 8 câu, 4 hình | 4 cặp | 8 từ | 6 câu, 2 hình | câu hỏi 2 hình |
+| 6 | 15 thẻ | 4 | 12 câu | 10 câu | tranh 12 hình, tìm 8 | 10 câu, 4 hình | 6 cặp | 8 từ | 8 câu, 3 hình | câu hỏi 3 hình |
 
 ## Dùng bằng bàn phím
 
@@ -92,12 +97,14 @@ Trong đó có:
 - Chỉnh tốc độ đọc. Kéo xong app sẽ đọc thử.
 - Bật đọc thêm nghĩa tiếng Việt ở thẻ từ (cần máy có giọng đọc tiếng Việt).
 - Bật/tắt phát lại giọng bé ở bài Say it (mặc định bật).
+- Bật/tắt thử thách ngoài màn hình sau buổi Play (mặc định bật).
+- **In thẻ từ:** chọn một chủ đề rồi in ra giấy A4, mỗi trang 9 thẻ có hình, từ tiếng Anh và nghĩa tiếng Việt, có đường nét đứt để cắt. Trong hộp thoại in có thể lưu thành PDF.
 - Giới hạn thời gian chơi mỗi ngày (mặc định 20 phút). Hết giờ, bạn gà Chip sẽ nói "Time to rest" và đưa bé ra màn hình nghỉ. Nếu hết giờ khi bé đang giữa một trò, bé được chơi nốt trò đó và xem sao, sticker rồi mới nghỉ.
 - **7 ngày qua:** số phút chơi mỗi ngày (biểu đồ), số ngày có chơi, số trò đã xong, tỉ lệ trả lời đúng ngay lần đầu, các từ mới thuộc trong tuần và số từ đến hạn ôn hôm nay.
 - Xem tiến độ: số từ đã thuộc và số sao của từng chủ đề, các từ bé hay nhầm, số sticker đã có.
 - Xóa tiến độ.
 - **Phiên bản và cập nhật:** app tự tải bản mới ở chế độ nền và chuyển sang bản mới vào lúc bé không chơi (khi app bị ẩn đi, hoặc đang ở màn chào), không bao giờ nạp lại giữa một trò. Mục Thiết bị ghi ngày giờ của bản đang dùng và có nút kiểm tra bản mới.
-- **Sao lưu tiến độ:** sao chép một đoạn mã (bắt đầu bằng `CHIP1:`) và giữ ở nơi khác, ví dụ tin nhắn cho chính mình. Khi đổi máy hoặc lỡ xóa dữ liệu trình duyệt, dán mã vào để lấy lại sao, sticker, từ đã học và cài đặt. Mã không đi qua máy chủ nào.
+- **Sao lưu tiến độ:** sao chép một đoạn mã (bắt đầu bằng `CHIP1:`) và giữ ở nơi khác, ví dụ tin nhắn cho chính mình. Khi đổi máy hoặc lỡ xóa dữ liệu trình duyệt, dán mã vào để lấy lại sao, sticker, từ đã học, truyện đã đọc, tranh của bé và cài đặt. Mã không đi qua máy chủ nào.
 - **Cài app ra màn hình chính.** Trên Android và máy tính (Chrome, Edge) có nút bấm để cài ngay. Trên iPhone/iPad, Apple không cho web tự mở hộp thoại cài nên app hiện hướng dẫn: mở bằng Safari, bấm Chia sẻ rồi chọn Thêm vào Màn hình chính.
 
 Toàn bộ tiến độ chỉ lưu trên máy (localStorage). App không có tài khoản và không gửi dữ liệu đi đâu. Ở bài Say it, tiếng của bé chỉ giữ tạm trong bộ nhớ để phát lại ngay trong câu đó, không lưu vào máy và không gửi đi đâu (có thể tắt trong phần bố mẹ).
@@ -144,11 +151,15 @@ src/
   lib/sfx.ts           # hiệu ứng âm thanh và giai điệu bằng Web Audio
   lib/install.ts       # nút cài app ra màn hình chính
   lib/sentences.ts     # bộ câu ngắn và cách chọn hình đáp án
+  lib/odd.ts           # Odd one out: chủ đề nào lấy hình lạc loài từ chủ đề nào
+  lib/challenges.ts    # thử thách ngoài màn hình sau buổi Play
+  lib/stories.ts       # 6 truyện tranh ngắn và câu hỏi
   lib/focus.ts         # tìm nút gần nhất theo hướng phím mũi tên
   lib/update.ts        # tự cập nhật bản mới vào lúc không làm gián đoạn
   screens/             # mỗi màn hình một file: core (trạng thái chung, điều hướng), home, topic,
-                       # learn, quiz (Listen and tap, Find the shadow, Review), find, memory, sing, say,
-                       # sentences, result, parents
+                       # learn, quiz (Listen and tap, Find the shadow, Review), find, odd, memory, sing, say,
+                       # sentences, stories, challenge, wordbook (sổ từ), scene (tranh sticker),
+                       # print (in thẻ từ), result, parents
   main.ts              # khởi động app và bộ đếm phút chơi
   style.css            # giao diện
 scripts/
