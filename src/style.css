@@ -335,10 +335,9 @@ select:focus-visible {
   border-radius: 6px;
 }
 
+/* the rest screen: Chip asleep is its own picture */
 .sleepy {
-  filter: saturate(0.7) drop-shadow(4px 0 0 #fff) drop-shadow(-4px 0 0 #fff) drop-shadow(0 4px 0 #fff)
-    drop-shadow(0 -4px 0 #fff);
-  transform: rotate(-8deg);
+  filter: drop-shadow(0 6px 0 rgb(43 58 85 / 0.1));
 }
 
 /* ---------- home ---------- */
@@ -1601,12 +1600,14 @@ td:not(:first-child) {
   pointer-events: none;
 }
 
-/* positions are fractions of Chip's width (its drawing is 32 units wide, eyes at y 10.5, head top at y 5) */
-.look-ribbon { width: 32%; left: 50%; top: 3%; transform: rotate(20deg); }
-.look-cap { width: 54%; left: 23%; top: -13%; }
-.look-glasses { width: 48%; left: 26%; top: 9%; }
-.look-hat { width: 50%; left: 25%; top: -27%; }
-.look-crown { width: 46%; left: 27%; top: -20%; }
+/* Positions are fractions of Chip's box. Chip's picture fills x 9-90% and y 2-96% of it, the eyes
+   sit at about y 42%. Each thing is a square picture with its drawing in the middle (a cap fills
+   y 16-83% of its square), so `top` is where the square starts, not where the drawing does. */
+.look-ribbon { width: 34%; left: 52%; top: -6%; transform: rotate(18deg); }
+.look-cap { width: 66%; left: 17%; top: -26%; }
+.look-glasses { width: 58%; left: 21%; top: 13%; }
+.look-hat { width: 56%; left: 22%; top: -31%; }
+.look-crown { width: 50%; left: 25%; top: -20%; }
 
 /* home: days in a row, next to the stars */
 .counters {

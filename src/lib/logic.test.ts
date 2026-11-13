@@ -561,7 +561,7 @@ group('things Chip can wear', () => {
     expect([...needs].sort((a, b) => a - b)).toEqual(needs);
     expect(Math.max(...needs)).toBeLessThanOrEqual(stickers.length);
     for (const l of LOOKS) {
-      expect(fs.existsSync(path.join(process.cwd(), 'public/img', `look-${l.id}.svg`)), l.id).toBe(true);
+      expect(fs.existsSync(path.join(process.cwd(), "public/img/art/ui", `look-${l.id}.webp`)), l.id).toBe(true);
     }
   });
 });

@@ -53,7 +53,6 @@ for (const w of data.words) {
   copy(w.asset, path.join(out, `${name}.svg`), w.skin, w.fallback);
 }
 
-copy('Front-facing baby chick', path.join(out, 'mascot.svg'));
 
 const stickers = JSON.parse(fs.readFileSync(path.join(root, 'src/data/stickers.json'), 'utf8'));
 const stickerArt = JSON.parse(fs.readFileSync(path.join(root, 'src/data/sticker-art.json'), 'utf8'));

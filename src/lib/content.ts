@@ -50,7 +50,10 @@ export const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
 const base = import.meta.env?.BASE_URL ?? './';
 
-export const imgUrl = (name: string) => `${base}img/${name}.svg`;
+/** Chip, the things Chip wears, the gift box and the flame are drawn in the app's own style. */
+const UI_ART = new Set(['mascot', 'mascot-sleepy', 'look-ribbon', 'look-cap', 'look-glasses', 'look-hat', 'look-crown', 'gift', 'fire']);
+
+export const imgUrl = (name: string) => (UI_ART.has(name) ? `${base}img/art/ui/${name}.webp` : `${base}img/${name}.svg`);
 
 export const topics: Topic[] = data.topics;
 

@@ -103,7 +103,7 @@ export function chip(cls = '') {
   return h(
     'span',
     { class: `chip ${cls}`, role: 'img', 'aria-label': 'Chip' },
-    h('img', { class: 'chip-body', src: imgUrl('mascot'), alt: '', draggable: false }),
+    h('img', { class: 'chip-body', src: imgUrl(cls.includes('sleepy') ? 'mascot-sleepy' : 'mascot'), alt: '', draggable: false }),
     chipLook && h('img', { class: `chip-look look-${chipLook}`, src: imgUrl(`look-${chipLook}`), alt: '', draggable: false }),
   );
 }
