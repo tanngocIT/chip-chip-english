@@ -100,7 +100,7 @@ export function stickerScene() {
         tap: () => land(clamp(15 + Math.random() * 70), clamp(20 + Math.random() * 60)),
         move: (cx, cy) => {
           if (!ghost) {
-            ghost = h('img', { class: 'ghost', src: s.img, alt: '' });
+            ghost = h('img', { class: 'drag-ghost', src: s.img, alt: '' });
             document.body.appendChild(ghost);
           }
           ghost.style.left = `${cx}px`;
@@ -141,7 +141,7 @@ export function stickerScene() {
       board,
       tray,
     ),
-    () => document.querySelectorAll('.ghost').forEach((g) => g.remove()),
+    () => document.querySelectorAll('.drag-ghost').forEach((g) => g.remove()),
   );
 }
 

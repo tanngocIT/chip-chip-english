@@ -303,7 +303,7 @@ else {
   await dragTo(await center('.tray-item'), [board.x + board.w * 0.7, board.y + board.h * 0.6]);
   const two = JSON.parse(await saved());
   if (two.length !== 2 || Math.abs(two[1][1] - 70) > 3 || Math.abs(two[1][2] - 60) > 3) errors.push(`dragging out of the tray did not place a sticker: ${JSON.stringify(two)}`);
-  if (await page.$('.ghost')) errors.push('the dragged copy stayed on screen');
+  if (await page.$('.drag-ghost')) errors.push('the dragged copy stayed on screen');
   const bgBefore = await page.$eval('.board', (b) => b.className);
   await click('.bar .round.soft');
   if ((await page.$eval('.board', (b) => b.className)) === bgBefore) errors.push('the background button did not change the picture');
@@ -361,6 +361,18 @@ await page.evaluate(() => {
 });
 await shot('14-parents');
 if (!(await page.$('.panel.install'))) errors.push('install panel missing');
+// Every control of the grown-ups area sits inside its own panel. A style meant for another
+// screen once took the "ghost" buttons out of the page and floated them over the Home button.
+const strays = await page.$$eval('.grown .panel button, .grown .panel select, .grown .panel input, .grown .panel textarea', (els) =>
+  els
+    .filter((el) => {
+      const r = el.getBoundingClientRect();
+      const p = el.closest('.panel').getBoundingClientRect();
+      return getComputedStyle(el).position === 'fixed' || r.left < p.left - 1 || r.right > p.right + 1 || r.top < p.top - 1 || r.bottom > p.bottom + 1;
+    })
+    .map((el) => (el.textContent || el.tagName).trim().slice(0, 30)),
+);
+if (strays.length) errors.push(`controls outside their panel in the grown-ups area: ${strays.join(' | ')}`);
 // The week: seven bars, and today's games and answers are counted.
 const weekInfo = await page.evaluate(() => ({
   bars: document.querySelectorAll('.panel.week .bar-col').length,

@@ -5,3 +5,6 @@ dist
 shots
 .venv-voice
 voice-model
+
+# hình nguồn do Gemini vẽ, chờ cắt và tách nền
+art-inbox/

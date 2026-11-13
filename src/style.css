@@ -2297,7 +2297,7 @@ td:not(:first-child) {
 
 .placed img,
 .tray-item img,
-.ghost {
+.drag-ghost {
   object-fit: contain;
   pointer-events: none;
   filter: drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff)
@@ -2339,7 +2339,7 @@ td:not(:first-child) {
   touch-action: pan-x;
 }
 
-.ghost {
+.drag-ghost {
   position: fixed;
   z-index: 20;
   width: clamp(56px, min(15vw, 15dvh), 120px);
