@@ -270,34 +270,132 @@ const lines = [
   '',
 ];
 let sheets = 0;
+
+/** One prompt for one sheet of up to nine pictures. */
+function sheet(file, items, style, magenta) {
+  sheets++;
+  lines.push(
+    `### Tên file: \`${file}.png\``,
+    '',
+    '```',
+    `Using the attached image as the exact style reference (flat vector sticker art, thick white sticker border around every picture, soft simple shapes, no text, no letters, no numbers), draw a new sheet of ${items.length} stickers for a toddler's English learning app.`,
+    '',
+    style,
+    'Every picture must be easy to tell apart from the others at a glance.',
+    'Each picture is ONE single connected sticker: everything that belongs to it (small details like notes, sparks, smoke or Zzz) sits inside the same white border, never floating apart.',
+    '',
+    `Layout: a 3x3 grid, in reading order (left to right, top to bottom)${items.length < 9 ? `; draw only these ${items.length} pictures; leave the remaining cells as plain background and do NOT copy any picture from the reference image` : ''}:`,
+    '',
+    items.map((t, k) => `${k + 1}. ${t}`).join('\n'),
+    '',
+    `Background: solid pure ${magenta ? 'magenta (#FF00FF)' : 'green (#00FF00)'}, flat, no shadows, no grid lines. Leave clear empty space between the pictures so they never touch each other, and keep every picture well away from the edges and corners of the image. Square image, highest resolution.`,
+    '```',
+    '',
+  );
+}
+
+function section(title, prefix, items, style, magenta) {
+  if (!items.length) return;
+  lines.push(`## ${title} (${items.length} hình)`, '');
+  for (let i = 0; i < items.length; i += 9) sheet(`${prefix}-${i / 9 + 1}`, items.slice(i, i + 9), style, magenta);
+}
+
+const ONE_OBJECT = 'Each cell shows ONE object alone, large in its cell, with no background scenery beyond what is described.';
 for (const id of TOPICS) {
   const topic = data.topics.find((t) => t.id === id);
   const words = data.words.filter((w) => w.topic === id && !DONE.has(w.id));
-  lines.push(`## ${topic.vi} (${words.length} hình)`, '');
-  for (let i = 0; i < words.length; i += 9) {
-    const part = words.slice(i, i + 9);
-    const n = i / 9 + 1;
-    sheets++;
-    const items = part.map((w, k) => `${k + 1}. ${HINT[w.id] ?? (w.word ?? w.id)}`).join('\n');
-    lines.push(
-      `### Tên file: \`${id}-${n}.png\``,
-      '',
-      '```',
-      `Using the attached image as the exact style reference (flat vector sticker art, thick white sticker border around every picture, soft simple shapes, no text, no letters, no numbers), draw a new sheet of ${part.length} stickers for a toddler's English learning app.`,
-      '',
-      STYLE[id] ?? 'Each cell shows ONE object alone, large in its cell, with no background scenery beyond what is described.',
-      'Every picture must be easy to tell apart from the others at a glance.',
-      'Each picture is ONE single connected sticker: everything that belongs to it (small details like notes, sparks, smoke or Zzz) sits inside the same white border, never floating apart.',
-      '',
-      `Layout: a 3x3 grid, in reading order (left to right, top to bottom)${part.length < 9 ? `; draw only these ${part.length} pictures; leave the remaining cells as plain background and do NOT copy any picture from the reference image` : ''}:`,
-      '',
-      items,
-      '',
-      `Background: solid pure ${MAGENTA.has(id) ? 'magenta (#FF00FF)' : 'green (#00FF00)'}, flat, no shadows, no grid lines. Leave clear empty space between the pictures so they never touch each other, and keep every picture well away from the edges and corners of the image. Square image, highest resolution.`,
-      '```',
-      '',
-    );
-  }
+  section(topic.vi, id, words.map((w) => HINT[w.id] ?? (w.word ?? w.id)), STYLE[id] ?? ONE_OBJECT, MAGENTA.has(id));
+}
+
+// ---- not words: the faces of the Feelings topic, the reward stickers, Chip and his things ----
+
+const FEELINGS = [
+  'happy: big open smile, eyes curved with joy',
+  'sad: mouth turned down, one big tear on the cheek',
+  'angry: red face, eyebrows pulled down hard, gritted teeth',
+  'scared: wide round eyes, open mouth, hands on the cheeks, face a little blue',
+  'sleepy: eyes closed, big yawn, Zzz attached above the head',
+  'surprised: raised eyebrows, wide eyes, small round "o" mouth',
+  'sick: thermometer in the mouth, pale green face, ice pack on the head',
+  'hot: red sweaty face, tongue out, sun rays attached above',
+  'cold: blue face, shivering, wearing a scarf and a woolly hat with snow on it',
+  'silly: one eye winking, tongue stuck out to the side',
+  'hungry: licking lips, holding a fork and a spoon',
+  'excited: party hat, huge grin, both fists up, confetti attached around the head',
+];
+if (!data.words.some((w) => w.topic === 'feelings' && w.art)) {
+  section(
+    'Cảm xúc',
+    'feelings',
+    FEELINGS,
+    'Each cell shows the SAME child (the boy with spiky brown hair and a green t-shirt from the reference image), head and shoulders, showing one feeling. Only the face and the small props change, so the feeling is what tells the pictures apart.',
+    false,
+  );
+}
+
+// reward stickers, in the order of src/data/stickers.json (their ids must not change)
+const STICKER_ART = [
+  'unicorn: white unicorn head with a rainbow mane and a golden horn',
+  'T-rex: friendly green T-rex standing on two legs, tiny arms, big smile',
+  'long-neck dinosaur: blue long-necked dinosaur (sauropod), whole body',
+  'octopus: purple octopus wearing a tiny party hat',
+  'dolphin: blue dolphin jumping through a gold ring',
+  'whale: happy blue whale with a big water spout',
+  'crab: orange crab waving both claws, wearing sunglasses',
+  'fox: orange fox head, winking',
+  'koala: grey koala hugging a branch',
+  'kangaroo: kangaroo jumping, with boxing gloves',
+  'hamster: chubby hamster with full cheeks holding a seed',
+  'snail: snail with a spiral rainbow shell',
+  'ladybug: red ladybug with black dots',
+  'penguin: penguin wearing a red scarf, sliding on its belly',
+  'owl: owl wearing a graduation cap',
+  'giraffe: giraffe head and long neck with a flower in its mouth',
+  'zebra: zebra head with a colourful mane',
+  'chick: baby chick hatching out of a cracked egg',
+  'party popper: party popper cone with confetti and streamers attached',
+  'trophy: golden trophy cup with a star on it',
+  'donut: donut with rainbow icing and a bite taken out',
+  'cake: slice of strawberry shortcake',
+  'flower: big pink hibiscus flower',
+  'clover: four-leaf clover with a smiling face',
+  'crown: golden crown with red and blue jewels',
+  'tea: green tea in a small cup without a handle, steam attached',
+  'carousel: carousel horse on a golden pole',
+  'ferris wheel: colourful ferris wheel',
+  'sparkles: three big golden four-pointed sparkle stars joined together as one sticker',
+  'rocket: rocket flying up with a trail of stars attached',
+  'rainbow: rainbow with a small cloud at each end',
+];
+if (!fs.existsSync('public/img/art/stickers')) {
+  section(
+    'Sticker thưởng trong album',
+    'stickers',
+    STICKER_ART,
+    'These are reward stickers a child collects: each cell shows ONE extra cute, joyful picture, large in its cell.',
+    true,
+  );
+}
+
+const CHIP_ART = [
+  'Chip the mascot: a round yellow baby chick seen from the front, standing, small orange beak, two orange feet, little wings at its sides, friendly black eyes, pink cheeks, NO hat and nothing on its head',
+  'the same chick asleep: eyes closed, head tilted, Zzz attached above',
+  'a red ribbon bow (hair bow) alone',
+  'a blue baseball cap alone, seen from the front, slightly from above',
+  'a pair of round red glasses alone, seen from the front',
+  'a black top hat with a red band alone, seen from the front',
+  'a golden crown with jewels alone, seen from the front',
+  'a wrapped gift box with a big bow, closed',
+  'a friendly orange flame (for a streak of days)',
+];
+if (!fs.existsSync('public/img/art/chip')) {
+  section(
+    'Bạn gà Chip và đồ của Chip',
+    'chip',
+    CHIP_ART,
+    'Each cell shows ONE thing alone, large in its cell. The hat, cap, crown, glasses and bow will later be placed on the chick by the app, so draw each of them alone, straight and upright, with nothing else.',
+    true,
+  );
 }
 lines.splice(8, 0, `Tổng cộng ${sheets} tấm.`, '');
 fs.mkdirSync('art-inbox', { recursive: true });
