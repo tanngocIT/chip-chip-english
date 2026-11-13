@@ -1,8 +1,9 @@
 // Grown-ups: the gate and the settings.
 
 import { h } from '../lib/dom';
-import { topics, wordsIn, wordById, stickers, type Word } from '../lib/content';
-import { exportCode, importCode, topicStars, learnedCount, emptyProgress, type AgeLevel } from '../lib/progress';
+import { words, topics, wordsIn, wordById, stickers, type Word } from '../lib/content';
+import { weekReport, dueCount, exportCode, importCode, topicStars, learnedCount, emptyProgress, type AgeLevel } from '../lib/progress';
+import { BUILD_TIME, updateReady, checkForUpdate, applyUpdate } from '../lib/update';
 import { say, setRate, canListen, hasVietnameseVoice, canSpeak, canRecord } from '../lib/voice';
 import { viNumber } from '../lib/vi';
 import { installState, promptInstall, onInstallChange } from '../lib/install';
@@ -150,6 +151,65 @@ export function parentArea() {
     },
   }, 'Xóa tiến độ');
 
+  // Tuần này: phút chơi mỗi ngày và những gì bé học được
+  const week = weekReport(P);
+  const answers = week.right + week.wrong;
+  const peak = Math.max(1, ...week.days.map((d) => d.min));
+  const DAY_NAMES = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+  const bars = week.days.map((d, i) => {
+    const when = new Date(`${d.date}T12:00:00`);
+    const label = DAY_NAMES[when.getDay()];
+    const tip = `${label} ${when.getDate()}/${when.getMonth() + 1}: ${d.min} phút, ${d.games} trò`;
+    return h(
+      'div',
+      { class: `bar-col ${i === 6 ? 'today' : ''}`, title: tip, role: 'img', 'aria-label': tip },
+      h('span', { class: 'bar-val' }, d.min > 0 ? String(d.min) : ''),
+      h('span', { class: 'bar-fill', style: `height:${d.min > 0 ? Math.max(4, Math.round((d.min / peak) * 100)) : 0}%` }),
+      h('span', { class: 'bar-day' }, label),
+    );
+  });
+  const tile = (value: string, label: string) => h('div', { class: 'tile' }, h('b', {}, value), h('span', {}, label));
+  const learnedWords = week.learned.map((id) => wordById(id)).filter(Boolean) as Word[];
+  const due = dueCount(P, words.map((w) => w.id));
+  const weekPanel = h(
+    'section',
+    { class: 'panel week' },
+    h('h3', {}, '7 ngày qua'),
+    h(
+      'div',
+      { class: 'tiles' },
+      tile(`${week.min}`, 'phút chơi'),
+      tile(`${week.activeDays}/7`, 'ngày có chơi'),
+      tile(`${week.games}`, 'trò đã xong'),
+      tile(answers ? `${Math.round((week.right / answers) * 100)}%` : '–', 'đúng ngay lần đầu'),
+    ),
+    h('p', { class: 'chart-title' }, 'Số phút chơi mỗi ngày'),
+    h('div', { class: 'bars' }, bars),
+    h(
+      'p',
+      {},
+      learnedWords.length
+        ? ['Từ mới thuộc trong 7 ngày: ', h('b', {}, learnedWords.map((w) => w.word).join(', '))]
+        : 'Chưa có từ nào mới thuộc trong 7 ngày qua. Một từ được tính là thuộc khi bé trả lời đúng ngay lần đầu ba lần liên tiếp.',
+    ),
+    h('p', {}, due > 0 ? `Có ${due} từ đến hạn ôn hôm nay. Nút Review ở màn hình chính sẽ hỏi lại các từ này.` : 'Hôm nay chưa có từ nào đến hạn ôn.'),
+  );
+
+  // Phiên bản: app tự cập nhật, nút này chỉ để kiểm tra ngay
+  const built = BUILD_TIME ? new Date(BUILD_TIME) : null;
+  const versionNote = h('small', { class: 'backup-note', 'aria-live': 'polite' }, updateReady() ? 'Đã có bản mới.' : '');
+  const updateBtn = h('button', {
+    class: 'ghost',
+    onclick: async () => {
+      if (updateReady()) return void applyUpdate();
+      versionNote.textContent = 'Đang kiểm tra…';
+      const found = await checkForUpdate();
+      if (!versionNote.isConnected) return;
+      versionNote.textContent = found ? 'Đã có bản mới. Bấm nút lần nữa để cập nhật.' : 'Đang dùng bản mới nhất.';
+      if (found) updateBtn.textContent = 'Cập nhật ngay';
+    },
+  }, updateReady() ? 'Cập nhật ngay' : 'Kiểm tra bản mới');
+
   // Sao lưu: chép mã ở máy này, dán vào máy khác. Không qua máy chủ nào.
   const backupNote = h('small', { class: 'backup-note', 'aria-live': 'polite' }, '');
   const codeOut = h('textarea', { class: 'code', rows: '3', readonly: true, 'aria-label': 'Mã sao lưu' }) as HTMLTextAreaElement;
@@ -244,6 +304,7 @@ export function parentArea() {
         field('Giới hạn mỗi ngày', limit, `Hôm nay đã chơi ${P.minutesToday.date === todayStr() ? P.minutesToday.minutes : 0} phút.`),
         extra,
       ),
+      weekPanel,
       h(
         'section',
         { class: 'panel' },
@@ -274,6 +335,14 @@ export function parentArea() {
         'section',
         { class: 'panel' },
         h('h3', {}, 'Thiết bị'),
+        h(
+          'p',
+          {},
+          built ? `Phiên bản: ${built.getDate()}/${built.getMonth() + 1}/${built.getFullYear()} ${String(built.getHours()).padStart(2, '0')}:${String(built.getMinutes()).padStart(2, '0')}. ` : '',
+          'App tự cập nhật khi có bản mới, vào lúc bé không chơi.',
+        ),
+        updateBtn,
+        versionNote,
         h('p', {}, canSpeak() ? 'Giọng đọc tiếng Anh: có.' : 'Không có giọng đọc. Hãy dùng Chrome hoặc Safari.'),
         h(
           'p',

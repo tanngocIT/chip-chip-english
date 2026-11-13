@@ -9,6 +9,18 @@ export interface WordStat {
   right: number;
   wrong: number;
   seen: number;
+  /** the day this word should come back (YYYY-MM-DD). Missing means it is due now. */
+  due?: string;
+}
+
+/** What happened on one day, for the grown-ups' weekly report. */
+export interface DayStat {
+  min: number;
+  games: number;
+  right: number;
+  wrong: number;
+  /** words that reached "learned" (box 3) on this day */
+  learned: string[];
 }
 
 export interface Settings {
@@ -31,6 +43,8 @@ export interface Progress {
   look: string | null;
   /** how many unlocked looks the child has already been shown in the sticker book */
   looksSeen: number;
+  /** the last few weeks, one entry per day the child played */
+  days: Record<string, DayStat>;
 }
 
 export const MAX_BOX = 4;
@@ -52,6 +66,7 @@ export const emptyProgress = (): Progress => ({
   streak: { count: 0, last: '' },
   look: null,
   looksSeen: 0,
+  days: {},
 });
 
 /**
@@ -97,16 +112,48 @@ export function stat(p: Progress, id: string): WordStat {
 }
 
 /** Record one answer. firstTry=false means the child needed more than one tap. */
-export function recordAnswer(p: Progress, id: string, firstTry: boolean): void {
+/**
+ * How long a word rests after an answer, by the box it lands in. A word just missed comes back
+ * the same day; a well-known word comes back after two weeks, before it is forgotten.
+ */
+export const INTERVAL_DAYS = [0, 1, 3, 7, 14];
+
+const addDays = (date: string, n: number) => {
+  const d = new Date(`${date}T12:00:00`);
+  d.setDate(d.getDate() + n);
+  return today(d);
+};
+
+/** A word the child has met and that is due to be asked again. */
+export const isDue = (s: WordStat, date = today()) => s.seen > 0 && (s.due ?? '') <= date;
+
+const KEEP_DAYS = 35;
+
+function dayStat(p: Progress, date: string): DayStat {
+  if (!p.days[date]) {
+    p.days[date] = { min: 0, games: 0, right: 0, wrong: 0, learned: [] };
+    const oldest = addDays(date, -KEEP_DAYS);
+    for (const k of Object.keys(p.days)) if (k < oldest) delete p.days[k];
+  }
+  return p.days[date];
+}
+
+/** Record one answer. firstTry=false means the child needed more than one tap. */
+export function recordAnswer(p: Progress, id: string, firstTry: boolean, date = today()): void {
   const s = { ...stat(p, id) };
+  const d = dayStat(p, date);
   s.seen++;
   if (firstTry) {
     s.right++;
+    d.right++;
     s.box = Math.min(MAX_BOX, s.box + 1);
+    if (s.box === 3 && !d.learned.includes(id)) d.learned.push(id);
   } else {
     s.wrong++;
+    d.wrong++;
     s.box = 0;
   }
+  s.due = addDays(date, INTERVAL_DAYS[s.box]);
   p.words[id] = s;
 }
 
@@ -121,7 +168,13 @@ export function recordSeen(p: Progress, id: string): void {
  * well-known words least. Words never shown yet are possible but less likely,
  * so quizzes mostly ask what Look and listen has already taught.
  */
-export const weightOf = (s: WordStat) => (s.seen === 0 ? 0.4 : MAX_BOX + 1 - s.box);
+export function weightOf(s: WordStat, date = today()): number {
+  if (s.seen === 0) return 0.4;
+  const base = MAX_BOX + 1 - s.box;
+  if (s.box < 3) return base;
+  // a learned word rests until its day comes, then it is asked again before it fades
+  return isDue(s, date) ? base + 2 : 0.3;
+}
 
 /**
  * Words for one Look and listen round: first words the child keeps missing,
@@ -194,15 +247,18 @@ export function pickReviewSet<T extends { id: string }>(
   n: number,
   p: Progress,
   rand: () => number = Math.random,
+  date = today(),
 ): T[] {
   const rank = (w: T) => {
     const s = stat(p, w.id);
-    return s.wrong > 0 && s.box <= 1 ? 0 : 1 + s.box;
+    if (s.wrong > 0 && s.box <= 1) return 0;
+    // learned words whose day has come: next most urgent, they are about to be forgotten
+    return s.box >= 3 ? 1 : 2 + s.box;
   };
   const picked = shuffle(pool, rand)
     .filter((w) => {
       const s = stat(p, w.id);
-      return s.seen > 0 && s.box < 3;
+      return s.seen > 0 && (s.box < 3 || isDue(s, date));
     })
     .map((w) => ({ w, r: rank(w) }))
     .sort((a, b) => a.r - b.r)
@@ -332,6 +388,7 @@ export function load(storage: Pick<Storage, 'getItem'> | undefined = safeStorage
       settings: { ...e.settings, ...(parsed.settings ?? {}) },
       minutesToday: parsed.minutesToday ?? e.minutesToday,
       streak: parsed.streak && typeof parsed.streak.last === 'string' ? parsed.streak : e.streak,
+      days: parsed.days && typeof parsed.days === 'object' ? parsed.days : e.days,
     };
   } catch {
     return emptyProgress();
@@ -361,6 +418,7 @@ export const today = (d = new Date()) =>
 export function addMinutes(p: Progress, minutes: number, date = today()): void {
   if (p.minutesToday.date !== date) p.minutesToday = { date, minutes: 0 };
   p.minutesToday.minutes += minutes;
+  dayStat(p, date).min += minutes;
 }
 
 export function overLimit(p: Progress, date = today()): boolean {
@@ -379,6 +437,7 @@ const dayBefore = (date: string) => {
 
 /** Call when a game is finished. Returns true if this is the first game of the day. */
 export function markDay(p: Progress, date = today()): boolean {
+  dayStat(p, date).games++;
   if (p.streak.last === date) return false;
   p.streak = { count: p.streak.last === dayBefore(date) ? p.streak.count + 1 : 1, last: date };
   return true;
@@ -410,7 +469,8 @@ const fromBase64 = (b64: string) => new TextDecoder().decode(Uint8Array.from(ato
 
 export function exportCode(p: Progress): string {
   const data = {
-    w: Object.entries(p.words).map(([id, s]) => [id, s.box, s.right, s.wrong, s.seen]),
+    w: Object.entries(p.words).map(([id, s]) => [id, s.box, s.right, s.wrong, s.seen, s.due ?? '']),
+    d: p.days,
     b: p.best,
     s: p.stickers,
     set: p.settings,
@@ -425,6 +485,8 @@ export function exportCode(p: Progress): string {
   return CODE_PREFIX + out.slice(0, -1);
 }
 
+const isDate = (v: unknown): v is string => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v);
+
 const count = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) && v >= 0 ? Math.floor(v) : 0);
 
 /** Read a backup code. Returns null if it is not one; odd values inside are dropped, not trusted. */
@@ -438,6 +500,7 @@ export function importCode(code: string): Progress | null {
     for (const row of data.w) {
       if (!Array.isArray(row) || typeof row[0] !== 'string') continue;
       p.words[row[0]] = { box: Math.min(MAX_BOX, count(row[1])), right: count(row[2]), wrong: count(row[3]), seen: count(row[4]) };
+      if (isDate(row[5])) p.words[row[0]].due = row[5];
     }
     if (data.b && typeof data.b === 'object') {
       for (const [k, v] of Object.entries(data.b)) {
@@ -455,8 +518,58 @@ export function importCode(code: string): Progress | null {
     if (data.st && typeof data.st.last === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(data.st.last)) p.streak = { count: count(data.st.count), last: data.st.last };
     if (LOOKS.some((l) => l.id === data.look)) p.look = data.look;
     p.looksSeen = Math.min(LOOKS.length, count(data.ls));
+    if (data.d && typeof data.d === 'object') {
+      for (const [k, v] of Object.entries(data.d as Record<string, Partial<DayStat>>)) {
+        if (!isDate(k) || !v || typeof v !== 'object') continue;
+        p.days[k] = {
+          min: count(v.min),
+          games: count(v.games),
+          right: count(v.right),
+          wrong: count(v.wrong),
+          learned: Array.isArray(v.learned) ? v.learned.filter((x) => typeof x === 'string').slice(0, 60) : [],
+        };
+      }
+    }
     return p;
   } catch {
     return null;
   }
+}
+
+// ---------- the week, for the grown-ups ----------
+
+export interface WeekReport {
+  /** seven days, oldest first, ending with `date` */
+  days: ({ date: string } & DayStat)[];
+  min: number;
+  games: number;
+  right: number;
+  wrong: number;
+  /** days with any play at all: a minute, an answer or a finished game */
+  activeDays: number;
+  /** words that became learned in these seven days */
+  learned: string[];
+}
+
+export function weekReport(p: Progress, date = today()): WeekReport {
+  const days = Array.from({ length: 7 }, (_, i) => {
+    const d = addDays(date, i - 6);
+    const s = p.days[d];
+    return { date: d, min: s?.min ?? 0, games: s?.games ?? 0, right: s?.right ?? 0, wrong: s?.wrong ?? 0, learned: s?.learned ?? [] };
+  });
+  const sum = (k: 'min' | 'games' | 'right' | 'wrong') => days.reduce((n, d) => n + d[k], 0);
+  return {
+    days,
+    min: sum('min'),
+    games: sum('games'),
+    right: sum('right'),
+    wrong: sum('wrong'),
+    activeDays: days.filter((d) => d.min > 0 || d.games > 0 || d.right + d.wrong > 0).length,
+    learned: [...new Set(days.flatMap((d) => d.learned))],
+  };
+}
+
+/** How many words are waiting to be asked again today. */
+export function dueCount(p: Progress, ids: string[], date = today()): number {
+  return ids.filter((id) => isDue(stat(p, id), date)).length;
 }

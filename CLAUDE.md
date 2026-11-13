@@ -48,6 +48,7 @@ src/lib/phrases.ts      danh sách mọi câu cần giọng + phraseKey (tên fi
 src/lib/sfx.ts          hiệu ứng âm thanh và giai điệu Sing along bằng Web Audio (không có file âm thanh)
 src/lib/install.ts      cài app: beforeinstallprompt (Android/desktop), nhận biết iOS và chế độ đã cài
 src/lib/vi.ts           viết số bằng chữ tiếng Việt (cho cổng phụ huynh)
+src/lib/update.ts       tự cập nhật: phát hiện bản mới, chuyển sang lúc an toàn (initUpdate, applyUpdate, BUILD_TIME)
 src/lib/focus.ts        nextInDirection: nút gần nhất theo hướng phím mũi tên
 src/lib/sentences.ts    bộ 96 câu ngắn (allSentences), chọn câu cho một ván (pickSentences), chọn hình đáp án (sentenceOptions)
 src/ui.ts               icon SVG, picture() (hình sticker; số = chữ số + N ngôi sao), stars, dots
@@ -155,6 +156,7 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 - **Đúng thì chỉ phát tiếng "ting" (`sfx.right()`), không đọc lời khen** ("Yes!", "Great!"…). Chủ repo góp ý lời khen sau mỗi câu là thừa và làm chậm nhịp chơi. Sau câu đúng app chỉ đọc lại từ vừa chọn (để bé nghe từ gắn với hình); bài Sentences thì không đọc lại gì. Lời nói ở màn kết quả cuối ván ("Great job!") vẫn giữ. Đừng thêm lại lời khen vào trò mới.
 - Sai không trừ điểm và không dùng màu đỏ. Bài Say it chỉ cho tối đa 2 lần thử, sau đó khen "Good try!" rồi chuyển câu.
 - Leitner có 5 hộp (0–4): đúng thì lên một hộp, sai thì về 0.
+- **Ôn tập theo thời gian:** mỗi lần trả lời đặt ngày hẹn `due` cho từ, theo hộp nó rơi vào: `INTERVAL_DAYS = [0, 1, 3, 7, 14]`. Từ đã thuộc (hộp ≥ 3) chưa tới hẹn thì gần như không bị hỏi (`weightOf` = 0.3), tới hẹn thì được ưu tiên. `pickReviewSet` lấy từ chưa thuộc và từ đã thuộc nhưng tới hẹn; thứ tự: từ vừa nhầm, từ đã thuộc tới hẹn, rồi từ ít thuộc nhất. Tiến độ lưu từ trước khi có tính năng này không có `due`, và được coi là tới hẹn.
 - `pickTargets` dùng trọng số: từ đã xem và hay sai được hỏi nhiều nhất, từ chưa xem có trọng số 0.4. Nhờ vậy trò chơi chủ yếu hỏi những gì Look and listen đã dạy. Không lặp một từ hai câu liền.
 - `pickLearnSet` xếp từ hay nhầm lên trước, rồi đến từ chưa xem, rồi từ ít thuộc nhất; các từ cùng mức được xáo. Sing along cũng dùng hàm này.
 - `pickScene` (Find it) chọn các từ cần tìm theo cùng trọng số với `pickTargets` nhưng không lặp, rồi thêm hình gây nhiễu ngẫu nhiên.
@@ -189,6 +191,8 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 - Cài đặt gồm: độ tuổi, tốc độ đọc, nghĩa tiếng Việt, phát lại giọng bé (mặc định bật), giới hạn phút mỗi ngày (mặc định 20).
 - Hết giờ không bao giờ cắt ngang một trò hay màn kết quả: bé chơi nốt, xem sao và sticker, bấm nút nào ở màn kết quả cũng chuyển sang màn nghỉ. Màn hình chính và màn chủ đề thì chuyển sang màn nghỉ ngay.
 - Phần này còn có bảng tiến độ và nút xóa tiến độ.
+- **7 ngày qua** (`weekReport`): `P.days` ghi mỗi ngày số phút, số trò xong, số câu đúng/sai ngay lần đầu và các từ vừa thuộc (lên hộp 3); giữ khoảng 35 ngày. Biểu đồ cột chỉ có một chuỗi số liệu nên dùng một màu (`--leaf-deep`, đã kiểm tra độ tương phản với nền trắng), không có chú giải; số phút ghi ngay trên cột vì màn cảm ứng không có hover.
+- **Tự cập nhật** (`lib/update.ts`, `registerType: 'prompt'` trong `vite.config.ts`): app kiểm tra bản mới khi được mở lại và mỗi 30 phút. Có bản mới thì chỉ chuyển sang (nạp lại trang) khi app bị ẩn hoặc đang ở màn chào; không bao giờ nạp lại giữa trò chơi. Trang chưa được service worker quản lý (lần mở đầu tiên) không nhận tín hiệu nạp lại, nên `applyUpdate` tự nạp lại sau 3 giây. Đừng đổi về `autoUpdate`: nó nạp lại trang ngay khi có bản mới, kể cả lúc bé đang chơi.
 - **Sao lưu tiến độ** (`exportCode` / `importCode`): một đoạn mã `CHIP1:` + base64 của JSON gọn (từ, sao, sticker, cài đặt, chuỗi ngày, đồ của Chip; không gồm số phút hôm nay). Chọn dạng mã để chép và dán vì chạy được trên mọi trình duyệt, kể cả bản đã cài trên iOS, và không cần máy chủ. `importCode` không tin dữ liệu bên trong: giá trị lạ bị bỏ hoặc kẹp về khoảng hợp lệ, mã sai trả về null. Thêm trường mới vào `Progress` thì thêm vào cả hai hàm này và test.
 - Mục "Cài app": có `beforeinstallprompt` thì hiện nút cài; trên iOS hiện các bước Chia sẻ → Thêm vào Màn hình chính; đã cài thì chỉ báo đã cài. Đặt trong phần bố mẹ để bé không bấm nhầm.
 
@@ -235,7 +239,7 @@ Các file trong `screens/` import vòng lẫn nhau (home → topic → trò chơ
 - Giọng tiếng Anh là mp3 nên giống nhau trên mọi máy. Giọng Việt (nếu bật) và câu chưa có mp3 vẫn phụ thuộc máy.
 - File mp3 phát qua blob URL (không dùng Range request) vì Safari phát từ service worker dễ lỗi với Range.
 - Cache offline thêm khoảng 9 MB cho giọng (1.129 file).
-- Bản cài như app chạy offline, nên sau khi deploy có thể phải mở lại app một lần mới thấy bản mới.
+- Sau khi deploy, app tự chuyển sang bản mới ở lần bị ẩn hoặc lần mở kế tiếp. Máy còn giữ bản rất cũ (trước 13/11/2026, khi chưa có `update.ts`) thì phải đóng hẳn rồi mở lại một lần.
 
 ## Ý tưởng tiếp theo (chưa làm)
 

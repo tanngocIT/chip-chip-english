@@ -22,6 +22,11 @@ import {
   pickTodayTopic,
   REVIEW_MIN,
   memoryStars,
+  isDue,
+  weightOf,
+  weekReport,
+  dueCount,
+  INTERVAL_DAYS,
   markDay,
   currentStreak,
   LOOKS,
@@ -659,5 +664,119 @@ group('arrow keys', () => {
       }
     }
     expect(seen.size).toBe(grid.length);
+  });
+});
+
+group('review by time', () => {
+  it('a word rests longer the better it is known, and a miss brings it back the same day', () => {
+    const p = emptyProgress();
+    expect(INTERVAL_DAYS).toEqual([0, 1, 3, 7, 14]);
+    recordAnswer(p, 'cat', true, '2026-03-01'); // box 1
+    expect(stat(p, 'cat').due).toBe('2026-03-02');
+    recordAnswer(p, 'cat', true, '2026-03-02'); // box 2
+    expect(stat(p, 'cat').due).toBe('2026-03-05');
+    recordAnswer(p, 'cat', true, '2026-03-05'); // box 3
+    expect(stat(p, 'cat').due).toBe('2026-03-12');
+    recordAnswer(p, 'cat', true, '2026-03-12'); // box 4
+    expect(stat(p, 'cat').due).toBe('2026-03-26');
+    recordAnswer(p, 'cat', false, '2026-03-26'); // missed
+    expect(stat(p, 'cat').due).toBe('2026-03-26');
+    expect(stat(p, 'cat').box).toBe(0);
+  });
+
+  it('crosses month ends', () => {
+    const p = emptyProgress();
+    for (const d of ['2026-01-20', '2026-01-21', '2026-01-24']) recordAnswer(p, 'dog', true, d);
+    expect(stat(p, 'dog').due).toBe('2026-01-31');
+    recordAnswer(p, 'dog', true, '2026-01-31');
+    expect(stat(p, 'dog').due).toBe('2026-02-14');
+  });
+
+  it('knows when a word is due', () => {
+    const p = emptyProgress();
+    expect(isDue(stat(p, 'cat'), '2026-03-01')).toBe(false); // never met
+    recordSeen(p, 'cat');
+    expect(isDue(stat(p, 'cat'), '2026-03-01')).toBe(true); // met on a card, never answered
+    recordAnswer(p, 'cat', true, '2026-03-01');
+    expect(isDue(stat(p, 'cat'), '2026-03-01')).toBe(false);
+    expect(isDue(stat(p, 'cat'), '2026-03-02')).toBe(true);
+    // progress saved before this feature has no dates: those words count as due
+    expect(isDue({ box: 4, right: 4, wrong: 0, seen: 4 }, '2026-03-01')).toBe(true);
+  });
+
+  it('a learned word is left alone until its day, then asked again', () => {
+    const p = emptyProgress();
+    for (const d of ['2026-03-01', '2026-03-02', '2026-03-05']) recordAnswer(p, 'cat', true, d); // box 3, due 03-12
+    const s = stat(p, 'cat');
+    expect(weightOf(s, '2026-03-06')).toBeLessThan(0.5);
+    expect(weightOf(s, '2026-03-12')).toBeGreaterThan(3);
+    // Review leaves it out while it rests and brings it back when due
+    for (const w of ['apple', 'bus', 'sun', 'dog']) recordSeen(p, w);
+    expect(pickReviewSet(words, 8, p, seeded(1), '2026-03-06').map((w) => w.id)).not.toContain('cat');
+    expect(pickReviewSet(words, 8, p, seeded(1), '2026-03-12').map((w) => w.id)).toContain('cat');
+  });
+
+  it('missed words still come first, then learned words that are due', () => {
+    const p = emptyProgress();
+    for (const w of words.slice(0, 40)) recordSeen(p, w.id);
+    for (const id of ['sun', 'bus']) for (const d of ['2026-03-01', '2026-03-02', '2026-03-05']) recordAnswer(p, id, true, d);
+    recordAnswer(p, 'red', false, '2026-03-12');
+    const set = pickReviewSet(words, 3, p, seeded(4), '2026-03-12').map((w) => w.id).sort();
+    expect(set).toEqual(['bus', 'red', 'sun']);
+    expect(dueCount(p, words.map((w) => w.id), '2026-03-12')).toBeGreaterThanOrEqual(3);
+  });
+});
+
+group('weekly report', () => {
+  it('adds up seven days ending today and lists the words learned in them', () => {
+    const p = emptyProgress();
+    addMinutes(p, 5, '2026-03-01'); // a week and a day back: outside the report
+    addMinutes(p, 12, '2026-03-03');
+    addMinutes(p, 7, '2026-03-08');
+    markDay(p, '2026-03-03');
+    markDay(p, '2026-03-03');
+    markDay(p, '2026-03-08');
+    for (const d of ['2026-03-03', '2026-03-04', '2026-03-08']) recordAnswer(p, 'cat', true, d);
+    recordAnswer(p, 'dog', false, '2026-03-08');
+    const r = weekReport(p, '2026-03-08');
+    expect(r.days.map((d) => d.date)).toEqual(['2026-03-02', '2026-03-03', '2026-03-04', '2026-03-05', '2026-03-06', '2026-03-07', '2026-03-08']);
+    expect(r.days.map((d) => d.min)).toEqual([0, 12, 0, 0, 0, 0, 7]);
+    expect(r.min).toBe(19);
+    expect(r.games).toBe(3);
+    expect(r.right).toBe(3);
+    expect(r.wrong).toBe(1);
+    expect(r.activeDays).toBe(3);
+    expect(r.learned).toEqual(['cat']);
+    expect(weekReport(emptyProgress(), '2026-03-08').min).toBe(0);
+  });
+
+  it('keeps about five weeks of days and survives old saved data', () => {
+    const p = emptyProgress();
+    addMinutes(p, 1, '2026-01-01');
+    addMinutes(p, 1, '2026-01-20');
+    addMinutes(p, 1, '2026-03-01');
+    expect(Object.keys(p.days).sort()).toEqual(['2026-03-01']);
+    const old = load({ getItem: () => JSON.stringify({ stickers: ['fox'], days: 'oops' }) });
+    expect(old.days).toEqual({});
+    addMinutes(old, 3, '2026-03-01');
+    expect(weekReport(old, '2026-03-01').min).toBe(3);
+  });
+
+  it('travels in the backup code, with the review dates', () => {
+    const p = emptyProgress();
+    addMinutes(p, 9, '2026-03-08');
+    markDay(p, '2026-03-08');
+    recordAnswer(p, 'cat', true, '2026-03-08');
+    const back = importCode(exportCode(p))!;
+    expect(back.days).toEqual(p.days);
+    expect(back.words.cat.due).toBe('2026-03-09');
+    // a code made before these fields existed still loads
+    const oldCode = 'CHIP1:' + btoa(JSON.stringify({ w: [['cat', 2, 2, 0, 2]], b: {}, s: [], set: {} }));
+    const o = importCode(oldCode)!;
+    expect(o.words.cat).toEqual({ box: 2, right: 2, wrong: 0, seen: 2 });
+    expect(o.days).toEqual({});
+    // junk days are dropped
+    const junk = 'CHIP1:' + btoa(JSON.stringify({ w: [], d: { nope: { min: 5 }, '2026-03-08': { min: -4, games: 'x', learned: [1, 'cat'] } } }));
+    expect(importCode(junk)!.days).toEqual({ '2026-03-08': { min: 0, games: 0, right: 0, wrong: 0, learned: ['cat'] } });
   });
 });

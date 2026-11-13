@@ -4,9 +4,11 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig({
   // relative base so it works on GitHub Pages sub-paths and from any folder
   base: './',
+  define: { __BUILD_TIME__: JSON.stringify(new Date().toISOString()) },
   plugins: [
     VitePWA({
-      registerType: 'autoUpdate',
+      // the app decides when to switch to a new version (src/lib/update.ts), never mid-game
+      registerType: 'prompt',
       includeAssets: ['img/**/*.svg', 'icon-192.png', 'icon-512.png'],
       manifest: {
         name: 'Chip Chip English',

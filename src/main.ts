@@ -8,6 +8,7 @@ import { addMinutes, overLimit } from './lib/progress';
 import { app, P, inParentArea, persist } from './screens/core';
 import { splash, rest } from './screens/home';
 import { initKeys } from './screens/keys';
+import { initUpdate, BUILD_TIME } from './lib/update';
 
 // ---------- play-time counter ----------
 
@@ -20,7 +21,9 @@ setInterval(() => {
   if (overLimit(P) && !app.querySelector('.lesson, .result, .rest')) rest();
 }, 60_000);
 
-(window as any).__app = { P, topicById };
+(window as any).__app = { P, topicById, build: BUILD_TIME };
 
 initKeys(app);
+// a new version may load only on the start screen (or while the app is hidden)
+initUpdate(() => !!app.querySelector('.splash:not(.rest)'));
 splash();

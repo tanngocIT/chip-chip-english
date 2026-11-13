@@ -278,6 +278,16 @@ await page.evaluate(() => {
 });
 await shot('14-parents');
 if (!(await page.$('.panel.install'))) errors.push('install panel missing');
+// The week: seven bars, and today's games and answers are counted.
+const weekInfo = await page.evaluate(() => ({
+  bars: document.querySelectorAll('.panel.week .bar-col').length,
+  tiles: [...document.querySelectorAll('.panel.week .tile b')].map((b) => b.textContent),
+  days: Object.values(window.__app.P.days),
+  version: [...document.querySelectorAll('.panel p')].some((p) => p.textContent.includes('Phiên bản')),
+}));
+if (weekInfo.bars !== 7 || weekInfo.tiles.length !== 4) errors.push(`week report is incomplete: ${JSON.stringify(weekInfo)}`);
+if (!weekInfo.days.length || weekInfo.days[0].games < 1 || weekInfo.days[0].right + weekInfo.days[0].wrong < 1) errors.push(`today was not recorded: ${JSON.stringify(weekInfo.days)}`);
+if (!weekInfo.version) errors.push('version line missing in the grown-ups area');
 // Backup: the code on screen restores the same progress.
 page.on('dialog', (d) => void d.accept());
 const backup = await page.evaluate(() => {

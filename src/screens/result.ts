@@ -31,7 +31,8 @@ export interface ResultSpec {
 }
 
 export function resultScreen({ tint, stars, sticker, again, done, steps }: ResultSpec) {
-  if (markDay(P)) persist();
+  markDay(P);
+  persist();
   const row = starsRow(0, 3, 'big');
   const stickerImg = sticker ? stickers.find((s) => s.id === sticker)!.img : null;
   const prize = h('div', { class: 'prize' });

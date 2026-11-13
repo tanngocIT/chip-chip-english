@@ -55,6 +55,7 @@ Mỗi chủ đề có 7 trò:
 - Chọn đúng thì app chỉ phát một tiếng "ting" ngắn và bạn gà Chip nhảy lên mừng, không đọc lời khen sau mỗi câu, để bé chơi liền mạch.
 - Chọn sai không bị trừ điểm. App chỉ phát tiếng "boop" nhẹ, làm mờ hình sai và đọc lại câu hỏi.
 - Bài **Say it** chấm dễ: chấp nhận từ đồng âm ("for" → four, "I" → eye) và phát âm gần đúng. Nói hai lần chưa được thì app vẫn khen "Good try!", đọc mẫu rồi chuyển câu, để bé không bị kẹt.
+- **Ôn tập theo thời gian:** mỗi từ có ngày hẹn ôn lại. Vừa nhầm thì hỏi lại ngay trong ngày; đúng thì nghỉ 1, 3, 7 rồi 14 ngày. Từ bé đã thuộc sẽ không bị hỏi mãi, nhưng tới hẹn thì quay lại (ở các trò chơi và ở nút Review) trước khi bé quên.
 - App ghi nhớ từ nào bé hay nhầm (theo kiểu hộp Leitner) và cho từ đó xuất hiện nhiều hơn ở các lần chơi sau. Các trò chơi chủ yếu hỏi những từ bé đã xem ở Look and listen, thỉnh thoảng mới có từ mới.
 
 **Độ khó theo tuổi** (bố mẹ chọn trong phần cài đặt):
@@ -91,8 +92,10 @@ Trong đó có:
 - Bật đọc thêm nghĩa tiếng Việt ở thẻ từ (cần máy có giọng đọc tiếng Việt).
 - Bật/tắt phát lại giọng bé ở bài Say it (mặc định bật).
 - Giới hạn thời gian chơi mỗi ngày (mặc định 20 phút). Hết giờ, bạn gà Chip sẽ nói "Time to rest" và đưa bé ra màn hình nghỉ. Nếu hết giờ khi bé đang giữa một trò, bé được chơi nốt trò đó và xem sao, sticker rồi mới nghỉ.
+- **7 ngày qua:** số phút chơi mỗi ngày (biểu đồ), số ngày có chơi, số trò đã xong, tỉ lệ trả lời đúng ngay lần đầu, các từ mới thuộc trong tuần và số từ đến hạn ôn hôm nay.
 - Xem tiến độ: số từ đã thuộc và số sao của từng chủ đề, các từ bé hay nhầm, số sticker đã có.
 - Xóa tiến độ.
+- **Phiên bản và cập nhật:** app tự tải bản mới ở chế độ nền và chuyển sang bản mới vào lúc bé không chơi (khi app bị ẩn đi, hoặc đang ở màn chào), không bao giờ nạp lại giữa một trò. Mục Thiết bị ghi ngày giờ của bản đang dùng và có nút kiểm tra bản mới.
 - **Sao lưu tiến độ:** sao chép một đoạn mã (bắt đầu bằng `CHIP1:`) và giữ ở nơi khác, ví dụ tin nhắn cho chính mình. Khi đổi máy hoặc lỡ xóa dữ liệu trình duyệt, dán mã vào để lấy lại sao, sticker, từ đã học và cài đặt. Mã không đi qua máy chủ nào.
 - **Cài app ra màn hình chính.** Trên Android và máy tính (Chrome, Edge) có nút bấm để cài ngay. Trên iPhone/iPad, Apple không cho web tự mở hộp thoại cài nên app hiện hướng dẫn: mở bằng Safari, bấm Chia sẻ rồi chọn Thêm vào Màn hình chính.
 
@@ -141,6 +144,7 @@ src/
   lib/install.ts       # nút cài app ra màn hình chính
   lib/sentences.ts     # bộ câu ngắn và cách chọn hình đáp án
   lib/focus.ts         # tìm nút gần nhất theo hướng phím mũi tên
+  lib/update.ts        # tự cập nhật bản mới vào lúc không làm gián đoạn
   screens/             # mỗi màn hình một file: core (trạng thái chung, điều hướng), home, topic,
                        # learn, quiz (Listen and tap, Find the shadow, Review), find, memory, sing, say,
                        # sentences, result, parents
