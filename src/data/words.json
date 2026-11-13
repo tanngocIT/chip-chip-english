@@ -774,73 +774,85 @@
    "id": "ball",
    "topic": "toys",
    "vi": "quả bóng",
-   "asset": "Soccer ball"
+   "asset": "Soccer ball",
+   "art": true
   },
   {
    "id": "teddy bear",
    "topic": "toys",
    "vi": "gấu bông",
-   "asset": "Teddy bear"
+   "asset": "Teddy bear",
+   "art": true
   },
   {
    "id": "balloon",
    "topic": "toys",
    "vi": "bóng bay",
-   "asset": "Balloon"
+   "asset": "Balloon",
+   "art": true
   },
   {
    "id": "kite",
    "topic": "toys",
    "vi": "con diều",
-   "asset": "Kite"
+   "asset": "Kite",
+   "art": true
   },
   {
    "id": "book",
    "topic": "toys",
    "vi": "quyển sách",
-   "asset": "Closed book"
+   "asset": "Closed book",
+   "art": true
   },
   {
    "id": "pencil",
    "topic": "toys",
    "vi": "bút chì",
-   "asset": "Pencil"
+   "asset": "Pencil",
+   "art": true
   },
   {
    "id": "chair",
    "topic": "toys",
    "vi": "cái ghế",
-   "asset": "Chair"
+   "asset": "Chair",
+   "art": true
   },
   {
    "id": "bed",
    "topic": "toys",
    "vi": "cái giường",
-   "asset": "Bed"
+   "asset": "Bed",
+   "art": true
   },
   {
    "id": "door",
    "topic": "toys",
    "vi": "cánh cửa",
-   "asset": "Door"
+   "asset": "Door",
+   "art": true
   },
   {
    "id": "house",
    "topic": "toys",
    "vi": "ngôi nhà",
-   "asset": "House with garden"
+   "asset": "House with garden",
+   "art": true
   },
   {
    "id": "umbrella",
    "topic": "toys",
    "vi": "cái ô",
-   "asset": "Umbrella"
+   "asset": "Umbrella",
+   "art": true
   },
   {
    "id": "gift",
    "topic": "toys",
    "vi": "món quà",
-   "asset": "Wrapped gift"
+   "asset": "Wrapped gift",
+   "art": true
   },
   {
    "id": "sun",
@@ -1902,173 +1914,201 @@
    "id": "yo-yo",
    "topic": "toys",
    "vi": "con yo-yo",
-   "asset": "Yo-yo"
+   "asset": "Yo-yo",
+   "art": true
   },
   {
    "id": "puzzle",
    "topic": "toys",
    "vi": "xếp hình",
-   "asset": "Puzzle piece"
+   "asset": "Puzzle piece",
+   "art": true
   },
   {
    "id": "robot",
    "topic": "toys",
    "vi": "người máy",
-   "asset": "Robot"
+   "asset": "Robot",
+   "art": true
   },
   {
    "id": "drum",
    "topic": "toys",
    "vi": "cái trống",
-   "asset": "Drum"
+   "asset": "Drum",
+   "art": true
   },
   {
    "id": "guitar",
    "topic": "toys",
    "vi": "đàn ghi-ta",
-   "asset": "Guitar"
+   "asset": "Guitar",
+   "art": true
   },
   {
    "id": "piano",
    "topic": "toys",
    "vi": "đàn piano",
-   "asset": "Musical keyboard"
+   "asset": "Musical keyboard",
+   "art": true
   },
   {
    "id": "crayon",
    "topic": "toys",
    "vi": "bút sáp",
-   "asset": "Crayon"
+   "asset": "Crayon",
+   "art": true
   },
   {
    "id": "scissors",
    "topic": "toys",
    "vi": "cái kéo",
    "asset": "Scissors",
-   "plural": true
+   "plural": true,
+   "art": true
   },
   {
    "id": "clock",
    "topic": "toys",
    "vi": "đồng hồ",
-   "asset": "Alarm clock"
+   "asset": "Alarm clock",
+   "art": true
   },
   {
    "id": "phone",
    "topic": "toys",
    "vi": "điện thoại",
-   "asset": "Mobile phone"
+   "asset": "Mobile phone",
+   "art": true
   },
   {
    "id": "tv",
    "topic": "toys",
    "vi": "ti vi",
-   "asset": "Television"
+   "asset": "Television",
+   "art": true
   },
   {
    "id": "computer",
    "topic": "toys",
    "vi": "máy tính",
-   "asset": "Laptop"
+   "asset": "Laptop",
+   "art": true
   },
   {
    "id": "key",
    "topic": "toys",
    "vi": "chìa khóa",
-   "asset": "Key"
+   "asset": "Key",
+   "art": true
   },
   {
    "id": "backpack",
    "topic": "toys",
    "vi": "ba lô",
-   "asset": "Backpack"
+   "asset": "Backpack",
+   "art": true
   },
   {
    "id": "shoe",
    "topic": "toys",
    "vi": "đôi giày",
-   "asset": "Running shoe"
+   "asset": "Running shoe",
+   "art": true
   },
   {
    "id": "hat",
    "topic": "toys",
    "vi": "cái mũ",
-   "asset": "Womans hat"
+   "asset": "Womans hat",
+   "art": true
   },
   {
    "id": "t-shirt",
    "topic": "toys",
    "vi": "áo thun",
-   "asset": "T-shirt"
+   "asset": "T-shirt",
+   "art": true
   },
   {
    "id": "socks",
    "topic": "toys",
    "vi": "đôi tất",
    "asset": "Socks",
-   "plural": true
+   "plural": true,
+   "art": true
   },
   {
    "id": "dress",
    "topic": "toys",
    "vi": "váy",
-   "asset": "Dress"
+   "asset": "Dress",
+   "art": true
   },
   {
    "id": "glasses",
    "topic": "toys",
    "vi": "mắt kính",
    "asset": "Glasses",
-   "plural": true
+   "plural": true,
+   "art": true
   },
   {
    "id": "toothbrush",
    "topic": "toys",
    "vi": "bàn chải",
-   "asset": "Toothbrush"
+   "asset": "Toothbrush",
+   "art": true
   },
   {
    "id": "soap",
    "topic": "toys",
    "vi": "xà phòng",
    "asset": "Soap",
-   "mass": true
+   "mass": true,
+   "art": true
   },
   {
    "id": "bathtub",
    "topic": "toys",
    "vi": "bồn tắm",
-   "asset": "Bathtub"
+   "asset": "Bathtub",
+   "art": true
   },
   {
    "id": "toilet",
    "topic": "toys",
    "vi": "bồn cầu",
-   "asset": "Toilet"
+   "asset": "Toilet",
+   "art": true
   },
   {
    "id": "window",
    "topic": "toys",
    "vi": "cửa sổ",
-   "asset": "Window"
+   "asset": "Window",
+   "art": true
   },
   {
    "id": "sofa",
    "topic": "toys",
    "vi": "ghế sofa",
-   "asset": "Couch and lamp"
+   "asset": "Couch and lamp",
+   "art": true
   },
   {
    "id": "spoon",
    "topic": "toys",
    "vi": "cái thìa",
-   "asset": "Spoon"
+   "asset": "Spoon",
+   "art": true
   },
   {
    "id": "basket",
    "topic": "toys",
    "vi": "cái giỏ",
-   "asset": "Basket"
+   "asset": "Basket",
+   "art": true
   },
   {
    "id": "leaf",
@@ -2328,84 +2368,96 @@
    "topic": "feelings",
    "vi": "vui",
    "asset": "Grinning face with smiling eyes",
-   "kind": "feeling"
+   "kind": "feeling",
+   "art": true
   },
   {
    "id": "sad",
    "topic": "feelings",
    "vi": "buồn",
    "asset": "Crying face",
-   "kind": "feeling"
+   "kind": "feeling",
+   "art": true
   },
   {
    "id": "angry",
    "topic": "feelings",
    "vi": "tức giận",
    "asset": "Pouting face",
-   "kind": "feeling"
+   "kind": "feeling",
+   "art": true
   },
   {
    "id": "scared",
    "topic": "feelings",
    "vi": "sợ",
    "asset": "Face screaming in fear",
-   "kind": "feeling"
+   "kind": "feeling",
+   "art": true
   },
   {
    "id": "sleepy",
    "topic": "feelings",
    "vi": "buồn ngủ",
    "asset": "Sleeping face",
-   "kind": "feeling"
+   "kind": "feeling",
+   "art": true
   },
   {
    "id": "surprised",
    "topic": "feelings",
    "vi": "ngạc nhiên",
    "asset": "Astonished face",
-   "kind": "feeling"
+   "kind": "feeling",
+   "art": true
   },
   {
    "id": "sick",
    "topic": "feelings",
    "vi": "ốm",
    "asset": "Face with thermometer",
-   "kind": "feeling"
+   "kind": "feeling",
+   "art": true
   },
   {
    "id": "hot",
    "topic": "feelings",
    "vi": "nóng",
    "asset": "Hot face",
-   "kind": "feeling"
+   "kind": "feeling",
+   "art": true
   },
   {
    "id": "cold",
    "topic": "feelings",
    "vi": "lạnh",
    "asset": "Cold face",
-   "kind": "feeling"
+   "kind": "feeling",
+   "art": true
   },
   {
    "id": "silly",
    "topic": "feelings",
    "vi": "nghịch ngợm",
    "asset": "Zany face",
-   "kind": "feeling"
+   "kind": "feeling",
+   "art": true
   },
   {
    "id": "hungry",
    "topic": "feelings",
    "vi": "đói",
    "asset": "Drooling face",
-   "kind": "feeling"
+   "kind": "feeling",
+   "art": true
   },
   {
    "id": "excited",
    "topic": "feelings",
    "vi": "hào hứng",
    "asset": "Partying face",
-   "kind": "feeling"
+   "kind": "feeling",
+   "art": true
   },
   {
    "id": "run",
@@ -2695,7 +2747,8 @@
    "asset": "Princess",
    "kind": "letter",
    "example": "queen",
-   "skin": true
+   "skin": true,
+   "art": true
   },
   {
    "id": "letter-r",

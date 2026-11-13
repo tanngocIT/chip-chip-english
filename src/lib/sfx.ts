@@ -6,8 +6,13 @@ let muted = false;
 export function unlockAudio() {
   const AC = (globalThis as any).AudioContext ?? (globalThis as any).webkitAudioContext;
   if (!AC) return;
-  ctx ??= new AC();
-  if (ctx!.state === 'suspended') void ctx!.resume();
+  try {
+    // a context the device has closed (the audio device went away) is replaced by a new one
+    if (!ctx || ctx.state === 'closed') ctx = new AC();
+    if (ctx!.state === 'suspended') void ctx!.resume().catch(() => {});
+  } catch {
+    ctx = null;
+  }
 }
 
 export const setMuted = (m: boolean) => {
@@ -16,19 +21,25 @@ export const setMuted = (m: boolean) => {
 
 function tone(freq: number, start: number, dur: number, type: OscillatorType = 'sine', vol = 0.18, slideTo?: number) {
   if (!ctx || muted) return null;
-  const t0 = ctx.currentTime + start;
-  const osc = ctx.createOscillator();
-  const g = ctx.createGain();
-  osc.type = type;
-  osc.frequency.setValueAtTime(freq, t0);
-  if (slideTo) osc.frequency.exponentialRampToValueAtTime(slideTo, t0 + dur);
-  g.gain.setValueAtTime(0.0001, t0);
-  g.gain.exponentialRampToValueAtTime(vol, t0 + 0.02);
-  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-  osc.connect(g).connect(ctx.destination);
-  osc.start(t0);
-  osc.stop(t0 + dur + 0.05);
-  return osc;
+  // A sound effect is never worth a broken game: every caller plays its sound first and then
+  // goes on with the answer, so an error here (a failed audio device) would freeze the round.
+  try {
+    const t0 = ctx.currentTime + start;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, t0);
+    if (slideTo) osc.frequency.exponentialRampToValueAtTime(slideTo, t0 + dur);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(vol, t0 + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(g).connect(ctx.destination);
+    osc.start(t0);
+    osc.stop(t0 + dur + 0.05);
+    return osc;
+  } catch {
+    return null;
+  }
 }
 
 /** Note names used by the Sing along tune. */

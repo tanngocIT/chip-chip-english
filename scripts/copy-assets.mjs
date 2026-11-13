@@ -45,7 +45,8 @@ const copy = (asset, dest, skin = false, fallback) => {
 
 const seen = new Set();
 for (const w of data.words) {
-  if (w.custom) continue; // drawn for this app (shapes), already in public/img
+  // drawn for this app (shapes, the art set): already in public/img, nothing to copy
+  if (w.custom || w.art) continue;
   const name = slug(w.asset);
   if (seen.has(name)) continue;
   seen.add(name);

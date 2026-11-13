@@ -16,7 +16,8 @@ const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 const sheets = JSON.parse(fs.readFileSync('art-inbox/sheets.json', 'utf8'));
 const tmp = 'art-inbox/cut';
 fs.mkdirSync(tmp, { recursive: true });
-fs.mkdirSync('public/img/art', { recursive: true });
+const out = process.argv[4] ?? 'public/img/art';
+fs.mkdirSync(out, { recursive: true });
 let failed = 0;
 for (const [file, entry] of Object.entries(sheets)) {
   // an entry is the list of ids, or { ids, join } when a picture on the sheet was drawn in loose pieces
@@ -29,7 +30,7 @@ for (const [file, entry] of Object.entries(sheets)) {
     failed++;
     continue;
   }
-  for (const id of ids) fs.copyFileSync(path.join(tmp, `${id}.webp`), path.join('public/img/art', `${slug(id)}.webp`));
+  for (const id of ids) fs.copyFileSync(path.join(tmp, `${id}.webp`), path.join(out, `${slug(id)}.webp`));
   console.log(`${file}: ${ids.length}`);
 }
 process.exit(failed ? 1 : 0);
