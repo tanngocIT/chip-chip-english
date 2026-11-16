@@ -164,31 +164,33 @@ src/
   main.ts              # khởi động app và bộ đếm phút chơi
   style.css            # giao diện
 scripts/
-  copy-assets.mjs      # chép hình từ bộ Fluent Emoji vào public/img
-  make-icons.mjs       # tạo icon app
+  art-prompts.mjs      # viết prompt vẽ hình (art-inbox/PROMPTS.md) cho các từ chưa có hình riêng
+  cut-all-art.mjs      # cắt các tấm hình trong art-inbox/ thành public/img/art/*.webp (gọi cut-art.py)
+  copy-assets.mjs      # chép hình Fluent Emoji vào public/img cho các từ không có hình vẽ riêng
+  make-icons.mjs       # tạo icon app từ hình bạn gà Chip
   gen-voice.mjs        # sinh file giọng mp3 bằng Piper cho các câu còn thiếu (gọi gen-voice.py)
   screenshots.mjs      # chơi thử tự động + chụp màn hình
 ```
 
 ### Thêm từ mới
 
-1. Tìm tên hình trong [thư mục assets của Fluent Emoji](https://github.com/microsoft/fluentui-emoji/tree/main/assets), ví dụ `Penguin`.
-2. Thêm một dòng vào `src/data/words.json`:
-   `{ "id": "penguin", "topic": "animals", "vi": "chim cánh cụt", "asset": "Penguin" }`
-3. Chép lại hình:
-   ```bash
-   git clone --depth 1 --filter=blob:none --sparse https://github.com/microsoft/fluentui-emoji.git /tmp/fe
-   (cd /tmp/fe && git sparse-checkout set --no-cone '/assets/*/Flat/*' '/assets/*/Medium-Light/Flat/*' '/LICENSE')
-   node scripts/copy-assets.mjs /tmp/fe
-   ```
-4. Sinh giọng đọc cho từ mới (cần Piper, cách cài ghi trong `CLAUDE.md`):
+1. Thêm một dòng vào `src/data/words.json`:
+   `{ "id": "koala", "topic": "animals", "vi": "gấu túi", "asset": "Koala" }`
+2. Vẽ hình. Mười chủ đề từ vựng dùng hình vẽ riêng, nên từ mới cũng cần một hình cùng phong cách:
+   - Chạy `node scripts/art-prompts.mjs`. Script ghi `art-inbox/PROMPTS.md`, trong đó có prompt cho các từ chưa có hình (mỗi tấm tối đa 9 hình trên nền một màu). Từ nào dễ nhầm với từ khác thì thêm mô tả vào bảng `HINT` trong script.
+   - Dán prompt vào một công cụ vẽ hình (bộ hiện tại vẽ bằng Gemini), kèm một hình có sẵn trong `public/img/art/` làm mẫu phong cách, rồi lưu tấm hình vào `art-inbox/`.
+   - Ghi tên file và danh sách `id` theo thứ tự đọc vào `art-inbox/sheets.json`, ví dụ `{ "animals-1.png": ["koala"] }`, rồi chạy `node scripts/cut-all-art.mjs <python>` (Python cần pillow, numpy, scipy). Hình được cắt thành `public/img/art/<id>.webp`.
+   - Thêm `"art": true` vào dòng của từ đó. Xem lại hình đã cắt trước khi dùng.
+
+   Với chủ đề Màu sắc và Số (dùng Fluent Emoji), bỏ qua bước vẽ: tìm tên hình trong [thư mục assets của Fluent Emoji](https://github.com/microsoft/fluentui-emoji/tree/main/assets) rồi chép về bằng `node scripts/copy-assets.mjs <thư mục checkout>`.
+3. Sinh giọng đọc cho từ mới (cần Piper, cách cài ghi trong `CLAUDE.md`):
    ```bash
    node scripts/gen-voice.mjs <python> <đường dẫn en_US-kristin-medium.onnx>
    ```
    Bỏ qua bước này thì từ mới vẫn đọc được bằng giọng của máy, nhưng `npm test` sẽ báo thiếu file mp3.
-5. Chạy `npm test`.
+4. Chạy `npm test`.
 
-Các cờ có thể dùng: `"plural": true` (grapes → "They're grapes"), `"mass": true` (milk → "It's milk"), `"the": true` (the sun), `"skin": true` (hình người dùng màu da trung tính), `"kind": "color" | "number" | "person" | "job" | "feeling" | "action" | "letter"`.
+Các cờ có thể dùng: `"art": true` (dùng hình vẽ riêng trong `public/img/art/`), `"plural": true` (grapes → "They're grapes"), `"mass": true` (milk → "It's milk"), `"the": true` (the sun), `"skin": true` (hình người dùng màu da trung tính), `"kind": "color" | "number" | "person" | "job" | "feeling" | "action" | "letter"`.
 
 ## Hướng phát triển tiếp
 
@@ -197,9 +199,16 @@ Dự án giữ nguyên tắc miễn phí hoàn toàn, nên chỉ xét các hư�
 - Bài hát có giọng hát thật (Sing along hiện là đọc theo nhịp nhạc).
 - Giọng tiếng Việt bằng mp3 sinh sẵn, để mục "nghĩa tiếng Việt" chạy trên cả máy không có giọng Việt.
 - Thêm kiểu câu cho bài Sentences (ví dụ có động từ: "The cat is sleeping."); cần hình ghép mà bộ hình hiện tại chưa có.
+- Vẽ lại icon của các trò chơi (con mắt, cái tai, cái miệng, cái trống, mảnh ghép) cho cùng phong cách với bộ hình mới.
 
 Đã loại vì tốn tiền: chấm phát âm bằng Azure Pronunciation Assessment, đưa lên App Store / Google Play (cần tài khoản nhà phát triển trả phí). App dùng dạng PWA cài từ trình duyệt.
 
 ## Giấy phép
 
-Mã nguồn: MIT. Hình minh họa: Fluent Emoji © Microsoft, MIT (`public/img/LICENSE-fluentui-emoji.txt`).
+Mã nguồn: MIT.
+
+Hình minh họa:
+
+- Hình từ vựng, sticker, bạn gà Chip và đồ của Chip (`public/img/art/`): tạo bằng Gemini của Google theo mô tả của dự án. Nếu dùng lại ngoài dự án này, hãy tự kiểm tra điều khoản sử dụng của Gemini.
+- Trái tim màu, ngôi sao và icon trò chơi: Fluent Emoji © Microsoft, MIT (`public/img/LICENSE-fluentui-emoji.txt`).
+- Hình khối: vẽ riêng cho dự án, MIT.
