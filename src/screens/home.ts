@@ -235,30 +235,102 @@ export function home() {
   );
 }
 
-/** Grown-ups button: needs a 1.5 s press so little fingers don't open it by accident. */
+export const HOLD_MS = 1500;
+
+/**
+ * Grown-ups button: needs a 1.5 s press so little fingers don't open it by accident.
+ *
+ * A real finger is not a test click, so the press is followed in the most forgiving way:
+ *  - a finger is tracked with touch events. On phones a long press makes the browser think of
+ *    its own long-press menu, and it then cancels the pointer events half-way through the hold;
+ *    touch events whose default was prevented are left alone.
+ *  - the press only ends when the finger or mouse button lifts, or strays far from the button.
+ *    Rolling a thumb a few pixels off a small round button must not start the wait again.
+ *  - a short tap gets a hint, because nothing on the button says it has to be held.
+ */
 export function holdButton(onDone: () => void) {
-  let t: number | undefined;
+  let timer: number | undefined;
+  let startedAt = 0;
+  let origin: [number, number] | null = null;
   const btn = h('button', { class: 'grownup', 'aria-label': 'Dành cho bố mẹ (giữ để mở)' }, icon.gear(), h('i', { class: 'fill' }));
-  const start = (e: Event) => {
-    e.preventDefault();
+
+  const start = (x: number, y: number) => {
+    clearTimeout(timer);
+    document.querySelector('.hold-hint')?.remove();
+    origin = [x, y];
+    startedAt = Date.now();
     btn.classList.add('holding');
-    t = window.setTimeout(() => {
+    timer = window.setTimeout(() => {
+      origin = null;
       btn.classList.remove('holding');
       onDone();
-    }, 1500);
+    }, HOLD_MS);
   };
-  const end = () => {
+  const end = (hint: boolean) => {
+    if (!origin) return;
+    origin = null;
     btn.classList.remove('holding');
-    clearTimeout(t);
+    clearTimeout(timer);
+    if (hint && btn.isConnected && Date.now() - startedAt < HOLD_MS) showHoldHint(btn);
   };
-  btn.addEventListener('pointerdown', start);
-  btn.addEventListener('pointerup', end);
-  btn.addEventListener('pointerleave', end);
-  btn.addEventListener('pointercancel', end);
+  /** Far from where the press began: the finger has left for good. */
+  const strayed = (x: number, y: number) => !!origin && Math.hypot(x - origin[0], y - origin[1]) > 70;
+
+  const hasTouch = 'ontouchstart' in window;
+  if (hasTouch) {
+    btn.addEventListener(
+      'touchstart',
+      (e) => {
+        // no long-press menu, no text selection, no made-up mouse events after the touch
+        e.preventDefault();
+        const t = e.changedTouches[0];
+        start(t.clientX, t.clientY);
+      },
+      { passive: false },
+    );
+    btn.addEventListener('touchmove', (e) => {
+      const t = e.changedTouches[0];
+      if (strayed(t.clientX, t.clientY)) end(false);
+    });
+    btn.addEventListener('touchend', () => end(true));
+    btn.addEventListener('touchcancel', () => end(false));
+  }
+  btn.addEventListener('pointerdown', (e) => {
+    if (hasTouch && e.pointerType === 'touch') return; // followed by the touch events above
+    e.preventDefault();
+    try {
+      // keep getting the moves and the release even when the pointer slips off the button
+      btn.setPointerCapture(e.pointerId);
+    } catch {
+      /* not a live pointer */
+    }
+    start(e.clientX, e.clientY);
+  });
+  btn.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'touch' && strayed(e.clientX, e.clientY)) end(false);
+  });
+  btn.addEventListener('pointerup', (e) => {
+    if (!(hasTouch && e.pointerType === 'touch')) end(true);
+  });
+  btn.addEventListener('pointercancel', (e) => {
+    if (!(hasTouch && e.pointerType === 'touch')) end(false);
+  });
+  btn.addEventListener('contextmenu', (e) => e.preventDefault());
   btn.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') onDone();
   });
   return btn;
+}
+
+/** Tell a grown-up who only tapped that the button has to be held. Gone after a moment. */
+function showHoldHint(btn: HTMLElement) {
+  document.querySelector('.hold-hint')?.remove();
+  const r = btn.getBoundingClientRect();
+  const hint = h('div', { class: 'hold-hint', role: 'status' }, 'Bố mẹ giữ nút này 2 giây');
+  hint.style.right = `${Math.max(8, window.innerWidth - r.right)}px`;
+  hint.style.bottom = `${window.innerHeight - r.top + 10}px`;
+  document.body.appendChild(hint);
+  setTimeout(() => hint.remove(), 2600);
 }
 
 // ---------- stickers ----------

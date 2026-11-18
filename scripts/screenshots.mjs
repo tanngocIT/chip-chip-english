@@ -338,6 +338,33 @@ await click('.bar .round');
   if (!(await page.$('.home'))) errors.push('word book Home did not go home');
 }
 
+// The gear with a real finger. A parent reported that holding it did nothing: the old code gave
+// up when the phone browser cancelled the pointer for its own long press, or when the press
+// slipped a little off the small button.
+{
+  const [gx, gy] = await page.$eval('.grownup', (g) => { const r = g.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; });
+  // a short tap opens nothing and says what to do
+  await page.touchscreen.touchStart(gx, gy);
+  await wait(120);
+  await page.touchscreen.touchEnd();
+  await wait(200);
+  const hint = await page.$eval('.hold-hint', (el) => el.textContent).catch(() => '');
+  if (!hint || (await page.$('.gate'))) errors.push(`a tap on the gear: hint "${hint}", gate ${!!(await page.$('.gate'))}`);
+  // a hold that slips off the button, while the browser cancels the pointer half-way
+  await page.touchscreen.touchStart(gx, gy);
+  await wait(500);
+  await page.touchscreen.touchMove(gx - 28, gy - 20);
+  await page.$eval('.grownup', (g) => {
+    g.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, pointerType: 'touch', pointerId: 1 }));
+    g.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }));
+  });
+  await wait(1300);
+  await page.touchscreen.touchEnd();
+  await wait(300);
+  if (!(await page.$('.gate'))) errors.push('holding the gear with a finger did not open the grown-ups gate');
+  else await click('.bar .round');
+}
+
 // Grown-ups: hold the lock button.
 await page.$eval('.grownup', (el) => el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })));
 await wait(1700);

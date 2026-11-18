@@ -89,7 +89,7 @@ Khi dùng bàn phím, mỗi ô hiện một số nhỏ ở góc để biết b�
 
 ## Phần dành cho bố mẹ
 
-Giữ nút bánh răng ở góc dưới bên phải khoảng 1,5 giây, rồi chạm vào con số được viết bằng chữ (ví dụ "ba mươi bảy"). Bé nhỏ chưa đọc được nên sẽ không tự vào được.
+Giữ nút bánh răng ở góc dưới bên phải khoảng 2 giây (nút đầy dần màu xanh), rồi chạm vào con số được viết bằng chữ (ví dụ "ba mươi bảy"). Nếu chỉ chạm nhanh, app hiện dòng nhắc "Bố mẹ giữ nút này 2 giây". Bé nhỏ chưa đọc được nên sẽ không tự vào được.
 
 Trong đó có:
 

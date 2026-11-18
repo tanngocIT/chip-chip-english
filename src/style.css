@@ -2415,3 +2415,29 @@ td:not(:first-child) {
     color: #5d6b85;
   }
 }
+
+/* grown-ups button: nothing of the browser's own long press, and a hint for a short tap */
+.grownup {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.grownup svg,
+.grownup .fill {
+  pointer-events: none;
+}
+
+.hold-hint {
+  position: fixed;
+  z-index: 30;
+  max-width: 70vw;
+  padding: 8px 14px;
+  border-radius: 14px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 700 16px/1.25 var(--font);
+  box-shadow: 0 4px 0 rgb(43 58 85 / 0.2);
+  pointer-events: none;
+  animation: pop 0.25s ease-out both;
+}
