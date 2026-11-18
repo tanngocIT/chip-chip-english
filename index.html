@@ -12,6 +12,39 @@
   </head>
   <body>
     <div id="app"></div>
+    <script>
+      // Self-repair. If this page cannot load its own scripts (it was cached from a version whose
+      // files are gone), or nothing has appeared after a while, load it again: the service
+      // worker in charge by then serves a page that matches its files. At most twice, so a
+      // device that is simply offline does not reload for ever. main.ts clears the count.
+      (function () {
+        var KEY = 'chip-heal';
+        function heal() {
+          try {
+            var n = Number(sessionStorage.getItem(KEY)) || 0;
+            if (n >= 2) return;
+            sessionStorage.setItem(KEY, String(n + 1));
+          } catch (e) {
+            return;
+          }
+          setTimeout(function () {
+            location.reload();
+          }, 1500);
+        }
+        addEventListener(
+          'error',
+          function (e) {
+            var t = e.target;
+            if (t && (t.tagName === 'SCRIPT' || t.tagName === 'LINK') && /assets\//.test(t.src || t.href || '')) heal();
+          },
+          true,
+        );
+        setTimeout(function () {
+          var app = document.getElementById('app');
+          if (app && !app.firstChild) heal();
+        }, 12000);
+      })();
+    </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

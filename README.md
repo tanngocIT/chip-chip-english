@@ -103,7 +103,7 @@ Trong đó có:
 - **7 ngày qua:** số phút chơi mỗi ngày (biểu đồ), số ngày có chơi, số trò đã xong, tỉ lệ trả lời đúng ngay lần đầu, các từ mới thuộc trong tuần và số từ đến hạn ôn hôm nay.
 - Xem tiến độ: số từ đã thuộc và số sao của từng chủ đề, các từ bé hay nhầm, số sticker đã có.
 - Xóa tiến độ.
-- **Phiên bản và cập nhật:** app tự tải bản mới ở chế độ nền và chuyển sang bản mới vào lúc bé không chơi (khi app bị ẩn đi, hoặc đang ở màn chào), không bao giờ nạp lại giữa một trò. Mục Thiết bị ghi ngày giờ của bản đang dùng và có nút kiểm tra bản mới.
+- **Phiên bản và cập nhật:** app tự tải bản mới ở chế độ nền và chuyển sang khi bé không ở giữa một trò chơi (ở màn chào, màn hình chính, danh sách trò, hoặc lúc app bị ẩn), không bao giờ nạp lại giữa một trò. Màn chào ghi ngày giờ của bản đang dùng ở mép dưới và báo khi đang tải bản mới. Sau khi có bản mới trên máy chủ, app đang mở thường nhận được trong vòng 10 phút; không cần tắt mở lại. Mục Thiết bị trong phần bố mẹ có nút kiểm tra bản mới.
 - **Sao lưu tiến độ:** sao chép một đoạn mã (bắt đầu bằng `CHIP1:`) và giữ ở nơi khác, ví dụ tin nhắn cho chính mình. Khi đổi máy hoặc lỡ xóa dữ liệu trình duyệt, dán mã vào để lấy lại sao, sticker, từ đã học, truyện đã đọc, tranh của bé và cài đặt. Mã không đi qua máy chủ nào.
 - **Cài app ra màn hình chính.** Trên Android và máy tính (Chrome, Edge) có nút bấm để cài ngay. Trên iPhone/iPad, Apple không cho web tự mở hộp thoại cài nên app hiện hướng dẫn: mở bằng Safari, bấm Chia sẻ rồi chọn Thêm vào Màn hình chính.
 

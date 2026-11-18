@@ -369,7 +369,7 @@ export function parentArea() {
           'p',
           {},
           built ? `Phiên bản: ${built.getDate()}/${built.getMonth() + 1}/${built.getFullYear()} ${String(built.getHours()).padStart(2, '0')}:${String(built.getMinutes()).padStart(2, '0')}. ` : '',
-          'App tự cập nhật khi có bản mới, vào lúc bé không chơi.',
+          'App tự cập nhật khi có bản mới, vào lúc bé không ở giữa một trò chơi. Màn chào ghi ngày giờ của bản đang dùng.',
         ),
         updateBtn,
         versionNote,

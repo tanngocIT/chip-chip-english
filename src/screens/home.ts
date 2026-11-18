@@ -14,6 +14,7 @@ import { parentGate } from './parents';
 import { storyList } from './stories';
 import { wordBook, metCount } from './wordbook';
 import { stickerScene } from './scene';
+import { updateState, onUpdateChange, buildLabel } from '../lib/update';
 
 // ---------- splash ----------
 
@@ -32,6 +33,15 @@ export function splash() {
     },
     h('span', { class: 'tri' }),
   );
+  // For the grown-up: which version this is, and whether a new one is on its way. The switch
+  // itself happens by itself (lib/update.ts); this only says why the screen is about to reload.
+  const version = h('p', { class: 'version', 'aria-live': 'polite' });
+  const tell = () => {
+    if (!version.isConnected) return onUpdateChange(null);
+    const s = updateState();
+    version.textContent = s === 'downloading' ? 'Đang tải bản mới…' : s === 'ready' ? 'Đang chuyển sang bản mới…' : buildLabel() ? `Bản ${buildLabel()}` : '';
+    version.classList.toggle('busy', s !== 'none');
+  };
   show(
     h(
       'main',
@@ -40,8 +50,11 @@ export function splash() {
       h('h1', { class: 'brand' }, 'Chip Chip', h('span', {}, 'English')),
       btn,
       !canSpeak() && h('p', { class: 'note' }, 'Trình duyệt này không có giọng đọc. Hãy dùng Chrome hoặc Safari.'),
+      version,
     ),
   );
+  onUpdateChange(tell);
+  tell();
 }
 
 // ---------- home ----------

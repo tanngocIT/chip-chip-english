@@ -26,6 +26,13 @@ setInterval(() => {
 (window as any).__app = { P, topicById, build: BUILD_TIME, challenge: (id: string) => challenge(topicById(id)!) };
 
 initKeys(app);
-// a new version may load only on the start screen (or while the app is hidden)
-initUpdate(() => !!app.querySelector('.splash:not(.rest)'));
+// A new version may come in whenever no game is on and no grown-up is in the settings: the
+// start screen, the home screen, a topic's list of games, the sticker book, the word book.
+initUpdate(() => !inParentArea && !app.querySelector('.lesson, .result, .grown, .scene-screen'), app);
 splash();
+// the app is up: the page's self-repair (index.html) may count from zero again
+try {
+  sessionStorage.removeItem('chip-heal');
+} catch {
+  /* no session storage */
+}
